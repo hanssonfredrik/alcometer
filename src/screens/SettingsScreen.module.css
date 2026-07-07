@@ -1,0 +1,116 @@
+.sectionLabel {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.18em;
+  color: var(--w-35);
+  margin-bottom: 14px;
+}
+
+.weightField {
+  display: block;
+  font: 500 11.5px var(--font-sans);
+  color: var(--w-50);
+  margin-bottom: 16px;
+}
+.weightField input {
+  width: 100%;
+  margin-top: 7px;
+  background: var(--field-bg);
+  border: 1px solid var(--w-12);
+  border-radius: 11px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.subLabel {
+  font: 500 11.5px var(--font-sans);
+  color: var(--w-50);
+  margin-bottom: 8px;
+}
+
+.sexRow {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 26px;
+}
+.sexBtn {
+  flex: 1;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid var(--w-14);
+  background: transparent;
+  color: var(--text);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+}
+.sexBtn[data-selected='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.hint {
+  font: 400 11px/1.5 var(--font-sans);
+  color: var(--w-40);
+  margin: 0 0 14px;
+}
+
+.sizeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+.sizeName {
+  width: 64px;
+  font: 600 13px var(--font-sans);
+  color: var(--text);
+}
+.sizeField {
+  flex: 1;
+  min-width: 0;
+  font: 500 9.5px var(--font-sans);
+  color: var(--w-40);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sizeField input {
+  width: 100%;
+  background: var(--field-bg);
+  border: 1px solid var(--w-12);
+  border-radius: 9px;
+  padding: 9px 11px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.weightField input:focus-visible,
+.sizeField input:focus-visible {
+  outline: 2px solid var(--accent-55);
+  outline-offset: 0;
+}
+
+.reset {
+  margin-top: 6px;
+  background: none;
+  border: none;
+  color: var(--w-40);
+  font: 500 11.5px var(--font-sans);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.disclaimer {
+  background: var(--w-03);
+  border: 1px solid var(--w-06);
+  border-radius: 14px;
+  padding: 15px 16px;
+  font: 400 11.5px/1.7 var(--font-sans);
+  color: var(--w-40);
+  margin-top: 24px;
+}
+.em {
+  color: var(--w-60);
+}

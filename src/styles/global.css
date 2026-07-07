@@ -1,0 +1,130 @@
+:root {
+  /* ---- Palette (from the Neon Tracker design) ---- */
+  --accent: oklch(0.72 0.23 350);
+  --accent-hover: oklch(0.78 0.2 350);
+  --accent-16: oklch(0.72 0.23 350 / 0.16);
+  --accent-14: oklch(0.72 0.23 350 / 0.14);
+  --accent-12: oklch(0.72 0.23 350 / 0.12);
+  --accent-28: oklch(0.72 0.23 350 / 0.28);
+  --accent-40: oklch(0.72 0.23 350 / 0.4);
+  --accent-55: oklch(0.72 0.23 350 / 0.55);
+
+  --danger: oklch(0.62 0.21 25);
+  --danger-bar: oklch(0.66 0.21 25);
+  --danger-text: oklch(0.72 0.2 25);
+  --danger-text-soft: oklch(0.86 0.12 25);
+  --danger-bg: oklch(0.62 0.21 25 / 0.14);
+  --danger-border: oklch(0.62 0.21 25 / 0.5);
+
+  --ink: #08070c;
+  --panel: #0b0912;
+  --text: #f4f4f5;
+  --text-strong: #f6f6f7;
+  --on-accent: #0a0a0a;
+
+  /* Translucent whites used throughout the design */
+  --w-60: rgba(255, 255, 255, 0.6);
+  --w-55: rgba(255, 255, 255, 0.55);
+  --w-50: rgba(255, 255, 255, 0.5);
+  --w-45: rgba(255, 255, 255, 0.45);
+  --w-42: rgba(255, 255, 255, 0.42);
+  --w-40: rgba(255, 255, 255, 0.4);
+  --w-38: rgba(255, 255, 255, 0.38);
+  --w-35: rgba(255, 255, 255, 0.35);
+  --w-30: rgba(255, 255, 255, 0.3);
+  --w-28: rgba(255, 255, 255, 0.28);
+  --w-16: rgba(255, 255, 255, 0.16);
+  --w-14: rgba(255, 255, 255, 0.14);
+  --w-12: rgba(255, 255, 255, 0.12);
+  --w-10: rgba(255, 255, 255, 0.1);
+  --w-08: rgba(255, 255, 255, 0.08);
+  --w-07: rgba(255, 255, 255, 0.07);
+  --w-06: rgba(255, 255, 255, 0.06);
+  --w-05: rgba(255, 255, 255, 0.05);
+  --w-04: rgba(255, 255, 255, 0.04);
+  --w-03: rgba(255, 255, 255, 0.03);
+
+  --field-bg: rgba(0, 0, 0, 0.35);
+
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --app-max: 452px;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #17102180 0%, #08070c 60%) fixed,
+    var(--ink);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--accent);
+}
+a:hover {
+  color: var(--accent-hover);
+}
+
+button {
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Number inputs use the mono face, per the design */
+input[type='number'] {
+  font-family: var(--font-mono);
+}
+
+/* Hide native number spinners for a cleaner look */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Scrollbar-less scroll region */
+.scrollArea::-webkit-scrollbar {
+  width: 0;
+}
+.scrollArea {
+  scrollbar-width: none;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

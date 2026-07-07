@@ -1,0 +1,38 @@
+.nav {
+  display: flex;
+  border-top: 1px solid var(--w-07);
+  background: rgba(11, 9, 18, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab {
+  flex: 1;
+  padding: 14px 0 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 0 0 3px 3px;
+}
+
+.label {
+  font: 600 12px var(--font-sans);
+  color: var(--w-35);
+}
+
+.labelActive {
+  font: 600 12px var(--font-sans);
+  color: var(--text);
+}

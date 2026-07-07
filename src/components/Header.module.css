@@ -1,0 +1,45 @@
+.header {
+  padding: calc(26px + env(safe-area-inset-top)) 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font: 600 11px/1 var(--font-mono);
+  letter-spacing: 0.22em;
+  color: var(--accent);
+}
+
+.date {
+  font: 500 14px/1.3 var(--font-sans);
+  color: var(--w-45);
+  margin-top: 6px;
+}
+
+.streak {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--w-05);
+  border: 1px solid var(--w-08);
+  padding: 8px 13px;
+  border-radius: 100px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.streakNum {
+  font: 600 13px var(--font-mono);
+  color: var(--text);
+}
+
+.streakText {
+  font: 500 11px var(--font-sans);
+  color: var(--w-42);
+}

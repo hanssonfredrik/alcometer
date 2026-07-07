@@ -1,0 +1,215 @@
+/* ---- Week / month summary ---- */
+.summaryRow {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+.summary {
+  flex: 1;
+  background: var(--w-04);
+  border: 1px solid var(--w-06);
+  border-radius: 15px;
+  padding: 14px;
+}
+.summaryLabel {
+  font: 500 10.5px var(--font-sans);
+  color: var(--w-40);
+}
+.summaryNum {
+  font: 600 26px/1.1 var(--font-mono);
+  color: var(--text);
+  margin-top: 7px;
+}
+.summaryStd {
+  font: 500 10.5px var(--font-sans);
+  color: var(--accent);
+  margin-top: 3px;
+}
+
+/* ---- 12-day bar chart ---- */
+.chartCard {
+  background: var(--w-04);
+  border: 1px solid var(--w-06);
+  border-radius: 16px;
+  padding: 16px 14px 12px;
+  margin-bottom: 18px;
+}
+.chartHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.chartTitle {
+  font: 500 12px var(--font-sans);
+  color: var(--w-60);
+}
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legendMark {
+  width: 14px;
+  height: 2px;
+  background: #fff;
+  opacity: 0.6;
+}
+.legendText {
+  font: 500 10px var(--font-sans);
+  color: var(--w-40);
+}
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 120px;
+}
+.barCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  height: 100%;
+}
+.barTrack {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.bar {
+  width: 100%;
+  min-height: 3px;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.35s ease;
+}
+.peakMark {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  height: 2px;
+  background: #fff;
+  opacity: 0.65;
+  border-radius: 2px;
+}
+.barLabel {
+  font: 500 8.5px var(--font-mono);
+}
+
+/* ---- Monthly overview ---- */
+.monthCard {
+  background: var(--w-04);
+  border: 1px solid var(--w-06);
+  border-radius: 16px;
+  padding: 16px 16px 14px;
+  margin-bottom: 18px;
+}
+.monthTitle {
+  font: 500 12px var(--font-sans);
+  color: var(--w-60);
+  margin-bottom: 16px;
+}
+.monthRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.monthRow:last-child {
+  margin-bottom: 0;
+}
+.monthLabel {
+  width: 34px;
+  font: 600 11px var(--font-mono);
+}
+.monthTrack {
+  flex: 1;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--w-05);
+  overflow: hidden;
+  position: relative;
+}
+.monthFill {
+  height: 100%;
+  min-width: 3px;
+  border-radius: 7px;
+  transition: width 0.35s ease;
+}
+.monthValue {
+  width: 78px;
+  text-align: right;
+  font: 500 11px var(--font-sans);
+  color: var(--w-50);
+}
+.monthCount {
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+/* ---- Awards ---- */
+.sectionLabel {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.18em;
+  color: var(--w-35);
+  margin-bottom: 12px;
+}
+.awardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+.award {
+  background: var(--w-03);
+  border: 1px solid var(--w-07);
+  border-radius: 15px;
+  padding: 14px 14px 13px;
+}
+.award[data-earned='true'] {
+  background: var(--accent-12);
+  border-color: var(--accent-40);
+}
+.awardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+.awardIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--w-06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 13px var(--font-mono);
+  color: var(--w-40);
+}
+.awardIcon[data-earned='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.awardStatus {
+  font: 600 9px var(--font-mono);
+  letter-spacing: 0.1em;
+  color: var(--w-28);
+}
+.awardStatus[data-earned='true'] {
+  color: var(--accent);
+}
+.awardLabel {
+  font: 600 12.5px/1.2 var(--font-sans);
+  color: var(--w-55);
+}
+.awardLabel[data-earned='true'] {
+  color: var(--text);
+}
+.awardDesc {
+  font: 500 10.5px/1.35 var(--font-sans);
+  color: var(--w-40);
+  margin-top: 4px;
+}

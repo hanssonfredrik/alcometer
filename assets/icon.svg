@@ -1,0 +1,31 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="0%" r="100%">
+      <stop offset="0%" stop-color="#1c1230"/>
+      <stop offset="60%" stop-color="#0b0912"/>
+      <stop offset="100%" stop-color="#08070c"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff5db1"/>
+      <stop offset="100%" stop-color="#e0389a"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- progress arc (~72% of the circle) -->
+  <circle cx="256" cy="256" r="128" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="26"/>
+  <path d="M 256 128 A 128 128 0 1 1 128 256"
+        fill="none" stroke="url(#ring)" stroke-width="26" stroke-linecap="round"
+        filter="url(#glow)"/>
+
+  <!-- streak dot -->
+  <circle cx="256" cy="256" r="34" fill="url(#ring)" filter="url(#glow)"/>
+</svg>

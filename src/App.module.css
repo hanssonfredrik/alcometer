@@ -1,0 +1,36 @@
+.app {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame {
+  width: 100%;
+  max-width: var(--app-max);
+  height: 100dvh;
+  background: var(--panel);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* On viewports taller/wider than the phone frame, present it as a
+   centred device with side borders and a drop shadow (like the mockup). */
+@media (min-width: 480px) and (min-height: 940px) {
+  .frame {
+    height: min(920px, 100dvh);
+    border-left: 1px solid var(--w-06);
+    border-right: 1px solid var(--w-06);
+    border-radius: 0;
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 24px 24px;
+}
