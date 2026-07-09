@@ -82,11 +82,13 @@ export function useTracker() {
   )
 
   const removeDrink = useCallback(
-    (id) => {
-      const key = todayKey()
+    (id, key) => {
+      const dayKey = key || todayKey()
       mutate((d) => {
-        if (d.days[key]) {
-          d.days[key].entries = d.days[key].entries.filter((e) => e.id !== id)
+        if (d.days[dayKey]) {
+          d.days[dayKey].entries = d.days[dayKey].entries.filter(
+            (e) => e.id !== id,
+          )
         }
       })
     },

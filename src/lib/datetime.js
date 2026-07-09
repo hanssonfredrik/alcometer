@@ -17,6 +17,15 @@ export function dayIndex(key) {
   return Math.round(new Date(key + 'T12:00:00').getTime() / 86400000)
 }
 
+// Timestamp at local noon, `offset` calendar days from `ts`. Noon-anchored so
+// the arithmetic is immune to DST shifts.
+export function addDays(ts, offset) {
+  const d = new Date(ts)
+  d.setHours(12, 0, 0, 0)
+  d.setDate(d.getDate() + offset)
+  return d.getTime()
+}
+
 export function formatTime(ts) {
   const d = new Date(ts)
   return (

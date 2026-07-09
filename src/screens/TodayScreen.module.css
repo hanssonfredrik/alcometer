@@ -1,3 +1,56 @@
+/* ---- Day pager ---- */
+.dayNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2px 0 16px;
+}
+.navBtn {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 11px;
+  border: 1px solid var(--w-12);
+  background: var(--w-04);
+  color: var(--text);
+  font: 500 18px var(--font-mono);
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navBtn:active {
+  background: var(--w-08);
+}
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.dayNavLabel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.dayNavLabel:disabled {
+  cursor: default;
+}
+.dayNavRel {
+  font: 600 13px var(--font-sans);
+  color: var(--text);
+}
+.dayNavDate {
+  font: 500 11px var(--font-mono);
+  color: var(--w-45);
+}
+
 /* ---- Over-limit alert ---- */
 .alert {
   display: flex;

@@ -29,8 +29,8 @@ export default function App() {
     [actions],
   )
   const removeDrink = useCallback(
-    (id) => {
-      actions.removeDrink(id)
+    (id, key) => {
+      actions.removeDrink(id, key)
       setUndoId((cur) => (cur === id ? null : cur))
     },
     [actions],
