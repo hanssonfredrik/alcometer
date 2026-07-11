@@ -17,10 +17,35 @@ function makeId() {
  * Every mutation clones, applies, persists, and re-renders.
  */
 export function useTracker() {
-  const [data, setData] = useState(loadData)
+  const [data, setData] = useState(defaultData)
   const [now, setNow] = useState(() => Date.now())
   const dataRef = useRef(data)
   dataRef.current = data
+
+  // Persisted data arrives asynchronously (native storage is promise-based).
+  // Until it lands, mutations are queued so an early tap is neither lost nor
+  // saved over the not-yet-loaded state; hydration replays the queue on top.
+  const readyRef = useRef(false)
+  const pendingRef = useRef([])
+
+  useEffect(() => {
+    let cancelled = false
+    loadData().then((stored) => {
+      if (cancelled) return
+      let next = stored
+      if (pendingRef.current.length) {
+        next = clone(stored)
+        for (const fn of pendingRef.current) fn(next)
+        saveData(next)
+      }
+      pendingRef.current = []
+      readyRef.current = true
+      setData(next)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   // Re-tick every 20s so time-dependent estimates (BAC decay, "sober by",
   // day rollover) stay fresh without a manual refresh.
@@ -30,10 +55,11 @@ export function useTracker() {
   }, [])
 
   const mutate = useCallback((fn) => {
+    if (!readyRef.current) pendingRef.current.push(fn)
     setData((prev) => {
       const next = clone(prev || defaultData())
       fn(next)
-      saveData(next)
+      if (readyRef.current) saveData(next)
       return next
     })
   }, [])

@@ -20,3 +20,6 @@ dev-dist
 
 # Screenshots produced by the run-app skill
 screenshots
+
+# Derived native icon/splash sources (regenerate with `npm run icons`)
+assets/native

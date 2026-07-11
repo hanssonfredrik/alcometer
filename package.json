@@ -8,17 +8,30 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs && capacitor-assets generate --assetPath assets/native --ios --android",
+    "sync": "npm run build && npx cap sync",
+    "android": "npm run sync && npx cap run android"
   },
   "dependencies": {
+    "@capacitor-community/safe-area": "^8.0.1",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/ios": "^8.4.1",
     "@fontsource/ibm-plex-mono": "^5.1.1",
     "@fontsource/space-grotesk": "^5.1.1",
     "@vitejs/plugin-react": "^4.3.4",
     "sharp": "^0.33.5",
+    "typescript": "^5.9.3",
     "vite": "^6.0.7",
     "vite-plugin-pwa": "^0.21.1"
   }

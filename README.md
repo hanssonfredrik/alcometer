@@ -2,7 +2,9 @@
 
 A mobile-first PWA for tracking drinks, estimating your blood-alcohol level (BAC), and building sober-day streaks. Dark "neon" aesthetic, works offline, and **all data stays on your device** — nothing is ever sent anywhere.
 
-Built with React + Vite.
+Built with React + Vite. The same codebase also ships as native iOS and
+Android apps via [Capacitor](https://capacitorjs.com/) — the web build runs
+inside a native shell with platform storage, haptics, and splash/icons.
 
 **[Live demo →](https://victorious-moss-0f60f0d10.7.azurestaticapps.net/)**
 
@@ -28,11 +30,26 @@ npm run dev       # start the dev server at http://localhost:5173
 npm run dev       # dev server (http://localhost:5173)
 npm run build     # production build to dist/ (also generates the service worker)
 npm run preview   # serve the built dist/ (use this to test PWA/offline behaviour)
-npm run icons     # regenerate PWA icons from assets/*.svg
+npm run icons     # regenerate PWA + native icons/splash from assets/*.svg
+npm run sync      # build + copy the web app into the native projects
+npm run android   # build, sync, and run on an Android device/emulator
 ```
 
 > The service worker only runs in a build, not in `npm run dev`. To test offline
 > behaviour, run `npm run build && npm run preview`.
+
+## Native apps (iOS / Android)
+
+The `ios/` and `android/` folders are Capacitor shells around the same
+`dist/` build — there is no separate mobile codebase. On native, data is
+stored in platform storage (UserDefaults / SharedPreferences) instead of
+`localStorage`, and the service worker is skipped.
+
+- **Android:** `npm run android` with an emulator/device (needs the Android
+  SDK), or grab the debug APK from the *Android* GitHub Actions workflow.
+- **iOS:** built and uploaded to TestFlight by the *iOS (TestFlight)*
+  workflow on a macOS runner — no local Mac needed. See `SUBMISSION.md`
+  for the one-time App Store / Play Store setup.
 
 ## How the estimate works
 

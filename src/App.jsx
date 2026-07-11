@@ -1,6 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Capacitor } from '@capacitor/core'
+import { App as CapacitorApp } from '@capacitor/app'
 import { useTracker } from './hooks/useTracker.js'
 import { dateKey } from './lib/datetime.js'
+import { hapticLog, hapticUndo } from './lib/haptics.js'
 import { WEEKDAYS, MONTHS } from './lib/constants.js'
 import Header from './components/Header.jsx'
 import BottomNav from './components/BottomNav.jsx'
@@ -17,15 +20,39 @@ export default function App() {
   // Id of the most recently logged drink, for the inline "Undo" affordance.
   const [undoId, setUndoId] = useState(null)
 
+  // Android hardware/gesture back: fall back to the Today tab first; from
+  // there, background the app (never exit — that would feel like a crash).
+  const screenRef = useRef(screen)
+  screenRef.current = screen
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return
+    const listener = CapacitorApp.addListener('backButton', () => {
+      if (screenRef.current !== 'today') setScreen('today')
+      else CapacitorApp.minimizeApp()
+    })
+    return () => {
+      listener.then((handle) => handle.remove())
+    }
+  }, [])
+
   const d = new Date(now)
   const dateLabel = `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`
 
   const todayEntries = data?.days?.[dateKey(now)]?.entries ?? []
   const undoEntry = undoId ? todayEntries.find((e) => e.id === undoId) : null
 
-  const logDrink = useCallback((type) => setUndoId(actions.addDrink(type)), [actions])
+  const logDrink = useCallback(
+    (type) => {
+      hapticLog()
+      setUndoId(actions.addDrink(type))
+    },
+    [actions],
+  )
   const logCustom = useCallback(
-    (custom) => setUndoId(actions.addCustomDrink(custom)),
+    (custom) => {
+      hapticLog()
+      setUndoId(actions.addCustomDrink(custom))
+    },
     [actions],
   )
   const removeDrink = useCallback(
@@ -36,7 +63,10 @@ export default function App() {
     [actions],
   )
   const undoLast = useCallback(() => {
-    if (undoId) removeDrink(undoId)
+    if (undoId) {
+      hapticUndo()
+      removeDrink(undoId)
+    }
   }, [undoId, removeDrink])
 
   return (
