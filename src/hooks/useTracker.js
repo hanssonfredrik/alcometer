@@ -95,6 +95,28 @@ export function useTracker() {
     [mutate, todayKey],
   )
 
+  const updateDrink = useCallback(
+    (id, { type, cl, abv, time }, key) => {
+      const dayKey = key || todayKey()
+      mutate((d) => {
+        const day = d.days[dayKey]
+        const entry = day?.entries.find((e) => e.id === id)
+        if (!entry) return
+        entry.type = type
+        entry.ml = (parseFloat(cl) || 0) * 10
+        entry.abv = (parseFloat(abv) || 0) / 100
+        // Keep the date part of ts — an edited entry never jumps day keys.
+        const [h, m] = String(time).split(':')
+        const dt = new Date(entry.ts)
+        dt.setHours(+h || 0, +m || 0, 0, 0)
+        entry.ts = dt.getTime()
+        // The log renders entries in array order, so keep it time-ordered.
+        day.entries.sort((a, b) => a.ts - b.ts)
+      })
+    },
+    [mutate, todayKey],
+  )
+
   const changeLimit = useCallback(
     (delta) => {
       const key = todayKey()
@@ -135,6 +157,7 @@ export function useTracker() {
       addDrink,
       addCustomDrink,
       removeDrink,
+      updateDrink,
       changeLimit,
       setProfile,
       setSize,
@@ -144,6 +167,7 @@ export function useTracker() {
       addDrink,
       addCustomDrink,
       removeDrink,
+      updateDrink,
       changeLimit,
       setProfile,
       setSize,

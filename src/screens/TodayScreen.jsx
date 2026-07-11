@@ -15,6 +15,7 @@ import {
   STD_GLASS_GRAMS,
   BURN_RATE,
 } from '../lib/constants.js'
+import EditDrinkModal from '../components/EditDrinkModal.jsx'
 import styles from './TodayScreen.module.css'
 
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -71,6 +72,8 @@ export default function TodayScreen({
 }) {
   const [customOpen, setCustomOpen] = useState(false)
   const [custom, setCustom] = useState({ type: 'wine', cl: 15, abv: 12 })
+  // Entry being edited: { id, key, type, cl, abv, time } or null.
+  const [editing, setEditing] = useState(null)
   // 0 = today, negative = previous days.
   const [dayOffset, setDayOffset] = useState(0)
 
@@ -131,9 +134,14 @@ export default function TodayScreen({
       ...streakCopy(streak, count, next),
       entries: [...entries].reverse().map((e) => ({
         id: e.id,
+        type: e.type,
         typeLabel: LABELS[e.type] || e.type,
         cl: Math.round(e.ml / 10),
         abv: Math.round(e.abv * 100),
+        // Unrounded seeds for the edit form, so a no-op save doesn't
+        // silently change stored values (4.7% displays as 5%).
+        rawCl: +(e.ml / 10).toFixed(1),
+        rawAbv: +(e.abv * 100).toFixed(1),
         grams: entryGrams(e).toFixed(0),
         timeLabel: formatTime(e.ts),
       })),
@@ -359,14 +367,29 @@ export default function TodayScreen({
           </div>
           {v.entries.map((e) => (
             <div key={e.id} className={styles.logRow}>
-              <span className={styles.logDot} />
-              <div className={styles.logMain}>
-                <div className={styles.logType}>{e.typeLabel}</div>
-                <div className={styles.logMeta}>
-                  {e.cl} cl · {e.abv}% · {e.grams} g
+              <button
+                className={styles.logBody}
+                onClick={() =>
+                  setEditing({
+                    id: e.id,
+                    key: selectedKey,
+                    type: e.type,
+                    cl: e.rawCl,
+                    abv: e.rawAbv,
+                    time: e.timeLabel,
+                  })
+                }
+                aria-label={`Edit ${e.typeLabel}`}
+              >
+                <span className={styles.logDot} />
+                <div className={styles.logMain}>
+                  <div className={styles.logType}>{e.typeLabel}</div>
+                  <div className={styles.logMeta}>
+                    {e.cl} cl · {e.abv}% · {e.grams} g
+                  </div>
                 </div>
-              </div>
-              <div className={styles.logTime}>{e.timeLabel}</div>
+                <div className={styles.logTime}>{e.timeLabel}</div>
+              </button>
               <button
                 className={styles.logRemove}
                 onClick={() => onRemoveDrink(e.id, selectedKey)}
@@ -383,6 +406,17 @@ export default function TodayScreen({
             ? 'Nothing logged yet tonight.'
             : 'Nothing logged this day.'}
         </div>
+      )}
+
+      {editing && (
+        <EditDrinkModal
+          entry={editing}
+          onClose={() => setEditing(null)}
+          onSave={(form) => {
+            actions.updateDrink(editing.id, form, editing.key)
+            setEditing(null)
+          }}
+        />
       )}
     </div>
   )

@@ -1,0 +1,121 @@
+/* Overlay is absolutely positioned against the phone frame (.frame in
+   App.module.css is position: relative), so it covers the app — not the
+   whole desktop viewport. z-index lifts it above the bottom nav. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(8, 7, 12, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overscroll-behavior: contain;
+}
+
+.sheet {
+  background: var(--panel);
+  border: 1px solid var(--w-12);
+  border-radius: 18px;
+  padding: 18px;
+  width: 100%;
+  max-width: 340px;
+  animation: pop 0.18s ease;
+}
+
+.title {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.18em;
+  color: var(--w-35);
+  margin-bottom: 14px;
+}
+
+/* Type pills + fields mirror the custom-size panel in TodayScreen
+   (CSS Modules don't share classes across files). */
+.typeRow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.typePill {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 9px;
+  border: 1px solid var(--w-14);
+  background: transparent;
+  color: var(--text);
+  font: 500 11px var(--font-sans);
+  cursor: pointer;
+}
+.typePill[data-selected='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.fields {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.field {
+  flex: 1;
+  min-width: 0;
+  font: 500 10.5px var(--font-sans);
+  color: var(--w-42);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.field input {
+  width: 100%;
+  background: var(--field-bg);
+  border: 1px solid var(--w-12);
+  border-radius: 9px;
+  padding: 9px 11px;
+  color: var(--text);
+  font-size: 14px;
+}
+.field input:focus-visible {
+  outline: 2px solid var(--accent-55);
+  outline-offset: 0;
+}
+.field input[type='time'] {
+  font-family: var(--font-mono);
+  padding: 9px 6px 9px 9px;
+}
+.field input[type='time']::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+  width: 14px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+.cancelBtn {
+  flex: 1;
+  padding: 11px;
+  border-radius: 11px;
+  border: 1px solid var(--w-12);
+  background: transparent;
+  color: var(--w-50);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+}
+.saveBtn {
+  flex: 1;
+  padding: 11px;
+  border-radius: 11px;
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+}
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
