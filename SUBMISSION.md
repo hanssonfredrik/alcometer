@@ -103,11 +103,14 @@ building and signing.
 
 Required before public release; not required for TestFlight/internal testing.
 
-- **Privacy policy URL** — both stores require one, even for a
-  no-data-collected app. A single static page is enough; it can live on the
-  existing Azure Static Web App (e.g. `/privacy.html`: "Neon Tracker stores
-  all data locally on your device. No data is collected, transmitted, or
-  shared."). Tell me if you want it generated.
+- **Privacy policy URL** — ✅ done, deployed with the web app:
+  `https://victorious-moss-0f60f0d10.7.azurestaticapps.net/privacy`
+  (`public/privacy.html`; `public/staticwebapp.config.json` makes `/privacy`
+  canonical — `/privacy.html` 301-redirects to it, so the URL survives a
+  future custom domain unchanged).
+  Use it for **both** stores' privacy-policy fields **and** as Apple's
+  required **Support URL** (the page has a support section). If you later
+  attach a custom domain to the Static Web App, update both store fields.
 - **Privacy questionnaires** — truthful answers are "nothing collected":
   - Apple: App Privacy → **Data Not Collected**.
   - Play: App content → Data safety → no collection, no sharing.
@@ -147,6 +150,8 @@ Do these on real hardware once TestFlight / internal-testing builds are in
 - [ ] Airplane mode: app fully works.
 - [ ] `＋ Custom size` and the edit-drink modal: `time` input renders usably
       in the WebView (it uses the native time picker).
+- [ ] Setup → "privacy policy" link opens the hosted page in the system
+      browser (not inside the app's WebView).
 
 ## 5. Ongoing releases
 

@@ -39,6 +39,11 @@ export default defineConfig({
         // Precache the app shell + hashed assets (JS/CSS/fonts) so the app
         // loads and runs fully offline after the first visit.
         globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2}'],
+        // The privacy page is served at the canonical /privacy URL by the
+        // static host (privacy.html 301s there); keep the PWA out of the way:
+        // never precache it and never serve the SPA shell for it.
+        globIgnores: ['privacy.html'],
+        navigateFallbackDenylist: [/^\/privacy/],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },

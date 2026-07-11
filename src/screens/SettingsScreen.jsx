@@ -88,6 +88,15 @@ export default function SettingsScreen({ data, actions }) {
         first drink, with alcohol burned off at ~0.15&nbsp;‰/h. It&apos;s an
         estimate — never a substitute for a real breathalyzer.
       </div>
+
+      <a
+        className={styles.privacyLink}
+        href="https://victorious-moss-0f60f0d10.7.azurestaticapps.net/privacy"
+        target="_blank"
+        rel="noopener"
+      >
+        All data stays on this device — privacy policy
+      </a>
     </div>
   )
 }

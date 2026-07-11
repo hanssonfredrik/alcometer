@@ -111,6 +111,16 @@
   color: var(--w-40);
   margin-top: 24px;
 }
+
+.privacyLink {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  font: 500 11px var(--font-sans);
+  color: var(--w-35);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .em {
   color: var(--w-60);
 }
