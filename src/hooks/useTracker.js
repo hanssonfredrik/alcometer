@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadData, saveData, defaultData } from '../lib/storage.js'
+import { mergeBackup } from '../lib/backup.js'
 import { dateKey } from '../lib/datetime.js'
 import { DEFAULT_SIZES, DEFAULT_LIMIT } from '../lib/constants.js'
 
@@ -188,6 +189,21 @@ export function useTracker() {
     })
   }, [mutate])
 
+  // Merge an imported backup into the current data (see lib/backup.js), then
+  // persist. Returns how many entries were added/replaced so the UI can report.
+  const importData = useCallback(
+    (imported) => {
+      let mergedEntries = 0
+      mutate((d) => {
+        const merged = mergeBackup(d, imported)
+        Object.assign(d, merged.data)
+        mergedEntries = merged.mergedEntries
+      })
+      return mergedEntries
+    },
+    [mutate],
+  )
+
   const actions = useMemo(
     () => ({
       addDrink,
@@ -198,6 +214,7 @@ export function useTracker() {
       setProfile,
       setSize,
       resetSizes,
+      importData,
     }),
     [
       addDrink,
@@ -208,6 +225,7 @@ export function useTracker() {
       setProfile,
       setSize,
       resetSizes,
+      importData,
     ],
   )
 

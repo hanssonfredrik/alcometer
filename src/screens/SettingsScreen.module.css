@@ -93,6 +93,7 @@
 
 .reset {
   margin-top: 6px;
+  margin-bottom: 24px;
   background: none;
   border: none;
   color: var(--w-40);
@@ -100,6 +101,38 @@
   cursor: pointer;
   text-decoration: underline;
   padding: 0;
+}
+
+.dataBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.dataBtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid var(--w-14);
+  background: transparent;
+  color: var(--text);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+}
+.dataBtn:focus-visible {
+  outline: 2px solid var(--accent-55);
+  outline-offset: 0;
+}
+
+.dataMsg {
+  margin: 12px 0 0;
+  font: 500 11.5px/1.5 var(--font-sans);
+  color: var(--w-50);
+}
+.dataMsg[data-kind='ok'] {
+  color: var(--accent);
+}
+.dataMsg[data-kind='err'] {
+  color: var(--danger-text);
 }
 
 .disclaimer {

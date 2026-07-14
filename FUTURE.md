@@ -16,20 +16,24 @@ constraints that any of these must respect:
 
 ## Data safety & portability
 
-The most pressing gap: all data lives in one storage key with no way out.
-A lost phone or a cleared WebView means losing every streak.
+Data lives in one local storage key. Manual backup now closes the "no way
+out" gap — a lost phone or cleared WebView no longer means losing every streak.
 
-- **Export / import backup.** A "Download backup" button in Setup that
-  serialises the `neontrk_v1` object to a JSON file, and an import flow that
-  validates + merges it (keep the newer entry on id collision). On native,
-  use the share sheet. Small, pure `lib/backup.js` — high value, low effort.
-- **Schema versioning + migrations.** The key is already named `_v1`; add a
-  `version` field inside the object and a tiny migration ladder in
-  `storage.js` so future model changes (see below) don't strand old installs.
-- **CSV export** of entries for people who want their data in a spreadsheet.
+- ✓ **Shipped — Export / import backup.** `lib/backup.js` plus "Download
+  backup" / "Import backup" in Setup: exports the whole persisted object as
+  JSON (browser download on web, OS share sheet on native), and imports it
+  through a validate-then-merge flow that unions entries per day and keeps the
+  newer entry on `id` collision. Import migrates older files first, so a
+  backup never strands the install.
+- ✓ **Shipped — Schema versioning + migrations.** The object carries a
+  `version` field; `SCHEMA_VERSION` + a `migrate()` ladder in `storage.js`
+  upgrade both loaded state and imported backups (the v1→v2 logical-day
+  re-bucket below is the first rung). Future model changes bolt on as new rungs.
+- ✓ **Shipped — CSV export.** "Export entries (CSV)" in Setup writes one row
+  per drink (date, time, type, cl, %, grams) for use in a spreadsheet.
 - **Optional encrypted sync** (far future). End-to-end encrypted blob sync so
-  a user can move phones. Only worth doing if there's real demand; a manual
-  backup file covers 90% of the need.
+  a user can move phones. Only worth doing if there's real demand; the manual
+  backup file above covers 90% of the need.
 
 ## Logging quality-of-life
 
@@ -50,20 +54,22 @@ A lost phone or a cleared WebView means losing every streak.
 
 ## Sessions & the midnight problem
 
-Days are local-date keyed, so a night that runs past 00:00 splits across two
-day buckets: the streak logic sees a "drinking day" on both dates, and
-`bacAt`'s "hours since first drink" resets. A **session** concept — entries
-group into a session if they're within ~6 h of the previous entry, regardless
-of date — would fix:
+✓ **Shipped — logical days.** Day keys now roll at 05:00 (`DAY_START_HOUR`;
+`dateKey` shifts the timestamp back), migrated in via the v1→v2 re-bucket. A
+night running past 00:00 lands in one bucket, which already delivers most of
+what a session concept promised:
 
-- BAC continuity across midnight (the 02:00 beer decays from the 23:00 state).
+- BAC continuity across midnight — `bacAt` sees the whole night, so the 02:00
+  beer decays from the 23:00 state and "hours since first drink" no longer
+  resets at midnight.
 - "Sober by" times that don't jump at midnight.
-- Fairer streaks (Friday night ending at 01:00 shouldn't cost Saturday).
-- A natural unit for history ("nights out" instead of calendar days).
+- Fairer streaks — a Friday night ending at 01:00 stays on Friday's key.
 
-This is the biggest *model* change proposed here and the main reason to do
-schema versioning first. All of it belongs in `lib/` (pure session grouping
-over the flat entry list).
+Remaining (optional refinement): a true **session** model that groups entries
+by an inactivity gap (~6 h) rather than a fixed 05:00 cut, handling the odd
+night that runs to 07:00 or two distinct sittings in one logical day, and
+giving history a natural "nights out" unit. Lower priority now that logical
+days cover the common case; it stays pure in `lib/` over the flat entry list.
 
 ## Insights & history
 

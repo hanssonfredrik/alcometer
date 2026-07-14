@@ -1,8 +1,29 @@
+import { useState } from 'react'
 import { DRINK_TYPES, LABELS } from '../lib/constants.js'
+import {
+  exportBackup,
+  exportEntriesCsv,
+  importBackupFile,
+} from '../lib/backup.js'
+import { hapticLog } from '../lib/haptics.js'
 import styles from './SettingsScreen.module.css'
 
 export default function SettingsScreen({ data, actions }) {
   const { profile, sizes } = data
+  const [dataMsg, setDataMsg] = useState(null) // { kind: 'ok' | 'err', text }
+
+  const handleImport = async () => {
+    setDataMsg(null)
+    try {
+      const obj = await importBackupFile()
+      if (!obj) return // picker cancelled
+      const count = actions.importData(obj)
+      hapticLog()
+      setDataMsg({ kind: 'ok', text: `Imported ${count} entries.` })
+    } catch (err) {
+      setDataMsg({ kind: 'err', text: err.message || 'Import failed.' })
+    }
+  }
 
   return (
     <div>
@@ -81,6 +102,31 @@ export default function SettingsScreen({ data, actions }) {
       <button className={styles.reset} onClick={() => actions.resetSizes()}>
         Reset to Swedish standards
       </button>
+
+      <div className={styles.sectionLabel}>DATA</div>
+      <p className={styles.hint}>
+        Everything stays on this device. Keep a backup so a lost or wiped phone
+        doesn&apos;t cost you your history.
+      </p>
+      <div className={styles.dataBtns}>
+        <button className={styles.dataBtn} onClick={() => exportBackup(data)}>
+          Download backup
+        </button>
+        <button className={styles.dataBtn} onClick={handleImport}>
+          Import backup
+        </button>
+        <button
+          className={styles.dataBtn}
+          onClick={() => exportEntriesCsv(data)}
+        >
+          Export entries (CSV)
+        </button>
+      </div>
+      {dataMsg && (
+        <p className={styles.dataMsg} data-kind={dataMsg.kind}>
+          {dataMsg.text}
+        </p>
+      )}
 
       <div className={styles.disclaimer}>
         Promille is estimated with the <span className={styles.em}>Widmark</span>{' '}

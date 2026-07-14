@@ -68,23 +68,27 @@ async function readRaw() {
 }
 
 /**
- * Load persisted state, backfilling any missing top-level keys so older
- * or partial saves stay usable.
+ * Backfill any missing top-level keys and run the migration ladder so older
+ * or partial data stays usable. Mutates and returns `d`. Shared by `loadData`
+ * (persisted state) and the backup importer (a file that may predate the
+ * current schema), so both paths upgrade identically.
  */
+export function migrate(d) {
+  if (!d.sizes) d.sizes = clone(DEFAULT_SIZES)
+  if (!d.profile) d.profile = { ...DEFAULT_PROFILE }
+  if (!d.days) d.days = {}
+  if ((d.version || 1) < 2) {
+    migrateToLogicalDays(d)
+    d.version = 2
+  }
+  return d
+}
+
+/** Load persisted state, migrating/backfilling it to the current schema. */
 export async function loadData() {
   try {
     const raw = await readRaw()
-    if (raw) {
-      const d = JSON.parse(raw)
-      if (!d.sizes) d.sizes = clone(DEFAULT_SIZES)
-      if (!d.profile) d.profile = { ...DEFAULT_PROFILE }
-      if (!d.days) d.days = {}
-      if ((d.version || 1) < 2) {
-        migrateToLogicalDays(d)
-        d.version = 2
-      }
-      return d
-    }
+    if (raw) return migrate(JSON.parse(raw))
   } catch {
     // Corrupt or unavailable storage — fall through to defaults.
   }

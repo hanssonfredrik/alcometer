@@ -67,7 +67,11 @@ export default function HistoryScreen({ data, now }) {
     const monthAgg = []
     for (let i = 5; i >= 0; i--) {
       const m = new Date(today.getFullYear(), today.getMonth() - i, 1)
-      const mKey = dateKey(m.getTime()).slice(0, 7)
+      // Build the YYYY-MM key straight from the month — don't route it through
+      // dateKey(), whose 05:00 logical shift would roll the 1st at 00:00 back
+      // into the previous month and misbucket the whole column.
+      const mKey =
+        m.getFullYear() + '-' + String(m.getMonth() + 1).padStart(2, '0')
       let count = 0
       let grams = 0
       Object.keys(days).forEach((k) => {
