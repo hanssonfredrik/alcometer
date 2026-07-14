@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { totalGrams, peakBac, computeStreaks } from '../lib/alcohol.js'
-import { dateKey, DAY_MS } from '../lib/datetime.js'
+import { dateKey, addDays, startOfWeek, DAY_MS } from '../lib/datetime.js'
 import {
   WEEKDAYS,
   MONTHS,
@@ -39,24 +39,24 @@ export default function HistoryScreen({ data, now }) {
       isToday: b.isToday,
     }))
 
-    // Week / month totals.
+    // Week totals — Monday–Sunday of the current week.
     let weekCount = 0
     let weekGrams = 0
+    const monday = startOfWeek(now)
     for (let i = 0; i < 7; i++) {
-      const d = days[dateKey(now - i * DAY_MS)]
+      const d = days[dateKey(addDays(monday, i))]
       if (d) {
         weekCount += d.entries.length
         weekGrams += totalGrams(d.entries)
       }
     }
+    // Month totals — current calendar month. Keys are local-zone `YYYY-MM-DD`,
+    // so match on the `YYYY-MM` prefix rather than re-parsing (UTC) with Date.
     let monthCount = 0
     let monthGrams = 0
+    const monthKey = dateKey(now).slice(0, 7)
     Object.keys(days).forEach((k) => {
-      const dt = new Date(k)
-      if (
-        dt.getFullYear() === today.getFullYear() &&
-        dt.getMonth() === today.getMonth()
-      ) {
+      if (k.slice(0, 7) === monthKey) {
         monthCount += days[k].entries.length
         monthGrams += totalGrams(days[k].entries)
       }
@@ -66,11 +66,11 @@ export default function HistoryScreen({ data, now }) {
     const monthAgg = []
     for (let i = 5; i >= 0; i--) {
       const m = new Date(today.getFullYear(), today.getMonth() - i, 1)
+      const mKey = dateKey(m.getTime()).slice(0, 7)
       let count = 0
       let grams = 0
       Object.keys(days).forEach((k) => {
-        const dt = new Date(k)
-        if (dt.getFullYear() === m.getFullYear() && dt.getMonth() === m.getMonth()) {
+        if (k.slice(0, 7) === mKey) {
           count += days[k].entries.length
           grams += totalGrams(days[k].entries)
         }

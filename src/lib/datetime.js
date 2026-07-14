@@ -26,6 +26,15 @@ export function addDays(ts, offset) {
   return d.getTime()
 }
 
+// Timestamp at local noon on the Monday of the week containing `ts`.
+// getDay(): 0=Sun..6=Sat; (getDay()+6)%7 gives days since Monday.
+export function startOfWeek(ts) {
+  const d = new Date(ts)
+  d.setHours(12, 0, 0, 0)
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7))
+  return d.getTime()
+}
+
 export function formatTime(ts) {
   const d = new Date(ts)
   return (
