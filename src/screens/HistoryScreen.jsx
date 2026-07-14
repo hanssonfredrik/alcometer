@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { totalGrams, peakBac, computeStreaks } from '../lib/alcohol.js'
-import { dateKey, addDays, startOfWeek, DAY_MS } from '../lib/datetime.js'
+import { dateKey, addDays, startOfWeek } from '../lib/datetime.js'
 import {
   WEEKDAYS,
   MONTHS,
@@ -15,13 +15,14 @@ export default function HistoryScreen({ data, now }) {
     const profile = data.profile
     const today = new Date(now)
 
-    const dayFor = (ts) => days[dateKey(ts)] || { entries: [] }
-
-    // 12-day bar chart (count height + peak-BAC marker).
+    // 12-day bar chart (count height + peak-BAC marker). Stepped over logical
+    // days from noon of today's logical day, so each bar's bucket and weekday
+    // label agree (raw `now - i·DAY_MS` drifts by one near the 05:00 cutoff).
+    const anchor = new Date(dateKey(now) + 'T12:00:00').getTime()
     const window = []
     for (let i = 11; i >= 0; i--) {
-      const ts = now - i * DAY_MS
-      const d = dayFor(ts)
+      const ts = addDays(anchor, -i)
+      const d = days[dateKey(ts)] || { entries: [] }
       window.push({
         count: d.entries.length,
         peak: peakBac(d.entries, profile),

@@ -1,7 +1,14 @@
 // Local-date helpers. All keys are `YYYY-MM-DD` in the device's local zone.
 
+import { DAY_START_HOUR } from './constants.js'
+
+// Logical-day key: shift back by DAY_START_HOUR so 00:00–04:59 fall onto the
+// previous calendar date. `Date` handles the negative-hour rollover. The result
+// is still a real calendar-date string, so downstream `YYYY-MM` prefix matching
+// and `dayIndex` arithmetic are unaffected.
 export function dateKey(ts) {
   const d = new Date(ts)
+  d.setHours(d.getHours() - DAY_START_HOUR)
   return (
     d.getFullYear() +
     '-' +

@@ -88,7 +88,11 @@ export default function TodayScreen({
   }, [data.days, now])
 
   const isToday = dayOffset === 0
-  const selectedTs = addDays(now, dayOffset)
+  // Anchor the pager on noon of the *logical* day `now` falls in (not noon of
+  // its calendar date) — otherwise at 02:00 the pager points a logical day too
+  // far forward and Today reads the wrong (empty) bucket.
+  const anchorTs = new Date(dateKey(now) + 'T12:00:00').getTime()
+  const selectedTs = addDays(anchorTs, dayOffset)
   const selectedKey = dateKey(selectedTs)
 
   const v = useMemo(() => {

@@ -1,6 +1,15 @@
 import { Capacitor } from '@capacitor/core'
 import { Preferences } from '@capacitor/preferences'
-import { DEFAULT_SIZES, DEFAULT_PROFILE, STORAGE_KEY } from './constants.js'
+import {
+  DEFAULT_SIZES,
+  DEFAULT_PROFILE,
+  DEFAULT_LIMIT,
+  STORAGE_KEY,
+} from './constants.js'
+import { dateKey } from './datetime.js'
+
+// Bump when the persisted shape changes; drives the migration ladder below.
+const SCHEMA_VERSION = 2
 
 // On web, localStorage is durable and synchronous — keep using it unchanged.
 // Inside the Capacitor shell, WebView localStorage is treated as a cache the
@@ -14,10 +23,37 @@ function clone(obj) {
 
 export function defaultData() {
   return {
+    version: SCHEMA_VERSION,
     profile: { ...DEFAULT_PROFILE },
     sizes: clone(DEFAULT_SIZES),
     days: {},
   }
+}
+
+/**
+ * v1 → v2: entries were bucketed by calendar date; re-bucket them by logical
+ * day (`dateKey` now rolls at 05:00), so a night running past midnight lands in
+ * one bucket. Idempotent: on already-logical data every entry maps to its own
+ * bucket, so nothing moves.
+ */
+function migrateToLogicalDays(d) {
+  const rebuilt = {}
+  for (const day of Object.values(d.days)) {
+    for (const e of day.entries || []) {
+      const k = dateKey(e.ts)
+      // Limit for logical key K comes from the same-date old bucket — that's
+      // where the user set that evening's limit. A calendar day with only
+      // early-morning entries loses its own limit (a soft nightly target).
+      if (!rebuilt[k]) {
+        rebuilt[k] = { limit: d.days[k]?.limit ?? DEFAULT_LIMIT, entries: [] }
+      }
+      rebuilt[k].entries.push(e)
+    }
+  }
+  for (const day of Object.values(rebuilt)) {
+    day.entries.sort((a, b) => a.ts - b.ts)
+  }
+  d.days = rebuilt
 }
 
 async function readRaw() {
@@ -43,6 +79,10 @@ export async function loadData() {
       if (!d.sizes) d.sizes = clone(DEFAULT_SIZES)
       if (!d.profile) d.profile = { ...DEFAULT_PROFILE }
       if (!d.days) d.days = {}
+      if ((d.version || 1) < 2) {
+        migrateToLogicalDays(d)
+        d.version = 2
+      }
       return d
     }
   } catch {

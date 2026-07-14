@@ -131,13 +131,23 @@ export function useTracker() {
         entry.type = type
         entry.ml = (parseFloat(cl) || 0) * 10
         entry.abv = (parseFloat(abv) || 0) / 100
-        // Keep the date part of ts — an edited entry never jumps day keys.
+        // Keep the calendar date of ts and change only H:M.
         const [h, m] = String(time).split(':')
         const dt = new Date(entry.ts)
         dt.setHours(+h || 0, +m || 0, 0, 0)
         entry.ts = dt.getTime()
-        // The log renders entries in array order, so keep it time-ordered.
-        day.entries.sort((a, b) => a.ts - b.ts)
+        const newKey = dateKey(entry.ts)
+        if (newKey !== dayKey) {
+          // Editing across the 05:00 boundary moves the entry to another logical
+          // day (e.g. 06:00 → 03:00). Relocate it so the bucket stays truthful.
+          day.entries = day.entries.filter((e) => e.id !== entry.id)
+          const dest = ensureDay(d, newKey)
+          dest.entries.push(entry)
+          dest.entries.sort((a, b) => a.ts - b.ts)
+        } else {
+          // The log renders entries in array order, so keep it time-ordered.
+          day.entries.sort((a, b) => a.ts - b.ts)
+        }
       })
     },
     [mutate, todayKey],

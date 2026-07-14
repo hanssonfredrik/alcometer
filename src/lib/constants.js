@@ -37,6 +37,10 @@ export const WIDMARK_R = { M: 0.68, F: 0.55 }
 
 export const DEFAULT_LIMIT = 5
 
+// The logical day rolls at 05:00 local — a drink logged at 02:00 counts to the
+// previous night, so a session that runs past midnight stays in one bucket.
+export const DAY_START_HOUR = 5
+
 export const DEFAULT_PROFILE = { weight: 75, sex: 'M' }
 
 // Sober-day streak milestones (award badges).
