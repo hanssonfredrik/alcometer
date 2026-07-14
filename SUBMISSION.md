@@ -45,9 +45,17 @@ building and signing.
    e.g. `neontracker`.
 4. **Create an App Store Connect API key**: App Store Connect → Users and
    Access → Integrations → App Store Connect API → Team Keys → **+**.
-   Role: **App Manager** (or Admin). Download the `.p8` file — **you can
-   only download it once**. Note the Key ID and the Issuer ID (shown at the
-   top of the page).
+   Role: **Admin** (required — see below). Download the `.p8` file — **you
+   can only download it once**. Note the Key ID and the Issuer ID (shown at
+   the top of the page).
+   > ⚠️ **Must be Admin.** Cloud signing generates the *Distribution*
+   > certificate at export time, and only an Admin-role key can create it
+   > (an App Manager key can sign the archive but not export — you'll hit
+   > `Cloud signing permission error` / `No signing certificate "iOS
+   > Distribution" found`). There is no per-key "Access to Cloud Managed
+   > Distribution Certificate" toggle in the web UI, so the role is the only
+   > lever — and **a key's role can't be changed after creation**: if an
+   > existing key is too low, create a new Admin key and update the secrets.
 5. **Find your Team ID**: developer.apple.com → Membership details →
    Team ID (10 characters).
 6. **Add four GitHub secrets**: repo → Settings → Secrets and variables →
@@ -59,14 +67,24 @@ building and signing.
    | `APP_STORE_CONNECT_PRIVATE_KEY` | full text contents of the `.p8` file |
    | `APPLE_TEAM_ID` | Team ID from step 5 |
 7. **Run the workflow**: repo → Actions → "iOS (TestFlight)" → Run
-   workflow. First run takes ~15 min. If it fails on signing, the usual
-   cause is the API key role being too low (needs App Manager+ for cloud
-   signing) or the bundle id not registered.
+   workflow. First run takes ~15 min. If it fails at the **export** step
+   with `Cloud signing permission error` / `No signing certificate "iOS
+   Distribution" found`, the API key role is too low — it must be **Admin**
+   (see step 4); recreate the key as Admin and update the secrets. Also
+   confirm the bundle id is registered (step 2) and that any pending Apple
+   agreements (App Store Connect → Business) are accepted.
 8. **Install via TestFlight**: App Store Connect → TestFlight → the build
-   appears after ~10 min of processing (answer the export-compliance
-   question: uses only standard/exempt encryption → HTTPS only → **Yes,
-   exempt**). Add yourself as an internal tester, install the TestFlight
-   app on your iPhone, install Neon Tracker.
+   appears after ~10 min of processing. **Export compliance is handled
+   automatically** — the iOS `Info.plist` sets
+   `ITSAppUsesNonExemptEncryption = false` (the app uses only standard,
+   exempt encryption: HTTPS provided by the OS), so no "Missing Compliance"
+   prompt should appear. If you ever *do* see it (e.g. an older build made
+   before that key existed), click **Manage** and answer:
+   *"Does your app use encryption?"* → **Yes**, then *"Does your app qualify
+   for any of the exemptions…?"* → **Yes**. Either way, no annual
+   self-classification report is required.
+   Then add yourself as an internal tester, install the TestFlight app on
+   your iPhone, and install Neon Tracker.
 
 ## 2. Android — one-time setup (~1 h)
 
