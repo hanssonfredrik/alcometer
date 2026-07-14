@@ -59,6 +59,24 @@ export default function SettingsScreen({ data, actions }) {
         </button>
       </div>
 
+      <div className={styles.sectionLabel}>WEEKLY GOAL</div>
+      <p className={styles.hint}>
+        Standard drinks per week — your Insights trend is measured against this.
+      </p>
+      <label className={styles.weightField}>
+        Target (std / week)
+        <input
+          type="number"
+          inputMode="decimal"
+          value={profile.weeklyTarget ?? ''}
+          onChange={(e) =>
+            actions.setProfile({
+              weeklyTarget: Math.max(0, parseFloat(e.target.value) || 0),
+            })
+          }
+        />
+      </label>
+
       <div className={styles.sectionLabel}>STANDARD DRINK SIZES</div>
       <p className={styles.hint}>
         These set what each quick-log button adds. Edit to match your usual pour.

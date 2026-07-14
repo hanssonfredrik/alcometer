@@ -1,0 +1,196 @@
+/* ---- Shared card ---- */
+.card {
+  background: var(--w-04);
+  border: 1px solid var(--w-06);
+  border-radius: 16px;
+  padding: 16px 16px 14px;
+  margin-bottom: 18px;
+}
+.cardTitle {
+  font: 500 12px var(--font-sans);
+  color: var(--w-60);
+  margin-bottom: 16px;
+}
+.lead {
+  font: 500 13px/1.45 var(--font-sans);
+  color: var(--w-55);
+  margin: 0 0 14px;
+}
+.em {
+  color: var(--accent);
+  font-weight: 600;
+}
+.empty {
+  font: 500 12px var(--font-sans);
+  color: var(--w-40);
+  margin: 0;
+}
+
+/* ---- Calendar heatmap ---- */
+.heatHead {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.heatHeadCell {
+  text-align: center;
+  font: 500 8.5px var(--font-mono);
+  color: var(--w-30);
+}
+.heatGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.heatCell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: var(--w-05);
+}
+.heatCell[data-status='sober'] {
+  background: var(--accent);
+}
+.heatCell[data-status='within'] {
+  background: var(--accent-28);
+}
+.heatCell[data-status='over'] {
+  background: var(--danger-bar);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 14px;
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 500 10px var(--font-sans);
+  color: var(--w-45);
+}
+.legendMark {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  background: var(--w-05);
+}
+.legendMark[data-status='sober'] {
+  background: var(--accent);
+}
+.legendMark[data-status='within'] {
+  background: var(--accent-28);
+}
+.legendMark[data-status='over'] {
+  background: var(--danger-bar);
+}
+
+/* ---- Weekly pattern ---- */
+.wdRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.wdRow:last-child {
+  margin-bottom: 0;
+}
+.wdLabel {
+  width: 24px;
+  font: 600 11px var(--font-mono);
+  color: var(--w-50);
+}
+.wdTrack {
+  flex: 1;
+  height: 18px;
+  border-radius: 6px;
+  background: var(--w-05);
+  overflow: hidden;
+}
+.wdFill {
+  height: 100%;
+  min-width: 3px;
+  border-radius: 6px;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+.wdValue {
+  width: 34px;
+  text-align: right;
+  font: 500 11px var(--font-mono);
+  color: var(--text);
+}
+
+/* ---- Trend ---- */
+.trendMain {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.trendNum {
+  font: 600 30px/1 var(--font-mono);
+  color: var(--text);
+}
+.trendUnit {
+  font: 500 11px var(--font-sans);
+  color: var(--w-40);
+}
+.trendArrow {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font: 600 22px var(--font-mono);
+}
+.trendArrow[data-dir='up'] {
+  color: var(--danger-text);
+}
+.trendArrow[data-dir='down'] {
+  color: var(--accent);
+}
+.trendArrow[data-dir='flat'] {
+  color: var(--w-40);
+}
+.trendDelta {
+  font: 600 12px var(--font-mono);
+}
+.trendSub {
+  font: 500 11px/1.45 var(--font-sans);
+  color: var(--w-40);
+  margin: 8px 0 0;
+}
+
+.targetTrack {
+  height: 8px;
+  border-radius: 5px;
+  background: var(--w-05);
+  overflow: hidden;
+  margin-top: 16px;
+}
+.targetFill {
+  height: 100%;
+  min-width: 3px;
+  border-radius: 5px;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+.targetFill[data-over='true'] {
+  background: var(--danger-bar);
+}
+.targetLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  font: 500 10.5px var(--font-sans);
+  color: var(--w-45);
+}
+.targetDelta {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+.targetDelta[data-over='true'] {
+  color: var(--danger-text);
+}

@@ -26,7 +26,7 @@ const k = (ts) => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 const seed = {
-  profile: { weight: 82, sex: 'M' },
+  profile: { weight: 82, sex: 'M', weeklyTarget: 10 },
   sizes: {
     wine: { ml: 150, abv: 0.12 },
     beer: { ml: 330, abv: 0.05 },
@@ -49,6 +49,22 @@ const seed = {
     [k(now - 9 * day)]: { limit: 5, entries: [{ id: 'i', type: 'cava', ml: 120, abv: 0.11, ts: now - 9 * day }] },
     [k(now - 40 * day)]: { limit: 5, entries: [{ id: 'j', type: 'wine', ml: 150, abv: 0.12, ts: now - 40 * day }] },
   },
+}
+
+// Sprinkle ~12 weeks of history so the Insights heatmap / weekday / trend views
+// have something to show. Weekends drink more; some nights go over the limit.
+for (let i = 4; i <= 82; i++) {
+  if (seed.days[k(now - i * day)]) continue
+  const dow = new Date(now - i * day).getDay()
+  const weekend = dow === 5 || dow === 6
+  const rnd = (i * 7 + dow) % 10
+  if (!weekend && rnd < 6) continue // most weekdays sober
+  const n = weekend ? 2 + (rnd % 5) : 1 + (rnd % 2)
+  const entries = []
+  for (let j = 0; j < n; j++) {
+    entries.push({ id: `h${i}_${j}`, type: j % 2 ? 'wine' : 'beer', ml: j % 2 ? 150 : 330, abv: j % 2 ? 0.12 : 0.05, ts: now - i * day + j * 1800000 })
+  }
+  seed.days[k(now - i * day)] = { limit: 4, entries }
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
@@ -131,6 +147,8 @@ await sleep(300)
 await capture('01b-prev-day.png')
 await clickTab('History')
 await capture('02-history.png')
+await clickTab('Insights')
+await capture('04-insights.png')
 await clickTab('Setup')
 await capture('03-setup.png')
 

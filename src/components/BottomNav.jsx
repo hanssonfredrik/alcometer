@@ -3,6 +3,7 @@ import styles from './BottomNav.module.css'
 const TABS = [
   { id: 'today', label: 'Today' },
   { id: 'history', label: 'History' },
+  { id: 'insights', label: 'Insights' },
   { id: 'settings', label: 'Setup' },
 ]
 

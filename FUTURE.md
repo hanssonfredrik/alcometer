@@ -73,13 +73,21 @@ days cover the common case; it stays pure in `lib/` over the flat entry list.
 
 ## Insights & history
 
-- **Calendar heatmap.** A month grid coloured by intensity (sober / within
-  limit / over limit) — the classic "don't break the chain" view. Pairs
-  naturally with the existing streak milestones.
-- **Weekly pattern view.** Average by weekday ("your Fridays average 4.2
-  drinks") — the single most actionable insight for cutting down.
-- **Trends over time.** Rolling 4-week average of std drinks/week with a
-  simple up/down indicator, framed against a user-set weekly target.
+The Insights tab (fourth in the bottom nav) collects the richer analytics, with
+the aggregation kept pure in `lib/insights.js` over the flat `days` map.
+
+- ✓ **Shipped — Calendar heatmap.** `heatmapGrid()` builds a GitHub-style
+  12-week grid (week rows × Mon–Sun columns); each cell is coloured sober /
+  within limit / over limit against that day's set limit — the classic "don't
+  break the chain" view, next to the streak milestones on History.
+- ✓ **Shipped — Weekly pattern view.** `weekdayAverages()` averages drinks and
+  std glasses per weekday over the span since the first log, surfaced as
+  "Your Fridays average 4.2 drinks" plus a per-weekday bar — the single most
+  actionable insight for cutting down.
+- ✓ **Shipped — Trends over time.** `weeklyTrend()` computes the rolling 4-week
+  average of std drinks/week with an up/down/flat indicator versus the previous
+  four weeks, framed against a user-set weekly target (`profile.weeklyTarget`,
+  std glasses/week, edited in Setup and backfilled by `migrate()`).
 - **Spending tracker.** Optional price per preset; History gains "≈ 640 kr
   this month". Money is a stronger motivator than grams for many people.
 - **More awards.** All current milestones are streak-based except "Home
@@ -89,8 +97,10 @@ days cover the common case; it stays pure in `lib/` over the flat entry list.
 
 ## Goals & gentle nudges
 
-- **Weekly target.** Today has a per-day limit; add a std-drinks-per-week
-  target set in Setup, surfaced as a progress ring in History.
+- ✓ **Shipped — Weekly target.** Today has a per-day limit; Setup now also
+  takes a std-drinks-per-week target (`profile.weeklyTarget`), surfaced against
+  the rolling 4-week average in the Insights Trend card. A dedicated progress
+  ring on History could still follow.
 - **Challenges.** Time-boxed goals ("Dry January", "3 sober weekdays this
   week") with their own award slots.
 - **Morning check-in notification** (native, opt-in): the morning after a

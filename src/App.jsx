@@ -9,10 +9,16 @@ import Header from './components/Header.jsx'
 import BottomNav from './components/BottomNav.jsx'
 import TodayScreen from './screens/TodayScreen.jsx'
 import HistoryScreen from './screens/HistoryScreen.jsx'
+import InsightsScreen from './screens/InsightsScreen.jsx'
 import SettingsScreen from './screens/SettingsScreen.jsx'
 import styles from './App.module.css'
 
-const SCREEN_LABELS = { today: 'TONIGHT', history: 'HISTORY', settings: 'SETUP' }
+const SCREEN_LABELS = {
+  today: 'TONIGHT',
+  history: 'HISTORY',
+  insights: 'INSIGHTS',
+  settings: 'SETUP',
+}
 
 export default function App() {
   const { data, now, actions } = useTracker()
@@ -93,6 +99,7 @@ export default function App() {
             />
           )}
           {screen === 'history' && <HistoryScreen data={data} now={now} />}
+          {screen === 'insights' && <InsightsScreen data={data} now={now} />}
           {screen === 'settings' && (
             <SettingsScreen data={data} actions={actions} />
           )}

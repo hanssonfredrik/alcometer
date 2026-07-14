@@ -4,6 +4,7 @@ import {
   DEFAULT_SIZES,
   DEFAULT_PROFILE,
   DEFAULT_LIMIT,
+  DEFAULT_WEEKLY_TARGET,
   STORAGE_KEY,
 } from './constants.js'
 import { dateKey } from './datetime.js'
@@ -76,6 +77,7 @@ async function readRaw() {
 export function migrate(d) {
   if (!d.sizes) d.sizes = clone(DEFAULT_SIZES)
   if (!d.profile) d.profile = { ...DEFAULT_PROFILE }
+  if (d.profile.weeklyTarget == null) d.profile.weeklyTarget = DEFAULT_WEEKLY_TARGET
   if (!d.days) d.days = {}
   if ((d.version || 1) < 2) {
     migrateToLogicalDays(d)

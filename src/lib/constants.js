@@ -37,11 +37,15 @@ export const WIDMARK_R = { M: 0.68, F: 0.55 }
 
 export const DEFAULT_LIMIT = 5
 
+// Default weekly goal, in standard glasses per week — the baseline the Insights
+// trend is framed against. Editable in Setup.
+export const DEFAULT_WEEKLY_TARGET = 10
+
 // The logical day rolls at 05:00 local — a drink logged at 02:00 counts to the
 // previous night, so a session that runs past midnight stays in one bucket.
 export const DAY_START_HOUR = 5
 
-export const DEFAULT_PROFILE = { weight: 75, sex: 'M' }
+export const DEFAULT_PROFILE = { weight: 75, sex: 'M', weeklyTarget: DEFAULT_WEEKLY_TARGET }
 
 // Sober-day streak milestones (award badges).
 export const MILESTONES = [
