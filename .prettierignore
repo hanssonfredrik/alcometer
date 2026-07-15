@@ -1,0 +1,15 @@
+dist
+dev-dist
+android
+ios
+build
+public
+assets
+node_modules
+package-lock.json
+*.svg
+# Prose/docs and third-party config are left as authored — Prettier owns the
+# app source and tooling config, not hand-wrapped Markdown or CI YAML.
+*.md
+.claude
+.github/workflows/azure-static-web-apps-victorious-moss-0f60f0d10.yml

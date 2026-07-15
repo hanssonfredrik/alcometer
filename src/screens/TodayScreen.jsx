@@ -117,7 +117,8 @@ export default function TodayScreen({
       overBy: `${Math.max(0, count - limit)} ${
         count - limit === 1 ? 'drink' : 'drinks'
       }`,
-      limitPct: limit > 0 ? Math.min(100, Math.round((count / limit) * 100)) : 0,
+      limitPct:
+        limit > 0 ? Math.min(100, Math.round((count / limit) * 100)) : 0,
       footLeft: isToday
         ? `${Math.max(0, limit - count)} left tonight`
         : over
@@ -209,7 +210,9 @@ export default function TodayScreen({
         <div className={styles.heroCount}>
           <span
             className={styles.countNum}
-            style={{ color: v.over ? 'var(--danger-text)' : 'var(--text-strong)' }}
+            style={{
+              color: v.over ? 'var(--danger-text)' : 'var(--text-strong)',
+            }}
           >
             {v.count}
           </span>
@@ -258,7 +261,10 @@ export default function TodayScreen({
             <div className={styles.best}>best {v.streak.longest}d</div>
           </div>
           <div className={styles.trackThin}>
-            <div className={styles.trackThinFill} style={{ width: `${v.streakPct}%` }} />
+            <div
+              className={styles.trackThinFill}
+              style={{ width: `${v.streakPct}%` }}
+            />
           </div>
           <div className={styles.cardSub}>{v.sub}</div>
         </section>
@@ -331,7 +337,9 @@ export default function TodayScreen({
                     type="number"
                     inputMode="decimal"
                     value={custom.cl}
-                    onChange={(e) => setCustom((c) => ({ ...c, cl: e.target.value }))}
+                    onChange={(e) =>
+                      setCustom((c) => ({ ...c, cl: e.target.value }))
+                    }
                   />
                 </label>
                 <label className={styles.field}>
@@ -340,7 +348,9 @@ export default function TodayScreen({
                     type="number"
                     inputMode="decimal"
                     value={custom.abv}
-                    onChange={(e) => setCustom((c) => ({ ...c, abv: e.target.value }))}
+                    onChange={(e) =>
+                      setCustom((c) => ({ ...c, abv: e.target.value }))
+                    }
                   />
                 </label>
               </div>
@@ -406,9 +416,7 @@ export default function TodayScreen({
         </div>
       ) : (
         <div className={styles.empty}>
-          {isToday
-            ? 'Nothing logged yet tonight.'
-            : 'Nothing logged this day.'}
+          {isToday ? 'Nothing logged yet tonight.' : 'Nothing logged this day.'}
         </div>
       )}
 

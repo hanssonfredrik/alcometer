@@ -53,4 +53,11 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    // jsdom gives the pure lib tests a `localStorage` + `window` when they
+    // exercise the storage adapter; the Widmark/date maths need nothing extra.
+    environment: 'jsdom',
+    globals: true,
+    include: ['src/**/*.test.{js,jsx}'],
+  },
 })

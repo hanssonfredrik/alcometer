@@ -134,7 +134,8 @@ export function weeklyTrend(days, now, target = 0, window = 4) {
   for (let w = total - 1; w >= 0; w--) {
     series.push(weekStd(days, addDays(thisMonday, -w * 7)))
   }
-  const avg = (arr) => (arr.length ? arr.reduce((s, x) => s + x, 0) / arr.length : 0)
+  const avg = (arr) =>
+    arr.length ? arr.reduce((s, x) => s + x, 0) / arr.length : 0
   const current = avg(series.slice(window))
   const previous = avg(series.slice(0, window))
 

@@ -20,8 +20,21 @@ function makeId() {
 export function useTracker() {
   const [data, setData] = useState(defaultData)
   const [now, setNow] = useState(() => Date.now())
+  // Set when a persist fails so the UI can warn the user their change may not
+  // have been saved; cleared on the next successful save (or an explicit
+  // dismiss). See `saveData` in lib/storage.js.
+  const [saveError, setSaveError] = useState(false)
   const dataRef = useRef(data)
   dataRef.current = data
+
+  // Route a save promise's outcome to the `saveError` banner: clear on
+  // success, raise on failure. Shared by the hydration replay and `mutate`.
+  const trackSave = useCallback((promise) => {
+    promise.then(
+      () => setSaveError(false),
+      () => setSaveError(true),
+    )
+  }, [])
 
   // Persisted data arrives asynchronously (native storage is promise-based).
   // Until it lands, mutations are queued so an early tap is neither lost nor
@@ -37,7 +50,7 @@ export function useTracker() {
       if (pendingRef.current.length) {
         next = clone(stored)
         for (const fn of pendingRef.current) fn(next)
-        saveData(next)
+        trackSave(saveData(next))
       }
       pendingRef.current = []
       readyRef.current = true
@@ -46,7 +59,7 @@ export function useTracker() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [trackSave])
 
   // Re-tick every 20s so time-dependent estimates (BAC decay, "sober by",
   // day rollover) stay fresh without a manual refresh.
@@ -55,15 +68,20 @@ export function useTracker() {
     return () => clearInterval(id)
   }, [])
 
-  const mutate = useCallback((fn) => {
-    if (!readyRef.current) pendingRef.current.push(fn)
-    setData((prev) => {
-      const next = clone(prev || defaultData())
-      fn(next)
-      if (readyRef.current) saveData(next)
-      return next
-    })
-  }, [])
+  const mutate = useCallback(
+    (fn) => {
+      if (!readyRef.current) pendingRef.current.push(fn)
+      setData((prev) => {
+        const next = clone(prev || defaultData())
+        fn(next)
+        if (readyRef.current) trackSave(saveData(next))
+        return next
+      })
+    },
+    [trackSave],
+  )
+
+  const dismissSaveError = useCallback(() => setSaveError(false), [])
 
   const ensureDay = (d, key) => {
     if (!d.days[key]) d.days[key] = { limit: DEFAULT_LIMIT, entries: [] }
@@ -240,5 +258,5 @@ export function useTracker() {
     ],
   )
 
-  return { data, now, actions }
+  return { data, now, actions, saveError, dismissSaveError }
 }

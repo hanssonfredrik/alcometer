@@ -8,6 +8,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "cross-env TZ=Europe/Stockholm vitest",
+    "test:run": "cross-env TZ=Europe/Stockholm vitest run",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "icons": "node scripts/generate-icons.mjs && capacitor-assets generate --assetPath assets/native --ios --android",
     "sync": "npm run build && npx cap sync",
     "android": "npm run sync && npx cap run android"
@@ -29,12 +35,23 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.4.1",
     "@capacitor/ios": "^8.4.1",
+    "@eslint/js": "^9.17.0",
     "@fontsource/ibm-plex-mono": "^5.1.1",
     "@fontsource/space-grotesk": "^5.1.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.4.2",
     "sharp": "^0.33.5",
     "typescript": "^5.9.3",
     "vite": "^6.0.7",
-    "vite-plugin-pwa": "^0.21.1"
+    "vite-plugin-pwa": "^0.21.1",
+    "vitest": "^2.1.8"
   }
 }

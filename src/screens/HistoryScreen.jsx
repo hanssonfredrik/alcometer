@@ -163,11 +163,16 @@ export default function HistoryScreen({ data, now }) {
                   className={styles.bar}
                   style={{
                     height: `${b.heightPct}%`,
-                    background: b.isToday ? 'var(--accent)' : 'rgba(255,255,255,.22)',
+                    background: b.isToday
+                      ? 'var(--accent)'
+                      : 'rgba(255,255,255,.22)',
                   }}
                 />
                 {b.showPeak && (
-                  <div className={styles.peakMark} style={{ bottom: `${b.peakPct}%` }} />
+                  <div
+                    className={styles.peakMark}
+                    style={{ bottom: `${b.peakPct}%` }}
+                  />
                 )}
               </div>
               <div
@@ -197,7 +202,9 @@ export default function HistoryScreen({ data, now }) {
                 className={styles.monthFill}
                 style={{
                   width: `${m.widthPct}%`,
-                  background: m.isNow ? 'var(--accent)' : 'rgba(255,255,255,.28)',
+                  background: m.isNow
+                    ? 'var(--accent)'
+                    : 'rgba(255,255,255,.28)',
                 }}
               />
             </div>

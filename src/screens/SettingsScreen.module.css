@@ -79,7 +79,9 @@
   border: 1px solid var(--w-16);
 }
 .themeBtn[data-selected='true'] .themeSwatch {
-  box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px var(--accent);
+  box-shadow:
+    0 0 0 2px var(--panel),
+    0 0 0 3px var(--accent);
 }
 
 .hint {

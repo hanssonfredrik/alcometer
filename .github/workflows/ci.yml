@@ -1,0 +1,40 @@
+# Lint and unit tests. Runs on every push and pull request as the fast
+# feedback gate, next to the platform build workflows (android.yml, ios.yml).
+#
+# `main` is intentionally excluded: the Azure Static Web Apps workflow runs the
+# same lint + tests inline before it deploys, so gating there avoids running the
+# checks twice for every push/PR that targets main.
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore: ['main']
+    paths-ignore: ['**.md']
+  pull_request:
+    branches-ignore: ['main']
+    paths-ignore: ['**.md']
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test:run

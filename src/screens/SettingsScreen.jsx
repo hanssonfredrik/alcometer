@@ -103,7 +103,8 @@ export default function SettingsScreen({ data, actions }) {
 
       <div className={styles.sectionLabel}>STANDARD DRINK SIZES</div>
       <p className={styles.hint}>
-        These set what each quick-log button adds. Edit to match your usual pour.
+        These set what each quick-log button adds. Edit to match your usual
+        pour.
       </p>
 
       {DRINK_TYPES.map((type) => {
@@ -171,17 +172,18 @@ export default function SettingsScreen({ data, actions }) {
       )}
 
       <div className={styles.disclaimer}>
-        Promille is estimated with the <span className={styles.em}>Widmark</span>{' '}
-        formula using your weight, sex (body-water ratio) and time since your
-        first drink, with alcohol burned off at ~0.15&nbsp;‰/h. It&apos;s an
-        estimate — never a substitute for a real breathalyzer.
+        Promille is estimated with the{' '}
+        <span className={styles.em}>Widmark</span> formula using your weight,
+        sex (body-water ratio) and time since your first drink, with alcohol
+        burned off at ~0.15&nbsp;‰/h. It&apos;s an estimate — never a substitute
+        for a real breathalyzer.
       </div>
 
       <a
         className={styles.privacyLink}
         href="https://victorious-moss-0f60f0d10.7.azurestaticapps.net/privacy"
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
       >
         All data stays on this device — privacy policy
       </a>

@@ -19,6 +19,19 @@ jobs:
         with:
           submodules: true
           lfs: false
+      # Gate the deploy on lint + unit tests. These run in the same job, before
+      # the deploy step, so a failure stops the job and nothing ships. (Separate
+      # workflows can't block each other — GitHub's `needs:` is per-workflow.)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests
+        run: npm run test:run
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

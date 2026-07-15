@@ -19,8 +19,18 @@ export const LABELS = {
 export const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
 export const MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ]
 
 // One "standard glass" is defined as 12 g of pure alcohol (Swedish standard).
@@ -67,10 +77,25 @@ export const DEFAULT_PROFILE = {
 
 // Sober-day streak milestones (award badges).
 export const MILESTONES = [
-  { d: 1, icon: '1', label: 'First clear day', desc: 'A full day with nothing logged.' },
+  {
+    d: 1,
+    icon: '1',
+    label: 'First clear day',
+    desc: 'A full day with nothing logged.',
+  },
   { d: 3, icon: '3', label: 'Dry spell', desc: 'Three sober days in a row.' },
-  { d: 7, icon: '7', label: 'One week clear', desc: 'A whole week off the drink.' },
-  { d: 14, icon: '14', label: 'Two weeks strong', desc: '14 sober days back to back.' },
+  {
+    d: 7,
+    icon: '7',
+    label: 'One week clear',
+    desc: 'A whole week off the drink.',
+  },
+  {
+    d: 14,
+    icon: '14',
+    label: 'Two weeks strong',
+    desc: '14 sober days back to back.',
+  },
   { d: 30, icon: '30', label: 'Dry month', desc: 'A full month with none.' },
   { d: 90, icon: '90', label: '90-day legend', desc: 'A quarter year sober.' },
 ]

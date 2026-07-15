@@ -21,7 +21,10 @@ export default function InsightsScreen({ data, now }) {
       std: wd[day].std,
     }))
     const maxWd = Math.max(0.001, ...weekdays.map((w) => w.count))
-    const busiest = weekdays.reduce((a, b) => (b.count > a.count ? b : a), weekdays[0])
+    const busiest = weekdays.reduce(
+      (a, b) => (b.count > a.count ? b : a),
+      weekdays[0],
+    )
 
     const trend = weeklyTrend(days, now, target, 4)
 
@@ -40,7 +43,8 @@ export default function InsightsScreen({ data, now }) {
 
   const t = v.trend
   const arrow = t.direction === 'up' ? '↑' : t.direction === 'down' ? '↓' : '→'
-  const targetPct = v.target > 0 ? Math.min(100, Math.round((t.current / v.target) * 100)) : 0
+  const targetPct =
+    v.target > 0 ? Math.min(100, Math.round((t.current / v.target) * 100)) : 0
 
   return (
     <div>
@@ -75,7 +79,8 @@ export default function InsightsScreen({ data, now }) {
             <span className={styles.legendMark} data-status="sober" /> sober
           </span>
           <span className={styles.legendItem}>
-            <span className={styles.legendMark} data-status="within" /> within limit
+            <span className={styles.legendMark} data-status="within" /> within
+            limit
           </span>
           <span className={styles.legendItem}>
             <span className={styles.legendMark} data-status="over" /> over limit
@@ -89,21 +94,26 @@ export default function InsightsScreen({ data, now }) {
         {v.hasWeekday ? (
           <>
             <p className={styles.lead}>
-              Your <span className={styles.em}>{fullDay(v.busiest.day)}s</span> average{' '}
-              {v.busiest.count.toFixed(1)} drinks.
+              Your <span className={styles.em}>{fullDay(v.busiest.day)}s</span>{' '}
+              average {v.busiest.count.toFixed(1)} drinks.
             </p>
             {v.weekdays.map((w) => (
               <div key={w.day} className={styles.wdRow}>
                 <div className={styles.wdLabel}>{w.label}</div>
                 <div className={styles.wdTrack}>
-                  <div className={styles.wdFill} style={{ width: `${w.widthPct}%` }} />
+                  <div
+                    className={styles.wdFill}
+                    style={{ width: `${w.widthPct}%` }}
+                  />
                 </div>
                 <div className={styles.wdValue}>{w.count.toFixed(1)}</div>
               </div>
             ))}
           </>
         ) : (
-          <p className={styles.empty}>Log a few drinks to see your weekly pattern.</p>
+          <p className={styles.empty}>
+            Log a few drinks to see your weekly pattern.
+          </p>
         )}
       </section>
 
@@ -125,7 +135,8 @@ export default function InsightsScreen({ data, now }) {
           </div>
         </div>
         <p className={styles.trendSub}>
-          4-week average vs the previous four weeks ({t.previous.toFixed(1)} std / wk).
+          4-week average vs the previous four weeks ({t.previous.toFixed(1)} std
+          / wk).
         </p>
         {v.target > 0 && (
           <>
@@ -138,10 +149,7 @@ export default function InsightsScreen({ data, now }) {
             </div>
             <div className={styles.targetLine}>
               <span>Target {v.target} std / wk</span>
-              <span
-                className={styles.targetDelta}
-                data-over={t.overTarget > 0}
-              >
+              <span className={styles.targetDelta} data-over={t.overTarget > 0}>
                 {t.overTarget > 0 ? '+' : ''}
                 {t.overTarget.toFixed(1)} {t.overTarget > 0 ? 'over' : 'under'}
               </span>
@@ -154,7 +162,13 @@ export default function InsightsScreen({ data, now }) {
 }
 
 const FULL_DAYS = [
-  'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
 ]
 function fullDay(day) {
   return FULL_DAYS[day]

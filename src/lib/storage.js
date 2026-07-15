@@ -78,7 +78,8 @@ async function readRaw() {
 export function migrate(d) {
   if (!d.sizes) d.sizes = clone(DEFAULT_SIZES)
   if (!d.profile) d.profile = { ...DEFAULT_PROFILE }
-  if (d.profile.weeklyTarget == null) d.profile.weeklyTarget = DEFAULT_WEEKLY_TARGET
+  if (d.profile.weeklyTarget == null)
+    d.profile.weeklyTarget = DEFAULT_WEEKLY_TARGET
   if (d.profile.theme == null) d.profile.theme = DEFAULT_THEME
   if (!d.days) d.days = {}
   if ((d.version || 1) < 2) {
@@ -99,16 +100,27 @@ export async function loadData() {
   return defaultData()
 }
 
-/** Fire-and-forget persist; callers never await it. */
+/**
+ * Persist `data`. Returns a promise that resolves on success and rejects if
+ * storage is unavailable (quota exceeded, private mode, evicted native store),
+ * so callers can surface a "couldn't save" warning instead of losing writes
+ * silently. Callers still don't need to await it — attach a `.catch` to react.
+ */
 export function saveData(data) {
+  let json
   try {
-    const json = JSON.stringify(data)
-    if (isNative) {
-      Preferences.set({ key: STORAGE_KEY, value: json }).catch(() => {})
-    } else {
-      localStorage.setItem(STORAGE_KEY, json)
-    }
-  } catch {
-    // Storage may be full or blocked (private mode); ignore.
+    json = JSON.stringify(data)
+  } catch (err) {
+    return Promise.reject(err)
+  }
+  if (isNative) {
+    return Preferences.set({ key: STORAGE_KEY, value: json })
+  }
+  try {
+    localStorage.setItem(STORAGE_KEY, json)
+    return Promise.resolve()
+  } catch (err) {
+    // Quota exceeded or storage blocked (private mode).
+    return Promise.reject(err)
   }
 }

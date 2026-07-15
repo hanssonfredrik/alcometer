@@ -21,7 +21,7 @@ const SCREEN_LABELS = {
 }
 
 export default function App() {
-  const { data, now, actions } = useTracker()
+  const { data, now, actions, saveError, dismissSaveError } = useTracker()
   const [screen, setScreen] = useState('today')
   // Id of the most recently logged drink, for the inline "Undo" affordance.
   const [undoId, setUndoId] = useState(null)
@@ -90,6 +90,22 @@ export default function App() {
           data={data}
           now={now}
         />
+
+        {saveError && (
+          <div className={styles.saveError} role="alert">
+            <div className={styles.saveErrorText}>
+              Couldn&apos;t save — your last change may not be stored.
+            </div>
+            <button
+              type="button"
+              className={styles.saveErrorDismiss}
+              onClick={dismissSaveError}
+              aria-label="Dismiss"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
         <main className={`${styles.scroll} scrollArea`}>
           {screen === 'today' && (

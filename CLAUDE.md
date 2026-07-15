@@ -15,13 +15,18 @@ same `dist/` build — there is no separate mobile UI).
 npm run dev       # dev server (http://localhost:5173)
 npm run build     # production build to dist/ (also generates the service worker)
 npm run preview   # serve the built dist/ (use this to test PWA/offline behaviour)
+npm test          # unit tests (Vitest, watch mode); npm run test:run for a single pass
+npm run lint      # ESLint; npm run lint:fix to autofix
+npm run format    # Prettier write; npm run format:check to verify
 npm run icons     # regenerate PWA + native icons/splash from assets/*.svg
 npm run sync      # build + npx cap sync (copies dist/ into ios/ and android/)
 npm run android   # sync, then build & run on an Android emulator/device
 ```
 
-There is no test suite or linter configured yet. Verify changes by running the
-app (see the `run` skill / `.claude/skills/run-app`).
+Unit tests cover the pure `lib/` logic (Vitest, pinned to `Europe/Stockholm`
+for deterministic date/DST assertions); lint + tests run in CI
+(`.github/workflows/ci.yml`). For UI changes, also verify by running the app
+(see the `run` skill / `.claude/skills/run-app`).
 
 ## Architecture
 

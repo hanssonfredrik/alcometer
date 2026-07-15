@@ -34,3 +34,30 @@
   -webkit-overflow-scrolling: touch;
   padding: 6px 24px 24px;
 }
+
+/* Save-failure banner: shown across all screens when a persist fails so a
+   change is never lost silently. Mirrors the over-limit alert styling. */
+.saveError {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  padding: 11px 15px;
+  margin: 0 24px;
+  border-radius: 15px;
+}
+.saveErrorText {
+  flex: 1;
+  font: 500 12.5px/1.4 var(--font-sans);
+  color: var(--danger-text-soft);
+}
+.saveErrorDismiss {
+  flex: none;
+  background: none;
+  border: none;
+  padding: 4px;
+  font: 600 13px var(--font-mono);
+  color: var(--danger-text);
+  cursor: pointer;
+}

@@ -148,11 +148,21 @@ the aggregation kept pure in `lib/insights.js` over the flat `days` map.
 
 Not features, but they make everything above cheaper and safer:
 
-- **Unit tests for `lib/`.** The whole point of keeping `alcohol.js`,
-  `datetime.js`, and `storage.js` pure is testability, and there's no test
-  runner yet. Vitest fits Vite with zero config; the Widmark math, streak
-  computation, and day-key/timezone edges (DST!) are the first targets.
-- **Linting/formatting.** ESLint + Prettier, wired into CI next to the
-  existing Android/iOS workflows.
-- **Storage-error surfacing.** `saveData` failures are currently silent; at
-  minimum, surface "couldn't save" so users don't lose entries unknowingly.
+- ✓ **Shipped — Unit tests for `lib/`.** Vitest (zero-config on Vite) with the
+  suite pinned to `Europe/Stockholm` (`cross-env TZ` in the `test` script) so
+  the day-key / DST assertions are deterministic. Co-located specs cover the
+  Widmark math and burn-off (`alcohol.test.js`), the 05:00 logical-day roll and
+  noon-anchored `dayIndex`/`addDays`/`startOfWeek` across DST boundaries
+  (`datetime.test.js`), and the schema backfill + v1→v2 re-bucket
+  (`storage.test.js`). Run with `npm test` / `npm run test:run`.
+- ✓ **Shipped — Linting/formatting.** ESLint 9 flat config
+  (`eslint.config.js`, React + hooks rules) and Prettier (`.prettierrc` tuned
+  to the existing no-semi/single-quote style). Scripts: `lint`, `lint:fix`,
+  `format`, `format:check`. A new `.github/workflows/ci.yml` runs lint + tests
+  on every push/PR, alongside the Android/iOS build workflows.
+- ✓ **Shipped — Storage-error surfacing.** `saveData` now returns a promise
+  that rejects when a persist fails (quota exceeded, private mode, evicted
+  native store) instead of swallowing the error; `useTracker` tracks a
+  `saveError` flag (cleared on the next successful save) and `App.jsx` shows a
+  dismissible "Couldn't save — your last change may not be stored" banner.
+

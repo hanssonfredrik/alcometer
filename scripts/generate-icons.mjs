@@ -46,7 +46,9 @@ console.log('✓ favicon.svg')
 function derive(svg, description, pattern, replacement) {
   const out = svg.replace(pattern, replacement)
   if (out === svg.toString()) {
-    throw new Error(`generate-icons: could not derive ${description} — did the source SVG change?`)
+    throw new Error(
+      `generate-icons: could not derive ${description} — did the source SVG change?`,
+    )
   }
   return Buffer.from(out)
 }
@@ -74,8 +76,11 @@ const background = derive(
 // Splash: the bg gradient across the full canvas with a small centred glyph.
 const glyphMatch = maskableSvg.match(/<g transform[\s\S]*<\/g>/)
 const defsMatch = maskableSvg.match(/<defs>[\s\S]*<\/defs>/)
-const glyphInner = glyphMatch[0].replace(/<g transform="[^"]*">/, '').replace(/<\/g>$/, '')
-const splash = Buffer.from(`<svg width="2732" height="2732" viewBox="0 0 2732 2732" fill="none" xmlns="http://www.w3.org/2000/svg">
+const glyphInner = glyphMatch[0]
+  .replace(/<g transform="[^"]*">/, '')
+  .replace(/<\/g>$/, '')
+const splash =
+  Buffer.from(`<svg width="2732" height="2732" viewBox="0 0 2732 2732" fill="none" xmlns="http://www.w3.org/2000/svg">
   ${defsMatch[0]}
   <rect width="2732" height="2732" fill="url(#bg)"/>
   <g transform="translate(1366 1366) scale(1.5) translate(-256 -256)">${glyphInner}</g>

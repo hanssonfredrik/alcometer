@@ -131,9 +131,8 @@ async function saveOrShareFile({ filename, mime, content }) {
     URL.revokeObjectURL(url)
     return
   }
-  const { Filesystem, Directory, Encoding } = await import(
-    '@capacitor/filesystem'
-  )
+  const { Filesystem, Directory, Encoding } =
+    await import('@capacitor/filesystem')
   const { Share } = await import('@capacitor/share')
   await Filesystem.writeFile({
     path: filename,
