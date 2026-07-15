@@ -143,10 +143,73 @@ Required before public release; not required for TestFlight/internal testing.
   - Play: ≥2 phone screenshots (16:9–9:16), 512×512 icon
     (`public/pwa-512x512.png` works), and a 1024×500 feature graphic.
   - I can generate all of these from the app with seeded demo data — ask.
-- **Descriptions** (short + full). Include the disclaimer: *BAC values are
-  Widmark-formula estimates and must never be used to decide whether it is
-  safe to drive.* This supports the "moderation utility, not drinking
-  encouragement" framing for review.
+- **Store listing text** — every field below is ready to paste. Character
+  limits are noted so nothing gets truncated. The BAC-estimate disclaimer is
+  baked into the full description (supports the "moderation utility, not
+  drinking encouragement" framing for review).
+
+  **App name** — Apple (≤30) & Play (≤30):
+  ```
+  Neon Tracker
+  ```
+
+  **Subtitle** — Apple only (≤30):
+  ```
+  Drinks, BAC & sober streaks
+  ```
+
+  **Short description** — Play only (≤80):
+  ```
+  Track drinks, estimate your BAC, and build sober-day streaks — all on-device.
+  ```
+
+  **Promotional text** — Apple only (≤170, editable anytime without review):
+  ```
+  Log a drink in one tap and watch your estimated promille rise and fall in real time. Rack up sober days. Everything stays on your phone — no account, works offline.
+  ```
+
+  **Keywords** — Apple only (≤100, commas, no spaces):
+  ```
+  bac,blood alcohol,promille,drink tracker,alcohol,sober,streak,widmark,breathalyzer,drinks,units
+  ```
+
+  **Full description** — Apple "Description" & Play "Full description" (paste
+  the same text in both):
+  ```
+  Neon Tracker helps you stay aware of how much you drink — with a bold neon interface that's fast to use and completely private.
+
+  Tap once to log a drink and watch your estimated blood-alcohol level (promille) rise and fall in real time. Build streaks of sober days, set a weekly goal, and follow your trends. Everything stays on your device — no account, no sign-up, no tracking.
+
+  WHAT YOU CAN DO
+  • One-tap logging for wine, beer, cava and liquor — or a custom pour
+  • Live BAC / promille estimate that decays over time
+  • "Sober by" time so you know when you're clear
+  • Sober-day streaks with milestone badges
+  • Weekly goal and an Insights trend
+  • Full, editable history
+  • Pick your accent theme: pink, cyan, green or amber
+  • Backup and restore your data (JSON), export to CSV
+
+  PRIVATE BY DESIGN
+  All your data lives only on this device. The app collects nothing, sends nothing, and works fully offline.
+
+  HOW THE ESTIMATE WORKS
+  BAC is estimated with the Widmark formula from your weight, sex (body-water ratio) and the time since your first drink, with alcohol burning off at about 0.15 ‰/h.
+
+  IMPORTANT
+  BAC values are estimates only. They must never be used to decide whether it is safe to drive or operate machinery. This app is a tool for awareness and moderation — not a breathalyzer.
+  ```
+
+  **Support URL** (Apple, required) & **Privacy policy URL** (both stores):
+  ```
+  https://victorious-moss-0f60f0d10.7.azurestaticapps.net/privacy
+  ```
+
+  > ASO note: Apple has no keyword/subtitle equivalent on Play, so Play's
+  > 80-char short description carries the descriptive keywords instead. If you
+  > later want more search weight, the name field can become
+  > "Neon: Drink Tracker" (still ≤30) on either store — display name only.
+
 - **App Store review notes** (App Review Information field):
   > Fully offline utility, not a website wrapper: all functionality is
   > local (native storage, haptics, no web navigation, works in airplane

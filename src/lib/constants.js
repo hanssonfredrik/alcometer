@@ -45,7 +45,25 @@ export const DEFAULT_WEEKLY_TARGET = 10
 // previous night, so a session that runs past midnight stays in one bucket.
 export const DAY_START_HOUR = 5
 
-export const DEFAULT_PROFILE = { weight: 75, sex: 'M', weeklyTarget: DEFAULT_WEEKLY_TARGET }
+// Selectable accent themes. The neon look is token-driven (see global.css):
+// each id maps to a `[data-theme]` block that swaps the `--accent*` group.
+// `swatch` is a solid preview colour for the picker (independent of the
+// active theme). Danger/red tokens are semantic and never themed.
+export const THEMES = [
+  { id: 'pink', label: 'Pink', swatch: 'oklch(0.72 0.23 350)' },
+  { id: 'cyan', label: 'Cyan', swatch: 'oklch(0.72 0.14 195)' },
+  { id: 'green', label: 'Green', swatch: 'oklch(0.72 0.18 150)' },
+  { id: 'amber', label: 'Amber', swatch: 'oklch(0.72 0.17 75)' },
+]
+
+export const DEFAULT_THEME = 'pink'
+
+export const DEFAULT_PROFILE = {
+  weight: 75,
+  sex: 'M',
+  weeklyTarget: DEFAULT_WEEKLY_TARGET,
+  theme: DEFAULT_THEME,
+}
 
 // Sober-day streak milestones (award badges).
 export const MILESTONES = [

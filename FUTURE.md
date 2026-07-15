@@ -136,6 +136,13 @@ the aggregation kept pure in `lib/insights.js` over the flat `days` map.
   instead of silently defaulting to 75 kg / M.
 - **Themes.** The neon aesthetic is token-driven (`global.css`), so accent
   swaps (cyan, green, amber) are nearly free and users love them.
+  - ✓ **Shipped.** An "Appearance" picker in Setup swaps the accent between
+    pink (default), cyan, green and amber. Each is a `[data-theme]` block in
+    `global.css` that overrides the `--accent*` token group only — the
+    semantic `--danger*` (over-limit) red stays fixed. The choice persists at
+    `profile.theme` (`THEMES`/`DEFAULT_THEME` in `constants.js`, backfilled by
+    `migrate()`), and `App.jsx` reflects it onto `document.documentElement`
+    via `data-theme`.
 
 ## Engineering foundations
 

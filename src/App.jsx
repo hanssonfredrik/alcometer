@@ -41,6 +41,12 @@ export default function App() {
     }
   }, [])
 
+  // Reflect the chosen accent theme on the document root; the `[data-theme]`
+  // blocks in global.css swap the `--accent*` tokens the whole UI reads from.
+  useEffect(() => {
+    document.documentElement.dataset.theme = data?.profile?.theme || 'pink'
+  }, [data?.profile?.theme])
+
   const d = new Date(now)
   const dateLabel = `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`
 

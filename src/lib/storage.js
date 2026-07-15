@@ -5,6 +5,7 @@ import {
   DEFAULT_PROFILE,
   DEFAULT_LIMIT,
   DEFAULT_WEEKLY_TARGET,
+  DEFAULT_THEME,
   STORAGE_KEY,
 } from './constants.js'
 import { dateKey } from './datetime.js'
@@ -78,6 +79,7 @@ export function migrate(d) {
   if (!d.sizes) d.sizes = clone(DEFAULT_SIZES)
   if (!d.profile) d.profile = { ...DEFAULT_PROFILE }
   if (d.profile.weeklyTarget == null) d.profile.weeklyTarget = DEFAULT_WEEKLY_TARGET
+  if (d.profile.theme == null) d.profile.theme = DEFAULT_THEME
   if (!d.days) d.days = {}
   if ((d.version || 1) < 2) {
     migrateToLogicalDays(d)

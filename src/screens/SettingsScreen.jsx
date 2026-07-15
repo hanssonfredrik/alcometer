@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DRINK_TYPES, LABELS } from '../lib/constants.js'
+import { DRINK_TYPES, LABELS, THEMES } from '../lib/constants.js'
 import {
   exportBackup,
   exportEntriesCsv,
@@ -11,6 +11,8 @@ import styles from './SettingsScreen.module.css'
 export default function SettingsScreen({ data, actions }) {
   const { profile, sizes } = data
   const [dataMsg, setDataMsg] = useState(null) // { kind: 'ok' | 'err', text }
+
+  const theme = profile.theme ?? 'pink'
 
   const handleImport = async () => {
     setDataMsg(null)
@@ -57,6 +59,28 @@ export default function SettingsScreen({ data, actions }) {
         >
           Female
         </button>
+      </div>
+
+      <div className={styles.sectionLabel}>APPEARANCE</div>
+      <p className={styles.hint}>Pick the neon accent used across the app.</p>
+      <div className={styles.themeRow}>
+        {THEMES.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className={styles.themeBtn}
+            data-selected={theme === t.id}
+            aria-label={t.label}
+            aria-pressed={theme === t.id}
+            onClick={() => actions.setTheme(t.id)}
+          >
+            <span
+              className={styles.themeSwatch}
+              style={{ background: t.swatch }}
+            />
+            {t.label}
+          </button>
+        ))}
       </div>
 
       <div className={styles.sectionLabel}>WEEKLY GOAL</div>

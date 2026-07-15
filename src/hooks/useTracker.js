@@ -174,6 +174,15 @@ export function useTracker() {
     [mutate],
   )
 
+  const setTheme = useCallback(
+    (id) => {
+      mutate((d) => {
+        d.profile = { ...d.profile, theme: id }
+      })
+    },
+    [mutate],
+  )
+
   const setSize = useCallback(
     (type, patch) => {
       mutate((d) => {
@@ -212,6 +221,7 @@ export function useTracker() {
       updateDrink,
       changeLimit,
       setProfile,
+      setTheme,
       setSize,
       resetSizes,
       importData,
@@ -223,6 +233,7 @@ export function useTracker() {
       updateDrink,
       changeLimit,
       setProfile,
+      setTheme,
       setSize,
       resetSizes,
       importData,
