@@ -6,12 +6,42 @@ import styles from './InsightsScreen.module.css'
 // Display order: Monday-first (getDay is Sunday-first).
 const MON_FIRST = [1, 2, 3, 4, 5, 6, 0]
 
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
+
 export default function InsightsScreen({ data, now }) {
   const v = useMemo(() => {
     const days = data.days
     const target = data.profile.weeklyTarget || 0
 
     const grid = heatmapGrid(days, now, 12)
+    // Newest-first rows, each labeled with its month only at a month boundary.
+    // A week's month is that of its Thursday (cells[3]) so weeks straddling a
+    // month boundary land on the ISO-representative month.
+    const heatWeeks = []
+    let prevMonth = -1
+    for (let i = grid.length - 1; i >= 0; i--) {
+      const week = grid[i]
+      const month = new Date(week[3].key + 'T12:00:00').getMonth()
+      heatWeeks.push({
+        key: week[0].key,
+        cells: week,
+        month: month !== prevMonth ? MONTHS[month] : '',
+      })
+      prevMonth = month
+    }
 
     const wd = weekdayAverages(days, now)
     const weekdays = MON_FIRST.map((day) => ({
@@ -29,7 +59,7 @@ export default function InsightsScreen({ data, now }) {
     const trend = weeklyTrend(days, now, target, 4)
 
     return {
-      grid,
+      heatWeeks,
       weekdays: weekdays.map((w) => ({
         ...w,
         widthPct: Math.round((w.count / maxWd) * 100),
@@ -48,75 +78,6 @@ export default function InsightsScreen({ data, now }) {
 
   return (
     <div>
-      {/* Calendar heatmap */}
-      <section className={styles.card}>
-        <div className={styles.cardTitle}>Last 12 weeks</div>
-        <div className={styles.heatHead}>
-          {MON_FIRST.map((day) => (
-            <span key={day} className={styles.heatHeadCell}>
-              {WEEKDAYS[day]}
-            </span>
-          ))}
-        </div>
-        <div className={styles.heatGrid}>
-          {v.grid.flatMap((week) =>
-            week.map((cell) => (
-              <span
-                key={cell.key}
-                className={styles.heatCell}
-                data-status={cell.status}
-                title={
-                  cell.status === 'empty'
-                    ? ''
-                    : `${cell.key} · ${cell.count} drink${cell.count === 1 ? '' : 's'}`
-                }
-              />
-            )),
-          )}
-        </div>
-        <div className={styles.legend}>
-          <span className={styles.legendItem}>
-            <span className={styles.legendMark} data-status="sober" /> sober
-          </span>
-          <span className={styles.legendItem}>
-            <span className={styles.legendMark} data-status="within" /> within
-            limit
-          </span>
-          <span className={styles.legendItem}>
-            <span className={styles.legendMark} data-status="over" /> over limit
-          </span>
-        </div>
-      </section>
-
-      {/* Weekly pattern */}
-      <section className={styles.card}>
-        <div className={styles.cardTitle}>By weekday</div>
-        {v.hasWeekday ? (
-          <>
-            <p className={styles.lead}>
-              Your <span className={styles.em}>{fullDay(v.busiest.day)}s</span>{' '}
-              average {v.busiest.count.toFixed(1)} drinks.
-            </p>
-            {v.weekdays.map((w) => (
-              <div key={w.day} className={styles.wdRow}>
-                <div className={styles.wdLabel}>{w.label}</div>
-                <div className={styles.wdTrack}>
-                  <div
-                    className={styles.wdFill}
-                    style={{ width: `${w.widthPct}%` }}
-                  />
-                </div>
-                <div className={styles.wdValue}>{w.count.toFixed(1)}</div>
-              </div>
-            ))}
-          </>
-        ) : (
-          <p className={styles.empty}>
-            Log a few drinks to see your weekly pattern.
-          </p>
-        )}
-      </section>
-
       {/* Trends over time */}
       <section className={styles.card}>
         <div className={styles.cardTitle}>Trend</div>
@@ -148,7 +109,7 @@ export default function InsightsScreen({ data, now }) {
               />
             </div>
             <div className={styles.targetLine}>
-              <span>Target {v.target} std / wk</span>
+              <span>Max {v.target} std / wk</span>
               <span className={styles.targetDelta} data-over={t.overTarget > 0}>
                 {t.overTarget > 0 ? '+' : ''}
                 {t.overTarget.toFixed(1)} {t.overTarget > 0 ? 'over' : 'under'}
@@ -156,6 +117,79 @@ export default function InsightsScreen({ data, now }) {
             </div>
           </>
         )}
+      </section>
+
+      {/* Weekly pattern */}
+      <section className={styles.card}>
+        <div className={styles.cardTitle}>By weekday</div>
+        {v.hasWeekday ? (
+          <>
+            <p className={styles.lead}>
+              Your <span className={styles.em}>{fullDay(v.busiest.day)}s</span>{' '}
+              average {v.busiest.count.toFixed(1)} drinks.
+            </p>
+            {v.weekdays.map((w) => (
+              <div key={w.day} className={styles.wdRow}>
+                <div className={styles.wdLabel}>{w.label}</div>
+                <div className={styles.wdTrack}>
+                  <div
+                    className={styles.wdFill}
+                    style={{ width: `${w.widthPct}%` }}
+                  />
+                </div>
+                <div className={styles.wdValue}>{w.count.toFixed(1)}</div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <p className={styles.empty}>
+            Log a few drinks to see your weekly pattern.
+          </p>
+        )}
+      </section>
+
+      {/* Calendar heatmap */}
+      <section className={styles.card}>
+        <div className={styles.cardTitle}>Last 12 weeks</div>
+        <div className={styles.heatHead}>
+          <span className={styles.heatHeadCell} />
+          {MON_FIRST.map((day) => (
+            <span key={day} className={styles.heatHeadCell}>
+              {WEEKDAYS[day]}
+            </span>
+          ))}
+        </div>
+        <div className={styles.heatGrid}>
+          {v.heatWeeks.flatMap((week) => [
+            <span key={`m-${week.key}`} className={styles.heatMonth}>
+              {week.month}
+            </span>,
+            ...week.cells.map((cell) => (
+              <span
+                key={cell.key}
+                className={styles.heatCell}
+                data-status={cell.status}
+                title={
+                  cell.status === 'empty'
+                    ? ''
+                    : `${cell.key} · ${cell.count} drink${cell.count === 1 ? '' : 's'}`
+                }
+              />
+            )),
+          ])}
+        </div>
+        <div className={styles.legend}>
+          <span className={styles.legendItem}>
+            <span className={styles.legendMark} data-status="sober" /> sober
+          </span>
+          <span className={styles.legendItem}>
+            <span className={styles.legendMark} data-status="within" /> within
+            limit
+          </span>
+          <span className={styles.legendItem}>
+            <span className={styles.legendMark} data-status="over" /> over limit
+          </span>
+        </div>
       </section>
     </div>
   )

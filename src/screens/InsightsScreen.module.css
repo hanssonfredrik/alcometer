@@ -29,7 +29,7 @@
 /* ---- Calendar heatmap ---- */
 .heatHead {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: 26px repeat(7, 1fr);
   gap: 4px;
   margin-bottom: 6px;
 }
@@ -40,8 +40,16 @@
 }
 .heatGrid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: 26px repeat(7, 1fr);
   gap: 4px;
+}
+.heatMonth {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 4px;
+  font: 500 8.5px var(--font-mono);
+  color: var(--w-30);
 }
 .heatCell {
   aspect-ratio: 1;

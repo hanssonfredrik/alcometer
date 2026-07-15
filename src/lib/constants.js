@@ -45,7 +45,7 @@ export const BURN_RATE = 0.15
 // Body-water ratio (Widmark r) by sex.
 export const WIDMARK_R = { M: 0.68, F: 0.55 }
 
-export const DEFAULT_LIMIT = 5
+export const DEFAULT_LIMIT = 3
 
 // Default weekly goal, in standard glasses per week — the baseline the Insights
 // trend is framed against. Editable in Setup.
