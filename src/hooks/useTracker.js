@@ -190,7 +190,7 @@ export function useTracker() {
       const dayKey = key || todayKey()
       mutate((d) => {
         const day = ensureDay(d, dayKey)
-        day.limit = Math.max(0, (day.limit || 0) + delta)
+        day.limit = Math.max(0, (day.limit ?? DEFAULT_LIMIT) + delta)
       })
     },
     [mutate, todayKey],

@@ -6,6 +6,7 @@ import {
   MONTHS,
   MILESTONES,
   STD_GLASS_GRAMS,
+  DEFAULT_LIMIT,
 } from '../lib/constants.js'
 import styles from './HistoryScreen.module.css'
 
@@ -107,7 +108,11 @@ export default function HistoryScreen({ data, now }) {
     }))
     const safeNight = Object.keys(days).some((k) => {
       const d = days[k]
-      return d.entries.length > 0 && d.entries.length <= (d.limit || 0)
+      // Missing limit falls back to the default; a limit of 0 is intentional
+      // and can't be met with drinks logged. Matches lib/insights.js.
+      return (
+        d.entries.length > 0 && d.entries.length <= (d.limit ?? DEFAULT_LIMIT)
+      )
     })
     achievements.push({
       key: 'safe',

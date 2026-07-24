@@ -15,6 +15,7 @@ import {
   STD_GLASS_GRAMS,
   BURN_RATE,
   BACKFILL_HOUR,
+  DEFAULT_LIMIT,
 } from '../lib/constants.js'
 import EditDrinkModal from '../components/EditDrinkModal.jsx'
 import styles from './TodayScreen.module.css'
@@ -101,14 +102,16 @@ export default function TodayScreen({
 
   const v = useMemo(() => {
     const profile = data.profile
-    const day = data.days[selectedKey] || { limit: 5, entries: [] }
+    const day = data.days[selectedKey] || { limit: DEFAULT_LIMIT, entries: [] }
     const entries = day.entries
     const count = entries.length
     const grams = totalGrams(entries)
     const bac = isToday ? bacAt(entries, now, profile) : 0
     const peak = peakBac(entries, profile, isToday ? now : undefined)
-    const limit = day.limit || 0
-    const over = limit > 0 && count > limit
+    // A limit of 0 is intentional (an alcohol-free day) — any drink is "over".
+    // Only a missing limit falls back to the default; matches lib/insights.js.
+    const limit = day.limit ?? DEFAULT_LIMIT
+    const over = count > limit
     const soberHours = bac > 0 ? bac / BURN_RATE : 0
 
     const streak = computeStreaks(data.days, now)
@@ -122,12 +125,16 @@ export default function TodayScreen({
         count - limit === 1 ? 'drink' : 'drinks'
       }`,
       limitPct:
-        limit > 0 ? Math.min(100, Math.round((count / limit) * 100)) : 0,
-      footLeft: isToday
-        ? `${Math.max(0, limit - count)} left tonight`
-        : over
-          ? `${count - limit} over limit`
-          : `${Math.max(0, limit - count)} under limit`,
+        limit > 0
+          ? Math.min(100, Math.round((count / limit) * 100))
+          : count > 0
+            ? 100
+            : 0,
+      footLeft: over
+        ? `${count - limit} over limit`
+        : isToday
+          ? `${limit - count} left tonight`
+          : `${limit - count} under limit`,
       std: (grams / STD_GLASS_GRAMS).toFixed(1),
       grams: Math.round(grams),
       bacBig: (isToday ? bac : peak).toFixed(2),
