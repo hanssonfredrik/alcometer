@@ -55,6 +55,10 @@ export const DEFAULT_WEEKLY_TARGET = 10
 // previous night, so a session that runs past midnight stays in one bucket.
 export const DAY_START_HOUR = 5
 
+// Default clock time for drinks backfilled onto a past day. Must stay ≥
+// DAY_START_HOUR so the minted timestamp lands in the target logical day.
+export const BACKFILL_HOUR = 20
+
 // Selectable accent themes. The neon look is token-driven (see global.css):
 // each id maps to a `[data-theme]` block that swaps the `--accent*` group.
 // `swatch` is a solid preview colour for the picker (independent of the

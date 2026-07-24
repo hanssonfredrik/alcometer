@@ -3,11 +3,12 @@ import {
   dateKey,
   dayIndex,
   addDays,
+  backfillTs,
   startOfWeek,
   formatTime,
   DAY_MS,
 } from './datetime.js'
-import { DAY_START_HOUR } from './constants.js'
+import { DAY_START_HOUR, BACKFILL_HOUR } from './constants.js'
 
 // These tests assume the process runs in Europe/Stockholm (set via the
 // `test` npm script's TZ). Stockholm observes DST, which is exactly what the
@@ -66,6 +67,33 @@ describe('addDays', () => {
   it('supports negative offsets', () => {
     const start = Date.parse('2026-01-01T08:00:00')
     expect(dateKey(addDays(start, -1))).toBe('2025-12-31')
+  })
+})
+
+describe('backfillTs', () => {
+  it('lands at BACKFILL_HOUR local time on the key’s calendar date', () => {
+    expect(BACKFILL_HOUR).toBe(20)
+    expect(backfillTs('2026-07-23')).toBe(Date.parse('2026-07-23T20:00:00'))
+  })
+
+  it('round-trips through dateKey', () => {
+    expect(dateKey(backfillTs('2026-07-23'))).toBe('2026-07-23')
+  })
+
+  it('round-trips on the spring-forward DST day', () => {
+    // Europe/Stockholm springs forward on 2026-03-29 (23h day).
+    expect(dateKey(backfillTs('2026-03-29'))).toBe('2026-03-29')
+  })
+
+  it('round-trips on the fall-back DST day', () => {
+    // Falls back on 2026-10-25 (25h day).
+    expect(dateKey(backfillTs('2026-10-25'))).toBe('2026-10-25')
+  })
+
+  it('accepts an hour override, down to the DAY_START_HOUR boundary', () => {
+    expect(formatTime(backfillTs('2026-07-23', 8))).toBe('08:00')
+    // At exactly DAY_START_HOUR the timestamp still belongs to its own key.
+    expect(dateKey(backfillTs('2026-07-23', DAY_START_HOUR))).toBe('2026-07-23')
   })
 })
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadData, saveData, defaultData } from '../lib/storage.js'
 import { mergeBackup } from '../lib/backup.js'
-import { dateKey } from '../lib/datetime.js'
+import { dateKey, backfillTs } from '../lib/datetime.js'
 import { DEFAULT_SIZES, DEFAULT_LIMIT } from '../lib/constants.js'
 
 function clone(obj) {
@@ -90,8 +90,15 @@ export function useTracker() {
 
   const todayKey = useCallback(() => dateKey(Date.now()), [])
 
+  // Timestamp for a new entry: "now" for today (or no key), a fixed evening
+  // time for a backfill onto a past logical day (adjustable via edit).
+  const entryTs = useCallback(
+    (key) => (!key || key === todayKey() ? Date.now() : backfillTs(key)),
+    [todayKey],
+  )
+
   const addDrink = useCallback(
-    (type) => {
+    (type, key) => {
       const sizes = dataRef.current.sizes || DEFAULT_SIZES
       const size = sizes[type] || DEFAULT_SIZES[type]
       const entry = {
@@ -99,31 +106,37 @@ export function useTracker() {
         type,
         ml: size.ml,
         abv: size.abv,
-        ts: Date.now(),
+        ts: entryTs(key),
       }
       mutate((d) => {
-        ensureDay(d, dateKey(entry.ts)).entries.push(entry)
+        const day = ensureDay(d, dateKey(entry.ts))
+        day.entries.push(entry)
+        // A backfilled entry can predate existing ones; the log renders
+        // entries in array order, so keep the bucket time-ordered.
+        day.entries.sort((a, b) => a.ts - b.ts)
       })
       return entry.id
     },
-    [mutate],
+    [mutate, entryTs],
   )
 
   const addCustomDrink = useCallback(
-    ({ type, cl, abv }) => {
+    ({ type, cl, abv }, key) => {
       const entry = {
         id: makeId(),
         type,
         ml: (parseFloat(cl) || 0) * 10,
         abv: (parseFloat(abv) || 0) / 100,
-        ts: Date.now(),
+        ts: entryTs(key),
       }
       mutate((d) => {
-        ensureDay(d, dateKey(entry.ts)).entries.push(entry)
+        const day = ensureDay(d, dateKey(entry.ts))
+        day.entries.push(entry)
+        day.entries.sort((a, b) => a.ts - b.ts)
       })
       return entry.id
     },
-    [mutate],
+    [mutate, entryTs],
   )
 
   const removeDrink = useCallback(
@@ -173,10 +186,10 @@ export function useTracker() {
   )
 
   const changeLimit = useCallback(
-    (delta) => {
-      const key = todayKey()
+    (delta, key) => {
+      const dayKey = key || todayKey()
       mutate((d) => {
-        const day = ensureDay(d, key)
+        const day = ensureDay(d, dayKey)
         day.limit = Math.max(0, (day.limit || 0) + delta)
       })
     },

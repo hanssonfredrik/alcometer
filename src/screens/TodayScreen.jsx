@@ -14,6 +14,7 @@ import {
   MONTHS,
   STD_GLASS_GRAMS,
   BURN_RATE,
+  BACKFILL_HOUR,
 } from '../lib/constants.js'
 import EditDrinkModal from '../components/EditDrinkModal.jsx'
 import styles from './TodayScreen.module.css'
@@ -77,14 +78,17 @@ export default function TodayScreen({
   // 0 = today, negative = previous days.
   const [dayOffset, setDayOffset] = useState(0)
 
-  // Earliest day we let the user page back to (first day with any entry).
+  // Earliest day we let the user page back to: the first day with any entry,
+  // but always at least 30 days so a forgotten drink can be backfilled onto a
+  // day that has nothing logged yet.
   const minOffset = useMemo(() => {
     const logged = Object.keys(data.days).filter(
       (k) => data.days[k].entries.length > 0,
     )
-    if (!logged.length) return 0
-    const earliest = Math.min(...logged.map(dayIndex))
-    return Math.min(0, earliest - dayIndex(dateKey(now)))
+    const earliest = logged.length
+      ? Math.min(...logged.map(dayIndex)) - dayIndex(dateKey(now))
+      : 0
+    return Math.min(earliest, -30)
   }, [data.days, now])
 
   const isToday = dayOffset === 0
@@ -161,7 +165,7 @@ export default function TodayScreen({
   const { rel, dateStr } = dayLabels(dayOffset, selectedTs, now)
 
   const submitCustom = () => {
-    onLogCustom(custom)
+    onLogCustom(custom, selectedKey)
     setCustomOpen(false)
   }
 
@@ -270,107 +274,109 @@ export default function TodayScreen({
         </section>
       )}
 
-      {/* Limit stepper — today only */}
-      {isToday && (
-        <section className={styles.limitRow}>
-          <div className={styles.limitLabel}>Tonight&apos;s limit</div>
-          <button
-            className={styles.stepper}
-            onClick={() => actions.changeLimit(-1)}
-            aria-label="Decrease limit"
-          >
-            −
-          </button>
-          <span className={styles.limitValue}>{v.limit}</span>
-          <button
-            className={styles.stepper}
-            onClick={() => actions.changeLimit(1)}
-            aria-label="Increase limit"
-          >
-            +
-          </button>
-        </section>
-      )}
+      {/* Limit stepper */}
+      <section className={styles.limitRow}>
+        <div className={styles.limitLabel}>
+          {isToday ? "Tonight's limit" : 'Limit'}
+        </div>
+        <button
+          className={styles.stepper}
+          onClick={() => actions.changeLimit(-1, selectedKey)}
+          aria-label="Decrease limit"
+        >
+          −
+        </button>
+        <span className={styles.limitValue}>{v.limit}</span>
+        <button
+          className={styles.stepper}
+          onClick={() => actions.changeLimit(1, selectedKey)}
+          aria-label="Increase limit"
+        >
+          +
+        </button>
+      </section>
 
-      {/* Quick log — today only (entries are timestamped "now") */}
-      {isToday && (
-        <>
-          <div className={styles.sectionLabel}>LOG A DRINK</div>
-          <div className={styles.quickGrid}>
+      {/* Quick log — today's entries are timestamped "now"; on a past day the
+          entry is backfilled at a default evening time (adjustable via edit). */}
+      <div className={styles.sectionLabel}>LOG A DRINK</div>
+      {!isToday && (
+        <div className={styles.backfillHint}>
+          Adds at {BACKFILL_HOUR}:00 — tap the entry to adjust the time.
+        </div>
+      )}
+      <div className={styles.quickGrid}>
+        {DRINK_TYPES.map((type) => (
+          <button
+            key={type}
+            className={styles.quickBtn}
+            onClick={() => onLogDrink(type, selectedKey)}
+          >
+            <div className={styles.quickName}>{LABELS[type]}</div>
+            <div className={styles.quickMeta}>{v.defs[type].cl}cl</div>
+          </button>
+        ))}
+      </div>
+
+      <button
+        className={styles.customToggle}
+        onClick={() => setCustomOpen((o) => !o)}
+      >
+        {customOpen ? 'Close custom' : '+ Custom size'}
+      </button>
+
+      {customOpen && (
+        <div className={styles.customPanel}>
+          <div className={styles.typeRow}>
             {DRINK_TYPES.map((type) => (
               <button
                 key={type}
-                className={styles.quickBtn}
-                onClick={() => onLogDrink(type)}
+                className={styles.typePill}
+                data-selected={custom.type === type}
+                onClick={() => setCustom((c) => ({ ...c, type }))}
               >
-                <div className={styles.quickName}>{LABELS[type]}</div>
-                <div className={styles.quickMeta}>{v.defs[type].cl}cl</div>
+                {LABELS[type]}
               </button>
             ))}
           </div>
-
-          <button
-            className={styles.customToggle}
-            onClick={() => setCustomOpen((o) => !o)}
-          >
-            {customOpen ? 'Close custom' : '+ Custom size'}
+          <div className={styles.customFields}>
+            <label className={styles.field}>
+              Size (cl)
+              <input
+                type="number"
+                inputMode="decimal"
+                value={custom.cl}
+                onChange={(e) =>
+                  setCustom((c) => ({ ...c, cl: e.target.value }))
+                }
+              />
+            </label>
+            <label className={styles.field}>
+              Strength (%)
+              <input
+                type="number"
+                inputMode="decimal"
+                value={custom.abv}
+                onChange={(e) =>
+                  setCustom((c) => ({ ...c, abv: e.target.value }))
+                }
+              />
+            </label>
+          </div>
+          <button className={styles.addBtn} onClick={submitCustom}>
+            Add drink
           </button>
+        </div>
+      )}
 
-          {customOpen && (
-            <div className={styles.customPanel}>
-              <div className={styles.typeRow}>
-                {DRINK_TYPES.map((type) => (
-                  <button
-                    key={type}
-                    className={styles.typePill}
-                    data-selected={custom.type === type}
-                    onClick={() => setCustom((c) => ({ ...c, type }))}
-                  >
-                    {LABELS[type]}
-                  </button>
-                ))}
-              </div>
-              <div className={styles.customFields}>
-                <label className={styles.field}>
-                  Size (cl)
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    value={custom.cl}
-                    onChange={(e) =>
-                      setCustom((c) => ({ ...c, cl: e.target.value }))
-                    }
-                  />
-                </label>
-                <label className={styles.field}>
-                  Strength (%)
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    value={custom.abv}
-                    onChange={(e) =>
-                      setCustom((c) => ({ ...c, abv: e.target.value }))
-                    }
-                  />
-                </label>
-              </div>
-              <button className={styles.addBtn} onClick={submitCustom}>
-                Add drink
-              </button>
-            </div>
-          )}
-
-          {undoEntry && (
-            <div className={styles.undoBar}>
-              <span className={styles.undoText}>
-                Logged {LABELS[undoEntry.type]}
-              </span>
-              <button className={styles.undoBtn} onClick={onUndo}>
-                Undo
-              </button>
-            </div>
-          )}
-        </>
+      {undoEntry && (
+        <div className={styles.undoBar}>
+          <span className={styles.undoText}>
+            Logged {LABELS[undoEntry.type]}
+          </span>
+          <button className={styles.undoBtn} onClick={onUndo}>
+            Undo
+          </button>
+        </div>
       )}
 
       {/* Log for the selected day */}

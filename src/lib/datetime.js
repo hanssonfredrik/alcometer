@@ -1,6 +1,6 @@
 // Local-date helpers. All keys are `YYYY-MM-DD` in the device's local zone.
 
-import { DAY_START_HOUR } from './constants.js'
+import { DAY_START_HOUR, BACKFILL_HOUR } from './constants.js'
 
 // Logical-day key: shift back by DAY_START_HOUR so 00:00–04:59 fall onto the
 // previous calendar date. `Date` handles the negative-hour rollover. The result
@@ -22,6 +22,15 @@ export function dateKey(ts) {
 // Anchored at local noon to avoid DST edge cases.
 export function dayIndex(key) {
   return Math.round(new Date(key + 'T12:00:00').getTime() / 86400000)
+}
+
+// Timestamp for a drink backfilled onto logical day `key`: `hour`:00 local on
+// the key's calendar date. Explicit Date(y, m, d, h) constructor — not string
+// parsing — so it's DST-safe. Because hour ≥ DAY_START_HOUR,
+// dateKey(backfillTs(key)) === key by construction.
+export function backfillTs(key, hour = BACKFILL_HOUR) {
+  const [y, m, d] = key.split('-').map(Number)
+  return new Date(y, m - 1, d, hour, 0, 0, 0).getTime()
 }
 
 // Timestamp at local noon, `offset` calendar days from `ts`. Noon-anchored so

@@ -23,8 +23,10 @@ const SCREEN_LABELS = {
 export default function App() {
   const { data, now, actions, saveError, dismissSaveError } = useTracker()
   const [screen, setScreen] = useState('today')
-  // Id of the most recently logged drink, for the inline "Undo" affordance.
-  const [undoId, setUndoId] = useState(null)
+  // The most recently logged drink ({ id, key }) for the inline "Undo"
+  // affordance — the day key is captured at log time so a backfilled drink
+  // (or a log just before the 05:00 rollover) resolves to the right bucket.
+  const [undo, setUndo] = useState(null)
 
   // Android hardware/gesture back: fall back to the Today tab first; from
   // there, background the app (never exit — that would feel like a crash).
@@ -50,36 +52,39 @@ export default function App() {
   const d = new Date(now)
   const dateLabel = `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`
 
-  const todayEntries = data?.days?.[dateKey(now)]?.entries ?? []
-  const undoEntry = undoId ? todayEntries.find((e) => e.id === undoId) : null
+  const undoEntry = undo
+    ? (data?.days?.[undo.key]?.entries ?? []).find((e) => e.id === undo.id)
+    : null
 
   const logDrink = useCallback(
-    (type) => {
+    (type, key) => {
       hapticLog()
-      setUndoId(actions.addDrink(type))
+      const id = actions.addDrink(type, key)
+      setUndo({ id, key: key ?? dateKey(Date.now()) })
     },
     [actions],
   )
   const logCustom = useCallback(
-    (custom) => {
+    (custom, key) => {
       hapticLog()
-      setUndoId(actions.addCustomDrink(custom))
+      const id = actions.addCustomDrink(custom, key)
+      setUndo({ id, key: key ?? dateKey(Date.now()) })
     },
     [actions],
   )
   const removeDrink = useCallback(
     (id, key) => {
       actions.removeDrink(id, key)
-      setUndoId((cur) => (cur === id ? null : cur))
+      setUndo((cur) => (cur?.id === id ? null : cur))
     },
     [actions],
   )
   const undoLast = useCallback(() => {
-    if (undoId) {
+    if (undo) {
       hapticUndo()
-      removeDrink(undoId)
+      removeDrink(undo.id, undo.key)
     }
-  }, [undoId, removeDrink])
+  }, [undo, removeDrink])
 
   return (
     <div className={styles.app}>

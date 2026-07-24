@@ -240,6 +240,13 @@
   margin-bottom: 11px;
 }
 
+/* Note under LOG A DRINK when backfilling onto a past day. */
+.backfillHint {
+  font: 500 11px var(--font-sans);
+  color: var(--w-42);
+  margin: -5px 0 11px;
+}
+
 /* ---- Quick log ---- */
 .quickGrid {
   display: grid;
