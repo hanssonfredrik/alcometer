@@ -26,6 +26,9 @@ export default function HistoryScreen({ data, now }) {
       const d = days[dateKey(ts)] || { entries: [] }
       window.push({
         count: d.entries.length,
+        // Over that day's limit (missing limit falls back to the default; a
+        // limit of 0 is an intentional alcohol-free target). Matches Today.
+        over: d.entries.length > (d.limit ?? DEFAULT_LIMIT),
         peak: peakBac(d.entries, profile),
         weekday: WEEKDAYS[new Date(ts).getDay()],
         isToday: i === 0,
@@ -35,6 +38,8 @@ export default function HistoryScreen({ data, now }) {
     const maxPeak = Math.max(0.5, ...window.map((b) => b.peak))
     const bars = window.map((b) => ({
       weekday: b.weekday,
+      over: b.over,
+      hasDrinks: b.count > 0,
       heightPct: Math.round((b.count / maxCount) * 100),
       showPeak: b.peak > 0,
       peakPct: Math.min(100, Math.round((b.peak / maxPeak) * 100)),
@@ -168,9 +173,17 @@ export default function HistoryScreen({ data, now }) {
                   className={styles.bar}
                   style={{
                     height: `${b.heightPct}%`,
-                    background: b.isToday
-                      ? 'var(--accent)'
-                      : 'rgba(255,255,255,.22)',
+                    // Match the Insights colour language: over-limit → danger
+                    // red (fixed across all themes), today emphasised at full
+                    // accent, other drinking days at half-strength accent
+                    // ("within limit"), and dry days a faint white.
+                    background: b.over
+                      ? 'var(--danger-bar)'
+                      : b.isToday
+                        ? 'var(--accent)'
+                        : b.hasDrinks
+                          ? 'var(--accent-55)'
+                          : 'rgba(255,255,255,.22)',
                   }}
                 />
                 {b.showPeak && (
@@ -209,7 +222,7 @@ export default function HistoryScreen({ data, now }) {
                   width: `${m.widthPct}%`,
                   background: m.isNow
                     ? 'var(--accent)'
-                    : 'rgba(255,255,255,.28)',
+                    : 'var(--accent-55)',
                 }}
               />
             </div>
