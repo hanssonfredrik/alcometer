@@ -84,9 +84,9 @@
   color: var(--danger-text);
 }
 /* Drank but within the limit → a drink emoji (CSS escape so the astral
-   codepoint survives file encoding). \01F37A = 🍺 beer mug. */
+   codepoint survives file encoding). \01F377 = 🍷 wine glass. */
 .heatCell[data-status='within']::after {
-  content: '\01F37A';
+  content: '\01F377';
   position: absolute;
   inset: 0;
   display: flex;
