@@ -27,6 +27,11 @@
 }
 
 /* ---- Calendar heatmap ---- */
+.hint {
+  font: 500 10.5px var(--font-sans);
+  color: var(--w-35);
+  margin: -10px 0 12px;
+}
 .heatHead {
   display: grid;
   grid-template-columns: 26px repeat(7, 1fr);
@@ -51,11 +56,27 @@
   font: 500 8.5px var(--font-mono);
   color: var(--w-30);
 }
+/* Rendered as a <button> for in-range days (opens the day detail) and a plain
+   <span> for out-of-range ones — reset the button chrome so both look alike. */
 .heatCell {
   aspect-ratio: 1;
+  border: none;
+  padding: 0;
   border-radius: 4px;
   background: var(--w-05);
   position: relative;
+}
+button.heatCell {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+button.heatCell:active {
+  opacity: 0.65;
+}
+button.heatCell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .heatCell[data-status='sober'] {
   background: var(--accent);

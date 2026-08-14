@@ -1,7 +1,7 @@
 // Pure, framework-free analytics over the persisted `days` map. Kept out of the
 // screens so the aggregation is unit-testable, like the rest of `lib/`.
 
-import { totalGrams } from './alcohol.js'
+import { peakBac, totalGrams } from './alcohol.js'
 import { STD_GLASS_GRAMS, DEFAULT_LIMIT } from './constants.js'
 import { dateKey, dayIndex, addDays, startOfWeek } from './datetime.js'
 
@@ -100,6 +100,33 @@ export function heatmapGrid(days, now, weeks = 12) {
     columns.push(cells)
   }
   return columns
+}
+
+/**
+ * Everything a single-day detail view needs for the logical day `key`: its
+ * entries in chronological order plus how they add up. Days with nothing
+ * logged (or never logged at all) come back as an empty, zeroed day rather
+ * than null, so callers can render "alcohol-free" without a special case.
+ *
+ * Returns { key, entries, count, limit, over, grams, std, peak }.
+ */
+export function dayDetail(days, key, profile) {
+  const day = days[key]
+  const entries = day ? [...day.entries].sort((a, b) => a.ts - b.ts) : []
+  // A limit of 0 is intentional (an alcohol-free target) — only a missing
+  // limit falls back to the default. Matches heatmapGrid above.
+  const limit = day && day.limit != null ? day.limit : DEFAULT_LIMIT
+  const grams = totalGrams(entries)
+  return {
+    key,
+    entries,
+    count: entries.length,
+    limit,
+    over: entries.length > limit,
+    grams,
+    std: grams / STD_GLASS_GRAMS,
+    peak: peakBac(entries, profile),
+  }
 }
 
 /** Standard glasses consumed in the week starting at `mondayTs`. */

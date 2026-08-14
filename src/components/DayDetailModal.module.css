@@ -1,0 +1,169 @@
+/* Overlay is absolutely positioned against the phone frame (.frame in
+   App.module.css is position: relative), so it covers the app — not the
+   whole desktop viewport. Mirrors EditDrinkModal. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(8, 7, 12, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overscroll-behavior: contain;
+}
+
+.sheet {
+  background: var(--panel);
+  border: 1px solid var(--w-12);
+  border-radius: 18px;
+  padding: 16px 18px 14px;
+  width: 100%;
+  max-width: 340px;
+  /* A long night can hold many entries — scroll inside the sheet rather than
+     growing past the frame. */
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  animation: pop 0.18s ease;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.headText {
+  flex: 1;
+  min-width: 0;
+}
+.rel {
+  font: 600 15px var(--font-sans);
+  color: var(--text);
+}
+.date {
+  font: 500 11px var(--font-mono);
+  color: var(--w-45);
+  margin-top: 2px;
+}
+.close {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--w-10);
+  background: transparent;
+  color: var(--w-40);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+.close:active {
+  background: var(--w-08);
+}
+
+.statRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.stat {
+  flex: 1;
+  min-width: 0;
+  background: var(--w-04);
+  border: 1px solid var(--w-06);
+  border-radius: 12px;
+  padding: 9px 10px 8px;
+}
+.statLabel {
+  font: 500 9.5px var(--font-sans);
+  color: var(--w-40);
+  white-space: nowrap;
+}
+.statValue {
+  font: 600 18px/1.2 var(--font-mono);
+  color: var(--text-strong);
+  margin-top: 3px;
+}
+.statValue[data-over='true'] {
+  color: var(--danger-text);
+}
+.statOf {
+  font: 500 10px var(--font-mono);
+  color: var(--w-38);
+  margin-left: 3px;
+}
+
+/* Entry list — mirrors the log rows on Today (read-only here). */
+.log {
+  margin-top: 10px;
+}
+.logRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--w-05);
+}
+.logRow:last-child {
+  border-bottom: none;
+}
+.logDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.logMain {
+  flex: 1;
+  min-width: 0;
+}
+.logType {
+  font: 600 13px var(--font-sans);
+  color: var(--text);
+}
+.logMeta {
+  font: 500 11px var(--font-mono);
+  color: var(--w-38);
+  margin-top: 2px;
+}
+.logTime {
+  font: 500 12px var(--font-mono);
+  color: var(--w-50);
+  flex: none;
+}
+
+.foot {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--w-06);
+  font: 500 10.5px/1.45 var(--font-sans);
+  color: var(--w-42);
+}
+
+/* Sober day — no entries to list. */
+.sober {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0 8px;
+}
+.soberMark {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 600 17px/1 var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.soberText {
+  font: 500 12.5px/1.45 var(--font-sans);
+  color: var(--w-55);
+}

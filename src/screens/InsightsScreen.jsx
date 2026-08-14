@@ -1,27 +1,23 @@
-import { useMemo } from 'react'
-import { weekdayAverages, heatmapGrid, weeklyTrend } from '../lib/insights.js'
-import { WEEKDAYS } from '../lib/constants.js'
+import { useMemo, useState } from 'react'
+import {
+  weekdayAverages,
+  heatmapGrid,
+  weeklyTrend,
+  dayDetail,
+} from '../lib/insights.js'
+import { entryGrams } from '../lib/alcohol.js'
+import { dateKey, dayIndex, formatTime } from '../lib/datetime.js'
+import { WEEKDAYS, MONTHS, LABELS } from '../lib/constants.js'
+import DayDetailModal from '../components/DayDetailModal.jsx'
 import styles from './InsightsScreen.module.css'
 
 // Display order: Monday-first (getDay is Sunday-first).
 const MON_FIRST = [1, 2, 3, 4, 5, 6, 0]
 
-const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
-
 export default function InsightsScreen({ data, now }) {
+  // Heatmap cell opened in the day-detail modal (a `YYYY-MM-DD` key), or null.
+  const [openKey, setOpenKey] = useState(null)
+
   const v = useMemo(() => {
     const days = data.days
     const target = data.profile.weeklyTarget || 0
@@ -37,7 +33,15 @@ export default function InsightsScreen({ data, now }) {
       const month = new Date(week[3].key + 'T12:00:00').getMonth()
       heatWeeks.push({
         key: week[0].key,
-        cells: week,
+        cells: week.map((cell) => ({
+          ...cell,
+          // Out-of-range cells have nothing to show, so they stay inert.
+          open: cell.status !== 'empty',
+          label:
+            cell.status === 'empty'
+              ? ''
+              : `${cell.key} · ${cell.count} drink${cell.count === 1 ? '' : 's'}`,
+        })),
         month: month !== prevMonth ? MONTHS[month] : '',
       })
       prevMonth = month
@@ -70,6 +74,11 @@ export default function InsightsScreen({ data, now }) {
       target,
     }
   }, [data, now])
+
+  const openDay = useMemo(
+    () => (openKey ? dayView(data, openKey, now) : null),
+    [data, openKey, now],
+  )
 
   const t = v.trend
   const arrow = t.direction === 'up' ? '↑' : t.direction === 'down' ? '↓' : '→'
@@ -151,6 +160,7 @@ export default function InsightsScreen({ data, now }) {
       {/* Calendar heatmap */}
       <section className={styles.card}>
         <div className={styles.cardTitle}>Last 12 weeks</div>
+        <p className={styles.hint}>Tap a day to see what you logged.</p>
         <div className={styles.heatHead}>
           <span className={styles.heatHeadCell} />
           {MON_FIRST.map((day) => (
@@ -164,18 +174,25 @@ export default function InsightsScreen({ data, now }) {
             <span key={`m-${week.key}`} className={styles.heatMonth}>
               {week.month}
             </span>,
-            ...week.cells.map((cell) => (
-              <span
-                key={cell.key}
-                className={styles.heatCell}
-                data-status={cell.status}
-                title={
-                  cell.status === 'empty'
-                    ? ''
-                    : `${cell.key} · ${cell.count} drink${cell.count === 1 ? '' : 's'}`
-                }
-              />
-            )),
+            ...week.cells.map((cell) =>
+              cell.open ? (
+                <button
+                  key={cell.key}
+                  type="button"
+                  className={styles.heatCell}
+                  data-status={cell.status}
+                  title={cell.label}
+                  aria-label={cell.label}
+                  onClick={() => setOpenKey(cell.key)}
+                />
+              ) : (
+                <span
+                  key={cell.key}
+                  className={styles.heatCell}
+                  data-status={cell.status}
+                />
+              ),
+            ),
           ])}
         </div>
         <div className={styles.legend}>
@@ -191,8 +208,49 @@ export default function InsightsScreen({ data, now }) {
           </span>
         </div>
       </section>
+
+      {openDay && (
+        <DayDetailModal day={openDay} onClose={() => setOpenKey(null)} />
+      )}
     </div>
   )
+}
+
+/**
+ * Formats one day for DayDetailModal: the pure aggregation from `dayDetail`
+ * plus display units (cl / percent / HH:MM) and a header label.
+ */
+function dayView(data, key, now) {
+  const d = dayDetail(data.days, key, data.profile)
+  const date = new Date(key + 'T12:00:00')
+  const offset = dayIndex(key) - dayIndex(dateKey(now))
+  const rel =
+    offset === 0
+      ? 'Today'
+      : offset === -1
+        ? 'Yesterday'
+        : FULL_DAYS[date.getDay()]
+  const sameYear = date.getFullYear() === new Date(now).getFullYear()
+  return {
+    rel,
+    dateLabel: `${date.getDate()} ${MONTHS[date.getMonth()]}${
+      sameYear ? '' : ' ' + date.getFullYear()
+    }`,
+    count: d.count,
+    limit: d.limit,
+    over: d.over,
+    std: d.std.toFixed(1),
+    grams: Math.round(d.grams),
+    peak: d.peak.toFixed(2),
+    entries: d.entries.map((e) => ({
+      id: e.id,
+      typeLabel: LABELS[e.type] || e.type,
+      cl: Math.round(e.ml / 10),
+      abv: Math.round(e.abv * 100),
+      grams: entryGrams(e).toFixed(0),
+      timeLabel: formatTime(e.ts),
+    })),
+  }
 }
 
 const FULL_DAYS = [
