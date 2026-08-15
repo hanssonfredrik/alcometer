@@ -21,15 +21,20 @@
   padding: 16px 18px 14px;
   width: 100%;
   max-width: 340px;
-  /* A long night can hold many entries — scroll inside the sheet rather than
-     growing past the frame. */
-  max-height: 100%;
-  overflow-y: auto;
+  /* A long night can hold many entries. Cap the sheet well inside the frame so
+     there's always overlay left to tap, and let only the entry list scroll
+     (see .log) — the header, stats and footer stay put, so the close button
+     never scrolls out of reach. */
+  max-height: 80%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   overscroll-behavior: contain;
   animation: pop 0.18s ease;
 }
 
 .head {
+  flex: none;
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -65,6 +70,7 @@
 }
 
 .statRow {
+  flex: none;
   display: flex;
   gap: 8px;
   margin-bottom: 6px;
@@ -96,9 +102,16 @@
   margin-left: 3px;
 }
 
-/* Entry list — mirrors the log rows on Today (read-only here). */
+/* Entry list — mirrors the log rows on Today (read-only here). The only
+   scrolling region of the sheet; min-height: 0 lets it shrink below its
+   content so the footer stays visible on a long night. */
 .log {
+  flex: 1 1 auto;
+  min-height: 0;
   margin-top: 10px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 .logRow {
   display: flex;
@@ -137,6 +150,7 @@
 }
 
 .foot {
+  flex: none;
   margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid var(--w-06);
@@ -146,6 +160,7 @@
 
 /* Sober day — no entries to list. */
 .sober {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 12px;

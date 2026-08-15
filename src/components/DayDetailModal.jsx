@@ -59,7 +59,7 @@ export default function DayDetailModal({ day, onClose }) {
               </div>
             </div>
 
-            <div className={styles.log}>
+            <div className={`${styles.log} scrollArea`}>
               {day.entries.map((e) => (
                 <div key={e.id} className={styles.logRow}>
                   <span className={styles.logDot} />
