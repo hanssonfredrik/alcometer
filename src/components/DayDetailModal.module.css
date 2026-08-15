@@ -24,8 +24,9 @@
   /* A long night can hold many entries. Cap the sheet well inside the frame so
      there's always overlay left to tap, and let only the entry list scroll
      (see .log) — the header, stats and footer stay put, so the close button
-     never scrolls out of reach. */
-  max-height: 80%;
+     never scrolls out of reach. The extra 20px keeps it clear of the iOS
+     status bar / home indicator in the installed PWA. */
+  max-height: calc(80% - 20px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
