@@ -10,7 +10,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  /* The frame runs edge-to-edge (viewport-fit=cover), so pad by the insets —
+     same pattern as Header/BottomNav — to keep the sheet clear of the iOS
+     status bar and home indicator in the installed PWA. */
+  padding: calc(24px + env(safe-area-inset-top)) 24px
+    calc(24px + env(safe-area-inset-bottom));
   overscroll-behavior: contain;
 }
 
@@ -24,9 +28,9 @@
   /* A long night can hold many entries. Cap the sheet well inside the frame so
      there's always overlay left to tap, and let only the entry list scroll
      (see .log) — the header, stats and footer stay put, so the close button
-     never scrolls out of reach. The extra 20px keeps it clear of the iOS
-     status bar / home indicator in the installed PWA. */
-  max-height: calc(80% - 20px);
+     never scrolls out of reach. 80% is of the overlay's padded box, so the
+     safe-area insets above already shrink it per device. */
+  max-height: 80%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
