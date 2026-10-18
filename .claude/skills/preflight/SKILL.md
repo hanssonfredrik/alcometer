@@ -42,3 +42,7 @@ generated-asset changes in separate commits when practical.
   invisible to a stale `now`.
 - `prefers-reduced-motion` zeroes all animation durations globally; don't rely
   on an animation finishing.
+- iOS lifts the page (window scroll, even with no overflow) to show a focused
+  input above the keyboard and may not restore it in an installed PWA.
+  `Sheet` resets ancestor/window scroll on field blur and on close; never
+  `autoFocus` an input inside a sheet, and keep that reset if you touch Sheet.

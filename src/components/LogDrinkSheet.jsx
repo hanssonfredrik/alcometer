@@ -140,7 +140,6 @@ export default function LogDrinkSheet({
             <input
               type="number"
               inputMode="decimal"
-              autoFocus
               value={custom.cl}
               onChange={(e) => setCustom((c) => ({ ...c, cl: e.target.value }))}
             />
