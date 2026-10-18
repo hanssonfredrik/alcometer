@@ -42,7 +42,7 @@ export default function BacHero({
         )}
       </div>
       <div className={styles.count}>
-        {count} / {limit} {count === 1 ? 'drink' : 'drinks'}
+        {count} / {limit} drinks
         {over && <span className={styles.overBy}> · {overBy} over limit</span>}
       </div>
     </section>

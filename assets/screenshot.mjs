@@ -1,9 +1,11 @@
 // Headless-Edge screenshotter for the three screens, driven over the Chrome
 // DevTools Protocol. No dependencies (Node 18+ global fetch/WebSocket).
 //
-// Prereq: a server is running on APP (default `npm run preview` on :4317).
+// Prereq: a server is running on APP on :4317 (dev or preview — see the
+// run-app skill).
 // Usage:  node assets/screenshot.mjs
-// Output: screenshots/0{1,2,3}-{today,history,setup}.png in the project root.
+// Output: screenshots/01-today, 01b-prev-day, 01c-log-sheet, 02-history,
+//         04-insights, 03-setup (.png) in the project root.
 import { spawn } from 'node:child_process'
 import { writeFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -145,6 +147,15 @@ await sleep(250)
 await evalJs(`document.querySelector('[aria-label="Previous day"]')?.click()`)
 await sleep(300)
 await capture('01b-prev-day.png')
+// Back to today, then open the log sheet (find buttons by text — CSS Module
+// class names are hashed).
+await evalJs(`document.querySelector('[title="Jump to today"]')?.click()`)
+await sleep(250)
+await evalJs(`[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Log a drink'))?.click()`)
+await sleep(450)
+await capture('01c-log-sheet.png')
+await evalJs(`document.querySelector('[role=dialog]')?.parentElement.click()`)
+await sleep(300)
 await clickTab('History')
 await capture('02-history.png')
 await clickTab('Insights')
