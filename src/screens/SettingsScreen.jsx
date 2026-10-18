@@ -1,11 +1,20 @@
 import { useState } from 'react'
-import { DRINK_TYPES, LABELS, THEMES, DEFAULT_THEME } from '../lib/constants.js'
+import {
+  DRINK_TYPES,
+  LABELS,
+  THEMES,
+  DEFAULT_THEME,
+  DEFAULT_PROFILE,
+  DEFAULT_WEEKLY_TARGET,
+  DEFAULT_SIZES,
+} from '../lib/constants.js'
 import {
   exportBackup,
   exportEntriesCsv,
   importBackupFile,
 } from '../lib/backup.js'
 import { hapticLog } from '../lib/haptics.js'
+import NumberField from '../components/NumberField.jsx'
 import styles from './SettingsScreen.module.css'
 
 export default function SettingsScreen({ data, actions }) {
@@ -33,13 +42,11 @@ export default function SettingsScreen({ data, actions }) {
 
       <label className={styles.weightField}>
         Weight (kg)
-        <input
-          type="number"
-          inputMode="decimal"
+        <NumberField
           value={profile.weight}
-          onChange={(e) =>
-            actions.setProfile({ weight: parseFloat(e.target.value) || 0 })
-          }
+          fallback={DEFAULT_PROFILE.weight}
+          min={1}
+          onCommit={(weight) => actions.setProfile({ weight })}
         />
       </label>
 
@@ -89,15 +96,10 @@ export default function SettingsScreen({ data, actions }) {
       </p>
       <label className={styles.weightField}>
         Target (std / week)
-        <input
-          type="number"
-          inputMode="decimal"
-          value={profile.weeklyTarget ?? ''}
-          onChange={(e) =>
-            actions.setProfile({
-              weeklyTarget: Math.max(0, parseFloat(e.target.value) || 0),
-            })
-          }
+        <NumberField
+          value={profile.weeklyTarget ?? DEFAULT_WEEKLY_TARGET}
+          fallback={DEFAULT_WEEKLY_TARGET}
+          onCommit={(weeklyTarget) => actions.setProfile({ weeklyTarget })}
         />
       </label>
 
@@ -114,28 +116,20 @@ export default function SettingsScreen({ data, actions }) {
             <div className={styles.sizeName}>{LABELS[type]}</div>
             <label className={styles.sizeField}>
               cl
-              <input
-                type="number"
-                inputMode="decimal"
-                value={Math.round(s.ml / 10)}
-                onChange={(e) =>
-                  actions.setSize(type, {
-                    ml: (parseFloat(e.target.value) || 0) * 10,
-                  })
-                }
+              <NumberField
+                value={+(s.ml / 10).toFixed(1)}
+                fallback={DEFAULT_SIZES[type].ml / 10}
+                min={0.1}
+                onCommit={(cl) => actions.setSize(type, { ml: cl * 10 })}
               />
             </label>
             <label className={styles.sizeField}>
               %
-              <input
-                type="number"
-                inputMode="decimal"
-                value={Math.round(s.abv * 100)}
-                onChange={(e) =>
-                  actions.setSize(type, {
-                    abv: (parseFloat(e.target.value) || 0) / 100,
-                  })
-                }
+              <NumberField
+                value={+(s.abv * 100).toFixed(1)}
+                fallback={DEFAULT_SIZES[type].abv * 100}
+                max={100}
+                onCommit={(pct) => actions.setSize(type, { abv: pct / 100 })}
               />
             </label>
           </div>

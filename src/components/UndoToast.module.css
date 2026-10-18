@@ -1,0 +1,42 @@
+/* Anchored to the scroll body wrapper in App (position: relative), so it
+   floats just above the bottom nav. z-index sits under the Sheet overlay (20)
+   so an open sheet covers it. */
+.toast {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 12px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--w-16);
+  background: var(--panel);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.2s ease;
+}
+.text {
+  flex: 1;
+  min-width: 0;
+  font: 600 15px var(--font-sans);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn {
+  flex: none;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  border: 1px solid var(--accent-40);
+  background: var(--accent-16);
+  color: var(--accent);
+  font: 700 15px var(--font-sans);
+  cursor: pointer;
+}
+.btn:active {
+  background: var(--accent-28);
+}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   weekdayAverages,
   heatmapGrid,
@@ -7,7 +7,7 @@ import {
 } from '../lib/insights.js'
 import { entryGrams } from '../lib/alcohol.js'
 import { dateKey, dayIndex, formatTime } from '../lib/datetime.js'
-import { WEEKDAYS, MONTHS, LABELS } from '../lib/constants.js'
+import { WEEKDAYS, MONTHS, LABELS, DRINK_ICONS } from '../lib/constants.js'
 import DayDetailModal from '../components/DayDetailModal.jsx'
 import styles from './InsightsScreen.module.css'
 
@@ -17,6 +17,7 @@ const MON_FIRST = [1, 2, 3, 4, 5, 6, 0]
 export default function InsightsScreen({ data, now }) {
   // Heatmap cell opened in the day-detail modal (a `YYYY-MM-DD` key), or null.
   const [openKey, setOpenKey] = useState(null)
+  const closeDay = useCallback(() => setOpenKey(null), [])
 
   const v = useMemo(() => {
     const days = data.days
@@ -209,9 +210,7 @@ export default function InsightsScreen({ data, now }) {
         </div>
       </section>
 
-      {openDay && (
-        <DayDetailModal day={openDay} onClose={() => setOpenKey(null)} />
-      )}
+      {openDay && <DayDetailModal day={openDay} onClose={closeDay} />}
     </div>
   )
 }
@@ -245,6 +244,7 @@ function dayView(data, key, now) {
     entries: d.entries.map((e) => ({
       id: e.id,
       typeLabel: LABELS[e.type] || e.type,
+      icon: DRINK_ICONS[e.type] || '',
       cl: Math.round(e.ml / 10),
       abv: Math.round(e.abv * 100),
       grams: entryGrams(e).toFixed(0),

@@ -3,6 +3,7 @@ import {
   BURN_RATE,
   WIDMARK_R,
   MILESTONES,
+  BAC_ZONES,
 } from './constants.js'
 import { dateKey, dayIndex } from './datetime.js'
 
@@ -51,6 +52,28 @@ export function peakBac(entries, profile, upto) {
     if (b > peak) peak = b
   }
   return peak
+}
+
+/**
+ * The BAC_ZONES band a ‰ value falls in. Rounds to the two decimals the UI
+ * displays first, so the label always agrees with the number next to it
+ * (0.199 shows as "0.20" and must read "Tipsy", not "Light").
+ */
+export function bacZone(bac) {
+  const v = Math.round((bac || 0) * 100) / 100
+  if (v <= 0) return BAC_ZONES[0]
+  return (
+    BAC_ZONES.find((z) => z.id !== 'sober' && v < z.max) || BAC_ZONES.at(-1)
+  )
+}
+
+/**
+ * Timestamp at which a current BAC of `bac` ‰ burns off to zero at the
+ * linear BURN_RATE, or null when already sober.
+ */
+export function soberAt(bac, nowTs) {
+  if (!(bac > 0)) return null
+  return nowTs + (bac / BURN_RATE) * 3600000
 }
 
 /**

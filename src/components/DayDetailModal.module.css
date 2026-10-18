@@ -1,41 +1,7 @@
-/* Overlay is absolutely positioned against the phone frame (.frame in
-   App.module.css is position: relative), so it covers the app — not the
-   whole desktop viewport. Mirrors EditDrinkModal. */
-.overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  background: var(--scrim);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* The frame runs edge-to-edge (viewport-fit=cover), so pad by the insets —
-     same pattern as Header/BottomNav — to keep the sheet clear of the iOS
-     status bar and home indicator in the installed PWA. */
-  padding: calc(24px + env(safe-area-inset-top)) 24px
-    calc(24px + env(safe-area-inset-bottom));
-  overscroll-behavior: contain;
-}
-
-.sheet {
-  background: var(--panel);
-  border: 1px solid var(--w-12);
-  border-radius: 18px;
-  padding: 16px 18px 14px;
-  width: 100%;
-  max-width: 340px;
-  /* A long night can hold many entries. Cap the sheet well inside the frame so
-     there's always overlay left to tap, and let only the entry list scroll
-     (see .log) — the header, stats and footer stay put, so the close button
-     never scrolls out of reach. 80% is of the overlay's padded box, so the
-     safe-area insets above already shrink it per device. */
-  max-height: 80%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  overscroll-behavior: contain;
-  animation: pop 0.18s ease;
+/* Rendered inside <Sheet position="center">; the overlay, sheet box and
+   entry rows live in Sheet.module.css / DrinkRow.module.css. */
+.log {
+  margin-top: 6px;
 }
 
 .head {
@@ -107,56 +73,7 @@
   margin-left: 3px;
 }
 
-/* Entry list — mirrors the log rows on Today (read-only here). The only
-   scrolling region of the sheet; min-height: 0 lets it shrink below its
-   content so the footer stays visible on a long night. */
-.log {
-  flex: 1 1 auto;
-  min-height: 0;
-  margin-top: 10px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-.logRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--w-05);
-}
-.logRow:last-child {
-  border-bottom: none;
-}
-.logDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex: none;
-}
-.logMain {
-  flex: 1;
-  min-width: 0;
-}
-.logType {
-  font: 600 13px var(--font-sans);
-  color: var(--text);
-}
-.logMeta {
-  font: 500 11px var(--font-mono);
-  color: var(--w-38);
-  margin-top: 2px;
-}
-.logTime {
-  font: 500 12px var(--font-mono);
-  color: var(--w-50);
-  flex: none;
-}
-
 .foot {
-  flex: none;
-  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid var(--w-06);
   font: 500 10.5px/1.45 var(--font-sans);

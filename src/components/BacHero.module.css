@@ -1,0 +1,93 @@
+/* The zone colour is picked once from the data-zone attribute and everything
+   else reads --zone, so number, pill and tint always agree. */
+.hero {
+  --zone: var(--zone-sober);
+  border-radius: 22px;
+  padding: 18px 22px 16px;
+  border: 1px solid color-mix(in oklch, var(--zone) 32%, transparent);
+  background: linear-gradient(
+    160deg,
+    color-mix(in oklch, var(--zone) 12%, transparent),
+    var(--w-03)
+  );
+  margin-bottom: 14px;
+}
+.hero[data-zone='light'] {
+  --zone: var(--zone-light);
+}
+.hero[data-zone='tipsy'] {
+  --zone: var(--zone-tipsy);
+}
+.hero[data-zone='drunk'] {
+  --zone: var(--zone-drunk);
+}
+.hero[data-zone='heavy'] {
+  --zone: var(--zone-heavy);
+}
+.hero[data-over='true'] {
+  border-color: var(--danger-border);
+}
+
+.eyebrow {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.18em;
+  color: var(--w-45);
+}
+
+.numRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 6px;
+}
+.num {
+  font: 600 76px/0.9 var(--font-mono);
+  letter-spacing: -0.03em;
+  color: var(--zone);
+}
+.unit {
+  font: 500 24px var(--font-mono);
+  color: var(--w-50);
+}
+
+.zoneRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+.zone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--zone) 45%, transparent);
+  background: color-mix(in oklch, var(--zone) 14%, transparent);
+  font: 600 17px var(--font-sans);
+  color: var(--zone);
+}
+.zoneDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--zone);
+}
+.sober {
+  font: 500 15px var(--font-sans);
+  color: var(--w-60);
+  text-align: right;
+}
+
+.count {
+  margin-top: 14px;
+  font: 600 17px var(--font-mono);
+  color: var(--text);
+}
+.hero[data-over='true'] .count {
+  color: var(--danger-text);
+}
+.overBy {
+  font-weight: 500;
+}

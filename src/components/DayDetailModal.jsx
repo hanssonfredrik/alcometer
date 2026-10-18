@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import Sheet from './Sheet.jsx'
+import DrinkRow from './DrinkRow.jsx'
 import styles from './DayDetailModal.module.css'
 
 /**
@@ -7,23 +8,24 @@ import styles from './DayDetailModal.module.css'
  * InsightsScreen); this component only renders it.
  */
 export default function DayDetailModal({ day, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
-
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div
-        className={styles.sheet}
-        role="dialog"
-        aria-modal="true"
-        aria-label={`Log for ${day.rel} ${day.dateLabel}`}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Sheet
+      position="center"
+      ariaLabel={`Log for ${day.rel} ${day.dateLabel}`}
+      onClose={onClose}
+      footer={
+        day.count > 0 ? (
+          <div className={styles.foot}>
+            {day.over
+              ? `${day.count - day.limit} over that day's limit of ${day.limit}.`
+              : `Within that day's limit of ${day.limit}.`}
+            {' · '}
+            {day.grams} g pure alcohol
+          </div>
+        ) : null
+      }
+    >
+      <>
         <div className={styles.head}>
           <div className={styles.headText}>
             <div className={styles.rel}>{day.rel}</div>
@@ -59,27 +61,10 @@ export default function DayDetailModal({ day, onClose }) {
               </div>
             </div>
 
-            <div className={`${styles.log} scrollArea`}>
+            <div className={styles.log}>
               {day.entries.map((e) => (
-                <div key={e.id} className={styles.logRow}>
-                  <span className={styles.logDot} />
-                  <div className={styles.logMain}>
-                    <div className={styles.logType}>{e.typeLabel}</div>
-                    <div className={styles.logMeta}>
-                      {e.cl} cl · {e.abv}% · {e.grams} g
-                    </div>
-                  </div>
-                  <div className={styles.logTime}>{e.timeLabel}</div>
-                </div>
+                <DrinkRow key={e.id} entry={e} showGrams />
               ))}
-            </div>
-
-            <div className={styles.foot}>
-              {day.over
-                ? `${day.count - day.limit} over that day's limit of ${day.limit}.`
-                : `Within that day's limit of ${day.limit}.`}
-              {' · '}
-              {day.grams} g pure alcohol
             </div>
           </>
         ) : (
@@ -90,7 +75,7 @@ export default function DayDetailModal({ day, onClose }) {
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </>
+    </Sheet>
   )
 }

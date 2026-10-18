@@ -16,6 +16,24 @@ export const LABELS = {
   liquor: 'Liquor',
 }
 
+// Glyph shown next to each drink type (log sheet tiles, log rows). Written as
+// escapes so the file survives any editor/encoding round-trip.
+export const DRINK_ICONS = {
+  wine: '\u{1F377}',
+  beer: '\u{1F37A}',
+  cava: '\u{1F942}',
+  liquor: '\u{1F943}',
+}
+
+// Common pour sizes per type, in cl. The user's configured default for the
+// type is merged in by `sizeChips()` (lib/drinks.js) and pre-selected.
+export const SIZE_PRESETS_CL = {
+  wine: [12, 15, 18, 25],
+  beer: [33, 40, 50],
+  cava: [10, 12, 15],
+  liquor: [2, 4, 6, 8],
+}
+
 export const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
 export const MONTHS = [
@@ -46,6 +64,22 @@ export const BURN_RATE = 0.15
 export const WIDMARK_R = { M: 0.68, F: 0.55 }
 
 export const DEFAULT_LIMIT = 3
+
+// Plain-language BAC bands for the Today hero. `max` is exclusive except for
+// sober, which is exactly 0 (after rounding to the 2 dp the UI shows). Each
+// id maps to a `--zone-<id>` colour token in global.css. 0.2‰ is the Swedish
+// legal driving limit, but the UI never claims fitness to drive — this is a
+// Widmark estimate.
+export const BAC_ZONES = [
+  { id: 'sober', label: 'Sober', max: 0 },
+  { id: 'light', label: 'Light', max: 0.2 },
+  { id: 'tipsy', label: 'Tipsy', max: 0.5 },
+  { id: 'drunk', label: 'Drunk', max: 1.0 },
+  { id: 'heavy', label: 'Very drunk', max: Infinity },
+]
+
+// How long the "Logged … · Undo" toast stays up.
+export const UNDO_TOAST_MS = 6000
 
 // Default weekly goal, in standard glasses per week — the baseline the Insights
 // trend is framed against. Editable in Setup.

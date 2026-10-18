@@ -1,29 +1,5 @@
-/* Overlay is absolutely positioned against the phone frame (.frame in
-   App.module.css is position: relative), so it covers the app — not the
-   whole desktop viewport. z-index lifts it above the bottom nav. */
-.overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  background: var(--scrim);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  overscroll-behavior: contain;
-}
-
-.sheet {
-  background: var(--panel);
-  border: 1px solid var(--w-12);
-  border-radius: 18px;
-  padding: 18px;
-  width: 100%;
-  max-width: 340px;
-  animation: pop 0.18s ease;
-}
-
+/* Rendered inside <Sheet position="center">; the overlay and sheet box
+   live in Sheet.module.css. */
 .title {
   font: 600 11px var(--font-mono);
   letter-spacing: 0.18em;
@@ -31,8 +7,6 @@
   margin-bottom: 14px;
 }
 
-/* Type pills + fields mirror the custom-size panel in TodayScreen
-   (CSS Modules don't share classes across files). */
 .typeRow {
   display: flex;
   gap: 6px;

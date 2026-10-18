@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DRINK_TYPES, LABELS } from '../lib/constants.js'
+import Sheet from './Sheet.jsx'
 import styles from './EditDrinkModal.module.css'
 
 /**
@@ -15,27 +16,13 @@ export default function EditDrinkModal({ entry, onSave, onClose }) {
     time: entry.time,
   })
 
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
-
   const cl = parseFloat(form.cl)
   const abv = parseFloat(form.abv)
   const valid = cl > 0 && abv >= 0 && abv <= 100 && !!form.time
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div
-        className={styles.sheet}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Edit drink"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Sheet position="center" ariaLabel="Edit drink" onClose={onClose}>
+      <>
         <div className={styles.title}>EDIT DRINK</div>
         <div className={styles.typeRow}>
           {DRINK_TYPES.map((type) => (
@@ -89,7 +76,7 @@ export default function EditDrinkModal({ entry, onSave, onClose }) {
             Save
           </button>
         </div>
-      </div>
-    </div>
+      </>
+    </Sheet>
   )
 }

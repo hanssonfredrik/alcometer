@@ -1,0 +1,71 @@
+/* Overlay is absolutely positioned against the phone frame (.frame in
+   App.module.css is position: relative), so it covers the app — including the
+   bottom nav — not the whole desktop viewport. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: var(--scrim);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overscroll-behavior: contain;
+}
+.overlay[data-position='center'] {
+  align-items: center;
+  /* The frame runs edge-to-edge (viewport-fit=cover): pad by the insets so a
+     centred dialog clears the iOS status bar and home indicator. */
+  padding: calc(24px + env(safe-area-inset-top)) 24px
+    calc(24px + env(safe-area-inset-bottom));
+}
+
+.sheet {
+  width: 100%;
+  /* Leave overlay to tap above the sheet, and clear the status bar. */
+  max-height: calc(92% - env(safe-area-inset-top));
+  background: var(--panel);
+  border: 1px solid var(--w-12);
+  border-bottom: none;
+  border-radius: 22px 22px 0 0;
+  padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  animation: slideUp 0.22s ease;
+  outline: none;
+}
+.overlay[data-position='center'] .sheet {
+  max-width: 340px;
+  max-height: 80%;
+  border-bottom: 1px solid var(--w-12);
+  border-radius: 18px;
+  padding: 16px 18px 14px;
+  animation: pop 0.18s ease;
+}
+
+.grabber {
+  flex: none;
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--w-16);
+  margin: 0 auto 14px;
+}
+
+/* The only scrolling region; min-height: 0 lets it shrink below its content
+   so the footer (confirm button) never scrolls out of reach. */
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.footer {
+  flex: none;
+  padding-top: 14px;
+}

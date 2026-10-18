@@ -6,12 +6,15 @@ import {
   peakBac,
   computeStreaks,
   nextMilestone,
+  bacZone,
+  soberAt,
 } from './alcohol.js'
 import {
   ETHANOL_DENSITY,
   BURN_RATE,
   WIDMARK_R,
   MILESTONES,
+  BAC_ZONES,
 } from './constants.js'
 
 const HOUR = 3600000
@@ -178,5 +181,42 @@ describe('nextMilestone', () => {
   it('returns null once every milestone is reached', () => {
     const last = MILESTONES[MILESTONES.length - 1].d
     expect(nextMilestone(last)).toBeNull()
+  })
+})
+
+describe('bacZone', () => {
+  const id = (v) => bacZone(v).id
+  it('is sober only at (displayed) zero', () => {
+    expect(id(0)).toBe('sober')
+    expect(id(0.004)).toBe('sober') // shows as 0.00
+    expect(id(0.005)).toBe('light')
+    expect(id(undefined)).toBe('sober')
+  })
+  it('uses the rounded value so the label matches the number shown', () => {
+    expect(id(0.199)).toBe('tipsy') // shows as 0.20
+    expect(id(0.194)).toBe('light') // shows as 0.19
+  })
+  it('bands at 0.2 / 0.5 / 1.0', () => {
+    expect(id(0.2)).toBe('tipsy')
+    expect(id(0.49)).toBe('tipsy')
+    expect(id(0.5)).toBe('drunk')
+    expect(id(0.99)).toBe('drunk')
+    expect(id(1.0)).toBe('heavy')
+    expect(id(3)).toBe('heavy')
+  })
+  it('returns the full zone record', () => {
+    expect(bacZone(0.3)).toEqual(BAC_ZONES[2])
+  })
+})
+
+describe('soberAt', () => {
+  const t = Date.parse('2026-01-10T22:00:00')
+  it('is null when already sober', () => {
+    expect(soberAt(0, t)).toBeNull()
+    expect(soberAt(-1, t)).toBeNull()
+  })
+  it('burns off linearly at BURN_RATE', () => {
+    expect(soberAt(BURN_RATE, t)).toBe(t + HOUR)
+    expect(soberAt(0.3, t)).toBe(t + 2 * HOUR)
   })
 })

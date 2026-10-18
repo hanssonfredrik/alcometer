@@ -4,9 +4,16 @@ import { App as CapacitorApp } from '@capacitor/app'
 import { useTracker } from './hooks/useTracker.js'
 import { dateKey } from './lib/datetime.js'
 import { hapticLog, hapticUndo } from './lib/haptics.js'
-import { WEEKDAYS, MONTHS, DEFAULT_THEME } from './lib/constants.js'
+import { handleBack } from './lib/backStack.js'
+import {
+  WEEKDAYS,
+  MONTHS,
+  DEFAULT_THEME,
+  UNDO_TOAST_MS,
+} from './lib/constants.js'
 import Header from './components/Header.jsx'
 import BottomNav from './components/BottomNav.jsx'
+import UndoToast from './components/UndoToast.jsx'
 import TodayScreen from './screens/TodayScreen.jsx'
 import HistoryScreen from './screens/HistoryScreen.jsx'
 import InsightsScreen from './screens/InsightsScreen.jsx'
@@ -23,18 +30,27 @@ const SCREEN_LABELS = {
 export default function App() {
   const { data, now, actions, saveError, dismissSaveError } = useTracker()
   const [screen, setScreen] = useState('today')
-  // The most recently logged drink ({ id, key }) for the inline "Undo"
-  // affordance — the day key is captured at log time so a backfilled drink
-  // (or a log just before the 05:00 rollover) resolves to the right bucket.
+  // The most recently logged drink ({ id, key }) for the "Undo" toast — the
+  // day key is captured at log time so a backfilled drink (or a log just
+  // before the 05:00 rollover) resolves to the right bucket.
   const [undo, setUndo] = useState(null)
 
-  // Android hardware/gesture back: fall back to the Today tab first; from
-  // there, background the app (never exit — that would feel like a crash).
+  // The toast dismisses itself; a fresh `undo` object per log restarts it.
+  useEffect(() => {
+    if (!undo) return
+    const t = setTimeout(() => setUndo(null), UNDO_TOAST_MS)
+    return () => clearTimeout(t)
+  }, [undo])
+
+  // Android hardware/gesture back: close an open sheet/modal first (see
+  // lib/backStack), then fall back to the Today tab; from there, background
+  // the app (never exit — that would feel like a crash).
   const screenRef = useRef(screen)
   screenRef.current = screen
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return
     const listener = CapacitorApp.addListener('backButton', () => {
+      if (handleBack()) return
       if (screenRef.current !== 'today') setScreen('today')
       else CapacitorApp.minimizeApp()
     })
@@ -57,18 +73,12 @@ export default function App() {
     ? (data?.days?.[undo.key]?.entries ?? []).find((e) => e.id === undo.id)
     : null
 
+  // The log sheet always has an explicit size in hand (UI units: cl and
+  // percent), so every log goes through addCustomDrink.
   const logDrink = useCallback(
-    (type, key) => {
+    (drink, key) => {
       hapticLog()
-      const id = actions.addDrink(type, key)
-      setUndo({ id, key: key ?? dateKey(Date.now()) })
-    },
-    [actions],
-  )
-  const logCustom = useCallback(
-    (custom, key) => {
-      hapticLog()
-      const id = actions.addCustomDrink(custom, key)
+      const id = actions.addCustomDrink(drink, key)
       setUndo({ id, key: key ?? dateKey(Date.now()) })
     },
     [actions],
@@ -113,25 +123,25 @@ export default function App() {
           </div>
         )}
 
-        <main className={`${styles.scroll} scrollArea`}>
-          {screen === 'today' && (
-            <TodayScreen
-              data={data}
-              now={now}
-              actions={actions}
-              undoEntry={undoEntry}
-              onLogDrink={logDrink}
-              onLogCustom={logCustom}
-              onRemoveDrink={removeDrink}
-              onUndo={undoLast}
-            />
-          )}
-          {screen === 'history' && <HistoryScreen data={data} now={now} />}
-          {screen === 'insights' && <InsightsScreen data={data} now={now} />}
-          {screen === 'settings' && (
-            <SettingsScreen data={data} actions={actions} />
-          )}
-        </main>
+        <div className={styles.body}>
+          <main className={`${styles.scroll} scrollArea`}>
+            {screen === 'today' && (
+              <TodayScreen
+                data={data}
+                now={now}
+                actions={actions}
+                onLogDrink={logDrink}
+                onRemoveDrink={removeDrink}
+              />
+            )}
+            {screen === 'history' && <HistoryScreen data={data} now={now} />}
+            {screen === 'insights' && <InsightsScreen data={data} now={now} />}
+            {screen === 'settings' && (
+              <SettingsScreen data={data} actions={actions} />
+            )}
+          </main>
+          <UndoToast entry={undoEntry} onUndo={undoLast} />
+        </div>
 
         <BottomNav screen={screen} onNavigate={setScreen} />
       </div>

@@ -77,6 +77,11 @@ export function useTracker() {
         if (readyRef.current) trackSave(saveData(next))
         return next
       })
+      // Re-tick alongside the change: a drink logged "now" is stamped later
+      // than the last 20 s tick, and bacAt() only counts entries at or before
+      // the evaluation time — without this the new drink wouldn't show in the
+      // estimate until the next tick.
+      setNow(Date.now())
     },
     [trackSave],
   )
