@@ -60,17 +60,19 @@ export const DAY_START_HOUR = 5
 export const BACKFILL_HOUR = 20
 
 // Selectable accent themes. The neon look is token-driven (see global.css):
-// each id maps to a `[data-theme]` block that swaps the `--accent*` group.
-// `swatch` is a solid preview colour for the picker (independent of the
-// active theme). Danger/red tokens are semantic and never themed.
+// `:root` carries the blue default; every other id maps to a `[data-theme]`
+// block that swaps --accent / --accent-hover. `swatch` is a solid preview
+// colour for the picker (independent of the active theme). Danger/red and
+// BAC-zone tokens are semantic and never themed.
 export const THEMES = [
+  { id: 'blue', label: 'Blue', swatch: 'oklch(0.72 0.155 255)' },
   { id: 'pink', label: 'Pink', swatch: 'oklch(0.72 0.23 350)' },
   { id: 'cyan', label: 'Cyan', swatch: 'oklch(0.72 0.14 195)' },
   { id: 'green', label: 'Green', swatch: 'oklch(0.72 0.18 150)' },
   { id: 'amber', label: 'Amber', swatch: 'oklch(0.72 0.17 75)' },
 ]
 
-export const DEFAULT_THEME = 'pink'
+export const DEFAULT_THEME = 'blue'
 
 export const DEFAULT_PROFILE = {
   weight: 75,
@@ -104,4 +106,5 @@ export const MILESTONES = [
   { d: 90, icon: '90', label: '90-day legend', desc: 'A quarter year sober.' },
 ]
 
+// Also read by the inline pre-paint script in index.html — keep in sync.
 export const STORAGE_KEY = 'neontrk_v1'

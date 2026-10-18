@@ -183,7 +183,7 @@ export default function HistoryScreen({ data, now }) {
                         ? 'var(--accent)'
                         : b.hasDrinks
                           ? 'var(--accent-55)'
-                          : 'rgba(255,255,255,.22)',
+                          : 'var(--w-22)',
                   }}
                 />
                 {b.showPeak && (
@@ -220,9 +220,7 @@ export default function HistoryScreen({ data, now }) {
                 className={styles.monthFill}
                 style={{
                   width: `${m.widthPct}%`,
-                  background: m.isNow
-                    ? 'var(--accent)'
-                    : 'var(--accent-55)',
+                  background: m.isNow ? 'var(--accent)' : 'var(--accent-55)',
                 }}
               />
             </div>

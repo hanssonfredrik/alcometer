@@ -21,6 +21,19 @@
       content="Track drinks, estimate your blood-alcohol level, and build sober-day streaks."
     />
     <title>Neon Tracker</title>
+    <script>
+      // Paint the saved accent before React hydrates so a non-default theme
+      // doesn't flash blue on load. Reads the same store as lib/storage.js
+      // (web only — the native shells keep data in Preferences and are
+      // covered by the splash screen). Pre-v3 stores say 'pink' for "default";
+      // the migration ladder turns that into blue, so skip it here too.
+      try {
+        var d = JSON.parse(localStorage.getItem('neontrk_v1'))
+        var t = d && d.profile && d.profile.theme
+        if (t === 'pink' && (d.version || 1) < 3) t = null
+        if (t) document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

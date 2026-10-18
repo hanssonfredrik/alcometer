@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DRINK_TYPES, LABELS, THEMES } from '../lib/constants.js'
+import { DRINK_TYPES, LABELS, THEMES, DEFAULT_THEME } from '../lib/constants.js'
 import {
   exportBackup,
   exportEntriesCsv,
@@ -12,7 +12,7 @@ export default function SettingsScreen({ data, actions }) {
   const { profile, sizes } = data
   const [dataMsg, setDataMsg] = useState(null) // { kind: 'ok' | 'err', text }
 
-  const theme = profile.theme ?? 'pink'
+  const theme = profile.theme ?? DEFAULT_THEME
 
   const handleImport = async () => {
     setDataMsg(null)
@@ -62,7 +62,7 @@ export default function SettingsScreen({ data, actions }) {
       </div>
 
       <div className={styles.sectionLabel}>APPEARANCE</div>
-      <p className={styles.hint}>Pick the neon accent used across the app.</p>
+      <p className={styles.hint}>Pick the accent colour used across the app.</p>
       <div className={styles.themeRow}>
         {THEMES.map((t) => (
           <button

@@ -98,7 +98,7 @@ button.heatCell:focus-visible {
   align-items: center;
   justify-content: center;
   font: 600 18px/1 var(--font-mono);
-  color: #fff;
+  color: var(--text-strong);
 }
 .heatCell[data-status='over']::after {
   content: '✗';

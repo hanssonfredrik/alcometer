@@ -94,7 +94,11 @@ estimate — the UI says so, and so should you. If you touch this math, keep it 
 - **Function components + hooks only.** No classes.
 - **CSS Modules** per component (`Foo.jsx` + `Foo.module.css`). Colours,
   fonts, and spacing come from the tokens in `global.css` — reference
-  `var(--accent)` etc., don't hard-code the neon pink (`oklch(0.72 0.23 350)`).
+  `var(--accent)` etc., don't hard-code the accent. Blue is the default
+  accent; the other themes (pink, cyan, green, amber) are `[data-theme]`
+  blocks that swap `--accent`/`--accent-hover`, and the `--accent-NN` alpha
+  tints derive from it via `color-mix`. BAC zone colours (`--zone-*`) and
+  danger red are semantic and never themed.
 - **Mobile-first.** The app fills the viewport; above `480px × 940px` it
   presents as a centred phone frame (see `App.module.css`). Respect safe-area
   insets (`env(safe-area-inset-*)`) — already wired in the header and nav.

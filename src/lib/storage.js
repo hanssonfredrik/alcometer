@@ -11,7 +11,7 @@ import {
 import { dateKey } from './datetime.js'
 
 // Bump when the persisted shape changes; drives the migration ladder below.
-const SCHEMA_VERSION = 2
+const SCHEMA_VERSION = 3
 
 // On web, localStorage is durable and synchronous — keep using it unchanged.
 // Inside the Capacitor shell, WebView localStorage is treated as a cache the
@@ -85,6 +85,13 @@ export function migrate(d) {
   if ((d.version || 1) < 2) {
     migrateToLogicalDays(d)
     d.version = 2
+  }
+  if (d.version < 3) {
+    // v2 → v3: the default accent moved from pink to blue. Before v3 pink was
+    // only ever the backfilled default, never a deliberate choice, so follow
+    // the new default. A pink picked afterwards is stamped v3 and sticks.
+    if (d.profile.theme === 'pink') d.profile.theme = DEFAULT_THEME
+    d.version = 3
   }
   return d
 }

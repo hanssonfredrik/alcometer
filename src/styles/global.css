@@ -1,13 +1,20 @@
 :root {
-  /* ---- Palette (from the Neon Tracker design) ---- */
-  --accent: oklch(0.72 0.23 350);
-  --accent-hover: oklch(0.78 0.2 350);
-  --accent-16: oklch(0.72 0.23 350 / 0.16);
-  --accent-14: oklch(0.72 0.23 350 / 0.14);
-  --accent-12: oklch(0.72 0.23 350 / 0.12);
-  --accent-28: oklch(0.72 0.23 350 / 0.28);
-  --accent-40: oklch(0.72 0.23 350 / 0.4);
-  --accent-55: oklch(0.72 0.23 350 / 0.55);
+  /* ---- Palette ----
+     Blue is the default accent (electric cobalt). L 0.72 matches every other
+     theme so --on-accent text and the alpha tints behave identically. The
+     alpha variants derive from --accent via color-mix; they resolve on <html>
+     (where data-theme lives), so a theme block only redefines --accent and
+     --accent-hover. */
+  --accent: oklch(0.72 0.155 255);
+  --accent-hover: oklch(0.78 0.13 255);
+  --accent-16: color-mix(in oklch, var(--accent) 16%, transparent);
+  --accent-14: color-mix(in oklch, var(--accent) 14%, transparent);
+  --accent-12: color-mix(in oklch, var(--accent) 12%, transparent);
+  --accent-28: color-mix(in oklch, var(--accent) 28%, transparent);
+  --accent-40: color-mix(in oklch, var(--accent) 40%, transparent);
+  --accent-55: color-mix(in oklch, var(--accent) 55%, transparent);
+  /* Faint top-of-screen glow behind the body (see body background). */
+  --accent-glow: color-mix(in oklch, var(--accent) 7%, transparent);
 
   --danger: oklch(0.62 0.21 25);
   --danger-bar: oklch(0.66 0.21 25);
@@ -15,6 +22,17 @@
   --danger-text-soft: oklch(0.86 0.12 25);
   --danger-bg: oklch(0.62 0.21 25 / 0.14);
   --danger-border: oklch(0.62 0.21 25 / 0.5);
+
+  /* ---- BAC zones (semantic, never themed) ----
+     sober 0 | light <0.2‰ | tipsy 0.2–0.5 | drunk 0.5–1.0 | heavy ≥1.0
+     A single warm sweep (neutral → lime → yellow → orange → red) so the BAC
+     hero reads "heating up" whatever the accent. All L ≥ 0.72 (≥ 7:1 on
+     --ink). The top zone is the same red as the over-limit state. */
+  --zone-sober: oklch(0.86 0 0);
+  --zone-light: oklch(0.9 0.07 120);
+  --zone-tipsy: oklch(0.85 0.17 95);
+  --zone-drunk: oklch(0.75 0.19 50);
+  --zone-heavy: var(--danger-text);
 
   --ink: #08070c;
   --panel: #0b0912;
@@ -33,6 +51,7 @@
   --w-35: rgba(255, 255, 255, 0.35);
   --w-30: rgba(255, 255, 255, 0.3);
   --w-28: rgba(255, 255, 255, 0.28);
+  --w-22: rgba(255, 255, 255, 0.22);
   --w-16: rgba(255, 255, 255, 0.16);
   --w-14: rgba(255, 255, 255, 0.14);
   --w-12: rgba(255, 255, 255, 0.12);
@@ -45,6 +64,9 @@
   --w-03: rgba(255, 255, 255, 0.03);
 
   --field-bg: rgba(0, 0, 0, 0.35);
+  /* Modal backdrop (--ink at 60%) and the translucent bottom nav (--panel). */
+  --scrim: rgba(8, 7, 12, 0.6);
+  --nav-bg: rgba(11, 9, 18, 0.72);
 
   --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
@@ -55,40 +77,28 @@
 }
 
 /* ---- Accent themes ----
-   Each block swaps only the `--accent*` group; the neon-pink `:root` values
-   above are the default (data-theme="pink" or unset). Danger/red tokens are
-   semantic (over-limit) and intentionally stay fixed across every theme. */
+   Each block swaps only --accent / --accent-hover; the alpha tints above
+   follow automatically. The blue `:root` values are the default
+   (data-theme="blue" or unset). Danger/red and BAC-zone tokens are semantic
+   and intentionally stay fixed across every theme. */
+[data-theme='pink'] {
+  --accent: oklch(0.72 0.23 350);
+  --accent-hover: oklch(0.78 0.2 350);
+}
+
 [data-theme='cyan'] {
   --accent: oklch(0.72 0.14 195);
   --accent-hover: oklch(0.78 0.13 195);
-  --accent-16: oklch(0.72 0.14 195 / 0.16);
-  --accent-14: oklch(0.72 0.14 195 / 0.14);
-  --accent-12: oklch(0.72 0.14 195 / 0.12);
-  --accent-28: oklch(0.72 0.14 195 / 0.28);
-  --accent-40: oklch(0.72 0.14 195 / 0.4);
-  --accent-55: oklch(0.72 0.14 195 / 0.55);
 }
 
 [data-theme='green'] {
   --accent: oklch(0.72 0.18 150);
   --accent-hover: oklch(0.78 0.16 150);
-  --accent-16: oklch(0.72 0.18 150 / 0.16);
-  --accent-14: oklch(0.72 0.18 150 / 0.14);
-  --accent-12: oklch(0.72 0.18 150 / 0.12);
-  --accent-28: oklch(0.72 0.18 150 / 0.28);
-  --accent-40: oklch(0.72 0.18 150 / 0.4);
-  --accent-55: oklch(0.72 0.18 150 / 0.55);
 }
 
 [data-theme='amber'] {
   --accent: oklch(0.72 0.17 75);
   --accent-hover: oklch(0.78 0.16 75);
-  --accent-16: oklch(0.72 0.17 75 / 0.16);
-  --accent-14: oklch(0.72 0.17 75 / 0.14);
-  --accent-12: oklch(0.72 0.17 75 / 0.12);
-  --accent-28: oklch(0.72 0.17 75 / 0.28);
-  --accent-40: oklch(0.72 0.17 75 / 0.4);
-  --accent-55: oklch(0.72 0.17 75 / 0.55);
 }
 
 * {
@@ -104,7 +114,8 @@ body {
 body {
   min-height: 100dvh;
   background:
-    radial-gradient(120% 60% at 50% 0%, #17102180 0%, #08070c 60%) fixed,
+    radial-gradient(120% 60% at 50% 0%, var(--accent-glow) 0%, var(--ink) 60%)
+      fixed,
     var(--ink);
   color: var(--text);
   font-family: var(--font-sans);
@@ -155,6 +166,17 @@ input[type='number'] {
   }
   100% {
     transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
     opacity: 1;
   }
 }

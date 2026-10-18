@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { defaultData, migrate } from './storage.js'
+import { mergeBackup } from './backup.js'
 import {
   DEFAULT_SIZES,
   DEFAULT_WEEKLY_TARGET,
@@ -10,7 +11,7 @@ import {
 describe('defaultData', () => {
   it('produces the current schema shape', () => {
     const d = defaultData()
-    expect(d.version).toBe(2)
+    expect(d.version).toBe(3)
     expect(d.profile).toMatchObject({ weight: 75, sex: 'M' })
     expect(d.sizes).toEqual(DEFAULT_SIZES)
     expect(d.days).toEqual({})
@@ -46,8 +47,71 @@ describe('migrate — backfill', () => {
       weeklyTarget: 5,
       theme: 'cyan',
     }
-    const d = migrate({ version: 2, profile, days: {} })
+    const d = migrate({ version: 3, profile, days: {} })
     expect(d.profile).toEqual(profile)
+  })
+})
+
+describe('migrate — v2 → v3 default accent', () => {
+  const v2 = (theme) => ({
+    version: 2,
+    profile: { weight: 75, sex: 'M', weeklyTarget: 10, theme },
+    sizes: DEFAULT_SIZES,
+    days: {},
+  })
+
+  it('moves a v2 profile on pink (the old default) to the new default', () => {
+    const d = migrate(v2('pink'))
+    expect(d.profile.theme).toBe(DEFAULT_THEME)
+    expect(d.version).toBe(3)
+  })
+
+  it('backfills a missing theme with the new default', () => {
+    const d = migrate(v2(undefined))
+    expect(d.profile.theme).toBe(DEFAULT_THEME)
+  })
+
+  it('leaves a non-pink v2 choice alone', () => {
+    expect(migrate(v2('amber')).profile.theme).toBe('amber')
+  })
+
+  it('keeps pink when it was picked on v3 (idempotent)', () => {
+    const d = { ...v2('pink'), version: 3 }
+    const once = migrate(structuredClone(d))
+    const twice = migrate(structuredClone(once))
+    expect(once.profile.theme).toBe('pink')
+    expect(twice.profile.theme).toBe('pink')
+    expect(twice.version).toBe(3)
+  })
+
+  it('runs the whole ladder on v1 data', () => {
+    const v1 = {
+      profile: { weight: 75, sex: 'M', theme: 'pink' },
+      days: {
+        '2026-01-11': {
+          limit: 4,
+          entries: [
+            {
+              id: 'a',
+              ts: Date.parse('2026-01-11T01:00:00'),
+              ml: 330,
+              abv: 0.05,
+            },
+          ],
+        },
+      },
+    }
+    const d = migrate(v1)
+    expect(d.version).toBe(3)
+    expect(d.profile.theme).toBe(DEFAULT_THEME)
+    expect(Object.keys(d.days)).toEqual(['2026-01-10'])
+  })
+
+  it('upgrades an imported v2 backup on the way in', () => {
+    const current = { ...v2('cyan'), version: 3 }
+    const { data } = mergeBackup(current, v2('pink'))
+    expect(data.profile.theme).toBe(DEFAULT_THEME)
+    expect(data.version).toBe(3)
   })
 })
 
@@ -71,7 +135,7 @@ describe('migrate — v1 → v2 logical-day re-bucket', () => {
       },
     }
     const d = migrate(v1)
-    expect(d.version).toBe(2)
+    expect(d.version).toBe(3)
     // 01:00 on the 11th rolls back to the night of the 10th.
     expect(d.days['2026-01-11']).toBeUndefined()
     expect(d.days['2026-01-10'].entries).toHaveLength(1)
@@ -164,8 +228,8 @@ describe('migrate — v1 → v2 logical-day re-bucket', () => {
 
   it('is idempotent on already-logical (v2) data', () => {
     const v2 = {
-      version: 2,
-      profile: { weight: 75, sex: 'M', weeklyTarget: 10, theme: 'pink' },
+      version: 3,
+      profile: { weight: 75, sex: 'M', weeklyTarget: 10, theme: 'blue' },
       sizes: DEFAULT_SIZES,
       days: {
         '2026-05-10': {

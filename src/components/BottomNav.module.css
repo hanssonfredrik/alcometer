@@ -1,7 +1,7 @@
 .nav {
   display: flex;
   border-top: 1px solid var(--w-07);
-  background: rgba(11, 9, 18, 0.72);
+  background: var(--nav-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding-bottom: env(safe-area-inset-bottom);

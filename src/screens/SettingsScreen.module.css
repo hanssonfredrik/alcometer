@@ -51,8 +51,10 @@
 
 .themeRow {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
+  /* Five fixed columns: auto-fit would orphan the fifth swatch on a narrow
+     phone. Cells are ~50px at 320px wide, ~77px in the 452px frame. */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
   margin-bottom: 26px;
 }
 .themeBtn {
@@ -60,12 +62,13 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 12px 6px;
+  min-width: 0;
+  padding: 12px 2px;
   border-radius: 12px;
   border: 1px solid var(--w-14);
   background: transparent;
   color: var(--w-50);
-  font: 600 11px var(--font-sans);
+  font: 600 10.5px var(--font-sans);
   cursor: pointer;
 }
 .themeBtn[data-selected='true'] {

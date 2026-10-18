@@ -4,7 +4,7 @@ import { App as CapacitorApp } from '@capacitor/app'
 import { useTracker } from './hooks/useTracker.js'
 import { dateKey } from './lib/datetime.js'
 import { hapticLog, hapticUndo } from './lib/haptics.js'
-import { WEEKDAYS, MONTHS } from './lib/constants.js'
+import { WEEKDAYS, MONTHS, DEFAULT_THEME } from './lib/constants.js'
 import Header from './components/Header.jsx'
 import BottomNav from './components/BottomNav.jsx'
 import TodayScreen from './screens/TodayScreen.jsx'
@@ -46,7 +46,8 @@ export default function App() {
   // Reflect the chosen accent theme on the document root; the `[data-theme]`
   // blocks in global.css swap the `--accent*` tokens the whole UI reads from.
   useEffect(() => {
-    document.documentElement.dataset.theme = data?.profile?.theme || 'pink'
+    document.documentElement.dataset.theme =
+      data?.profile?.theme || DEFAULT_THEME
   }, [data?.profile?.theme])
 
   const d = new Date(now)
