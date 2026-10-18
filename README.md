@@ -1,4 +1,4 @@
-# Neon Tracker
+# Alcometer
 
 A mobile-first PWA for tracking drinks, estimating your blood-alcohol level (BAC), and building sober-day streaks. Dark "neon" aesthetic, works offline, and **all data stays on your device** — nothing is ever sent anywhere.
 

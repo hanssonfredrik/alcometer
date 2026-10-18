@@ -1,10 +1,10 @@
-# Neon Tracker
+# Alcometer
 
 A mobile-first PWA for tracking drinks, estimating blood-alcohol level, and
 building sober-day streaks. Dark "neon" aesthetic. All data is local — nothing
 leaves the device.
 
-Ported from a Claude Design mockup (`Neon Tracker.dc.html`) into React + Vite.
+Ported from a Claude Design mockup (`Alcometer.dc.html`) into React + Vite.
 Ships as three targets from this one codebase: the web PWA, plus native iOS
 and Android apps via **Capacitor** (the `ios/` and `android/` shells wrap the
 same `dist/` build — there is no separate mobile UI).
@@ -143,7 +143,7 @@ platform-agnostic.
 
 ## Keeping in sync with the design
 
-The source design lives in a Claude Design project (`Neon Tracker.dc.html`).
+The source design lives in a Claude Design project (`Alcometer.dc.html`).
 See `.claude/skills/design-sync` for how to re-pull it and reconcile changes.
 The `.dc.html` uses a custom `{{ }}` / `<sc-if>` / `<sc-for>` template runtime;
 its `<script data-dc-script>` class holds the reference logic that `src/lib`

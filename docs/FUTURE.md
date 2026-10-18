@@ -1,6 +1,6 @@
 # Future ideas
 
-Proposals for future versions of Neon Tracker. Nothing here is committed work —
+Proposals for future versions of Alcometer. Nothing here is committed work —
 it's a menu, roughly ordered by value-for-effort within each section. Guiding
 constraints that any of these must respect:
 

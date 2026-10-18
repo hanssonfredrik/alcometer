@@ -1,9 +1,9 @@
 {
-  "name": "neon-tracker",
+  "name": "alcometer",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Neon Tracker — a mobile-first PWA for tracking drinks, estimating BAC (Widmark), and building sober-day streaks.",
+  "description": "Alcometer — a mobile-first PWA for tracking drinks, estimating BAC (Widmark), and building sober-day streaks.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

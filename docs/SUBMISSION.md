@@ -1,4 +1,4 @@
-# Getting Neon Tracker into the App Store & Google Play
+# Getting Alcometer into the App Store & Google Play
 
 Everything code-side is done: the native projects build, CI is wired, icons
 and splash screens are generated. What remains is account setup, secrets,
@@ -40,7 +40,7 @@ building and signing.
    Bundle ID (explicit): `se.venueve.neontracker`. No capabilities
    needed.
 3. **Create the app record**: App Store Connect → My Apps → **+** →
-   New App → platform iOS, the bundle id from step 2, name "Neon Tracker"
+   New App → platform iOS, the bundle id from step 2, name "Alcometer"
    (if taken, pick a variant — this is the store display name only), SKU
    e.g. `neontracker`.
 4. **Create an App Store Connect API key**: App Store Connect → Users and
@@ -84,7 +84,7 @@ building and signing.
    for any of the exemptions…?"* → **Yes**. Either way, no annual
    self-classification report is required.
    Then add yourself as an internal tester, install the TestFlight app on
-   your iPhone, and install Neon Tracker.
+   your iPhone, and install Alcometer.
 
 ## 2. Android — one-time setup (~1 h)
 
@@ -92,7 +92,7 @@ building and signing.
    https://play.google.com/console/signup . Identity verification can take
    a day or two.
 2. **Create the app** in Play Console: All apps → Create app → name
-   "Neon Tracker", app (not game), free.
+   "Alcometer", app (not game), free.
 3. **Generate the upload keystore** — run locally (any machine with Java,
    this PC has it):
    ```powershell
@@ -111,7 +111,7 @@ building and signing.
    | `ANDROID_KEY_ALIAS` | `upload` |
    | `ANDROID_KEY_PASSWORD` | key password |
 5. **Produce a release build**: `git tag v1.0.0 && git push --tags` → the
-   Android workflow uploads a `neon-tracker-release-aab` artifact →
+   Android workflow uploads a `alcometer-release-aab` artifact →
    download and unzip it.
 6. **Upload to Play**: Play Console → Testing → Internal testing → Create
    release → upload the `.aab` → add your Google account as a tester →
@@ -150,7 +150,7 @@ Required before public release; not required for TestFlight/internal testing.
 
   **App name** — Apple (≤30) & Play (≤30):
   ```
-  Neon Tracker
+  Alcometer
   ```
 
   **Subtitle** — Apple only (≤30):
@@ -176,7 +176,7 @@ Required before public release; not required for TestFlight/internal testing.
   **Full description** — Apple "Description" & Play "Full description" (paste
   the same text in both):
   ```
-  Neon Tracker helps you stay aware of how much you drink — with a bold neon interface that's fast to use and completely private.
+  Alcometer helps you stay aware of how much you drink — with a bold neon interface that's fast to use and completely private.
 
   Tap once to log a drink and watch your estimated blood-alcohol level (promille) rise and fall in real time. Build streaks of sober days, set a weekly goal, and follow your trends. Everything stays on your device — no account, no sign-up, no tracking.
 
@@ -208,7 +208,7 @@ Required before public release; not required for TestFlight/internal testing.
   > ASO note: Apple has no keyword/subtitle equivalent on Play, so Play's
   > 80-char short description carries the descriptive keywords instead. If you
   > later want more search weight, the name field can become
-  > "Neon: Drink Tracker" (still ≤30) on either store — display name only.
+  > "Alcometer: Drink Tracker" (still ≤30) on either store — display name only.
 
 - **App Store review notes** (App Review Information field):
   > Fully offline utility, not a website wrapper: all functionality is

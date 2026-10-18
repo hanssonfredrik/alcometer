@@ -29,7 +29,7 @@ export function serialize(data) {
  */
 export function validateBackup(obj) {
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-    throw new Error("This file isn't a Neon Tracker backup.")
+    throw new Error("This file isn't an Alcometer backup.")
   }
   if (!obj.days || typeof obj.days !== 'object') {
     throw new Error('Backup is missing its day data — it may be corrupt.')
@@ -154,7 +154,7 @@ function stampedName(prefix, ext) {
 /** Export the whole persisted object as a JSON backup file. */
 export function exportBackup(data) {
   return saveOrShareFile({
-    filename: stampedName('neon-tracker-backup', 'json'),
+    filename: stampedName('alcometer-backup', 'json'),
     mime: 'application/json',
     content: serialize(data),
   })
@@ -163,7 +163,7 @@ export function exportBackup(data) {
 /** Export all entries as a CSV file. */
 export function exportEntriesCsv(data) {
   return saveOrShareFile({
-    filename: stampedName('neon-tracker-entries', 'csv'),
+    filename: stampedName('alcometer-entries', 'csv'),
     mime: 'text/csv',
     content: entriesToCsv(data),
   })

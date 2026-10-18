@@ -13,8 +13,8 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Neon Tracker',
-        short_name: 'Neon',
+        name: 'Alcometer',
+        short_name: 'Alcometer',
         description:
           'Track drinks, estimate your blood-alcohol level, and build sober-day streaks.',
         theme_color: '#0b0912',

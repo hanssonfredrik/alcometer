@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'se.venueve.neontracker',
-  appName: 'Neon Tracker',
+  appName: 'Alcometer',
   webDir: 'dist',
   // Match the app's darkest background so native gaps (launch, overscroll,
   // keyboard transitions) never flash white.

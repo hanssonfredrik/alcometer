@@ -1,9 +1,9 @@
 ---
 name: run-app
-description: Launch the Neon Tracker PWA locally and, when a visual check is needed, capture screenshots of the Today/History/Setup screens with seeded data using headless Edge over the Chrome DevTools Protocol. Use when asked to run, preview, or screenshot the app, or to confirm a UI change works.
+description: Launch the Alcometer PWA locally and, when a visual check is needed, capture screenshots of the Today/History/Setup screens with seeded data using headless Edge over the Chrome DevTools Protocol. Use when asked to run, preview, or screenshot the app, or to confirm a UI change works.
 ---
 
-# Running & screenshotting Neon Tracker
+# Running & screenshotting Alcometer
 
 ## Just run it
 
