@@ -105,14 +105,21 @@
   box-sizing: border-box;
 }
 
+/* The document itself never scrolls — only .scroll inside the app frame
+   does. Locking html/body to the viewport (and refusing overscroll) stops
+   iOS from giving the page a scroll offset (rubber-band at the end of a list,
+   keyboard lift) that leaves the whole app shifted until the next scroll
+   gesture snaps it back. */
 html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
-  min-height: 100dvh;
   background:
     radial-gradient(120% 60% at 50% 0%, var(--accent-glow) 0%, var(--ink) 60%)
       fixed,

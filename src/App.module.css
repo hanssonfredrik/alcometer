@@ -1,5 +1,5 @@
 .app {
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8,7 +8,7 @@
 .frame {
   width: 100%;
   max-width: var(--app-max);
-  height: 100dvh;
+  height: 100%;
   background: var(--panel);
   overflow: hidden;
   position: relative;
@@ -20,7 +20,7 @@
    centred device with side borders and a drop shadow (like the mockup). */
 @media (min-width: 480px) and (min-height: 940px) {
   .frame {
-    height: min(920px, 100dvh);
+    height: min(920px, 100%);
     border-left: 1px solid var(--w-06);
     border-right: 1px solid var(--w-06);
     border-radius: 0;
@@ -43,6 +43,8 @@
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* Don't hand a rubber-band at the end of the list to the document. */
+  overscroll-behavior: contain;
   padding: 6px 24px 24px;
 }
 
