@@ -147,9 +147,13 @@ The core of the app is the journal: logging drinks, a limit for the night, a wee
 To try it, tap "Log a drink", pick a type and a size, and confirm. History, Insights and Settings need no setup.
 ```
 
-**Screenshots:** before a build is attached, upload the 6.5" set
-(`out/appstore/iphone-6.5/`, files 01 to 05 in order). Once a build is
-attached you can switch to the 6.9" set (`out/appstore/iphone-6.9/`).
+**Screenshots:** upload `out/appstore/iphone-6.5/` (files 01 to 05 in order)
+into the **iPhone 6.5" Display** slot. Once a build is attached you can use
+`out/appstore/iphone-6.9/` in the **iPhone 6.9" Display** slot instead.
+Never drop one set into the other's slot, or the Play files into either:
+App Store Connect rejects them with "File dimensions are invalid". If it asks
+for iPad screenshots, the attached build is an old one that still supports
+iPad (see `README.md`).
 
 ---
 

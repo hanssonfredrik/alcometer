@@ -209,6 +209,9 @@ link it. Native-only pieces:
   `env(safe-area-inset-*)` on Android WebViews that misreport it and owns the
   system-bar styling (do **not** reinstall `@capacitor/status-bar` — it
   conflicts). Edge-to-edge is enabled in `MainActivity.java`.
+- **iPhone only on iOS**: `TARGETED_DEVICE_FAMILY = 1` and no `~ipad`
+  orientations. Enabling iPad makes App Store Connect demand a 13" iPad
+  screenshot set (see `store/README.md`).
 - **Haptics / back button**: `lib/haptics.js`; Android back handling lives in
   `App.jsx`: an open sheet/modal closes first (`lib/backStack.js`), then
   non-Today tab → Today, then Today → minimize.

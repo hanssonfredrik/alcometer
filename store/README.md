@@ -35,9 +35,22 @@ English only for now (see [Adding a language](#adding-a-language)).
 - **`icon-1024.png` is not an upload.** Since Xcode 14 the marketing icon is
   read from the asset catalog inside the binary (`npm run icons` generates
   it). Keep it for press and for anyone who asks for "the icon".
-- **No iPad set.** The app is iPhone-only in the store; if iPad is ever
-  enabled, App Store Connect will ask for a 13" set and this kit needs a
-  fourth canvas in `render.mjs` and a rule in `finalize.mjs`.
+- **No iPad set, on purpose.** The iOS target is iPhone-only
+  (`TARGETED_DEVICE_FAMILY = 1` in `ios/App/App.xcodeproj/project.pbxproj`,
+  and no `UISupportedInterfaceOrientations~ipad` in `Info.plist`). It used to
+  be `1,2`. Then any attached build made App Store Connect require a 13" iPad
+  set, and iPhone files dropped in that slot fail with "File dimensions are
+  invalid". If you ever enable iPad, add a 2064 × 2752 canvas to
+  `render.mjs` and a rule to `finalize.mjs`.
+
+**"File dimensions are invalid" in App Store Connect** means a set went into
+the wrong slot. The pixel sizes are right (`finalize.mjs` proves it):
+
+- `iphone-6.5/` (1284 × 2778) goes in **iPhone 6.5" Display** only;
+- `iphone-6.9/` (1320 × 2868) goes in **iPhone 6.9" Display** only;
+- `googleplay/phone/` (1080 × 1920) is for Play and fits no Apple slot;
+- an **iPad** slot means the attached build still supports iPad. Attach a
+  build made after the iPhone-only change.
 
 The five shots, in order: Today mid-evening (gauge + tonight's curve), the
 log sheet, History, Insights (trend sparkline + heatmap), and Settings' data
