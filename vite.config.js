@@ -13,10 +13,10 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Alcometer',
-        short_name: 'Alcometer',
+        name: 'Promilla',
+        short_name: 'Promilla',
         description:
-          'Track drinks, estimate your blood-alcohol level, and build sober-day streaks.',
+          'A private drink journal. Log your drinks, follow an estimate of your evening and build alcohol-free streaks.',
         theme_color: '#0b0912',
         background_color: '#08070c',
         display: 'standalone',

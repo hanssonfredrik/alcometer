@@ -21,10 +21,10 @@ import SettingsScreen from './screens/SettingsScreen.jsx'
 import styles from './App.module.css'
 
 const SCREEN_LABELS = {
-  today: 'TONIGHT',
+  today: 'TODAY',
   history: 'HISTORY',
   insights: 'INSIGHTS',
-  settings: 'SETUP',
+  settings: 'SETTINGS',
 }
 
 export default function App() {
@@ -110,7 +110,7 @@ export default function App() {
         {saveError && (
           <div className={styles.saveError} role="alert">
             <div className={styles.saveErrorText}>
-              Couldn&apos;t save — your last change may not be stored.
+              Couldn&apos;t save. Your last change may be lost.
             </div>
             <button
               type="button"
@@ -140,7 +140,11 @@ export default function App() {
               <SettingsScreen data={data} actions={actions} />
             )}
           </main>
-          <UndoToast entry={undoEntry} onUndo={undoLast} />
+          <UndoToast
+            entry={undoEntry}
+            onUndo={undoLast}
+            raised={screen === 'today'}
+          />
         </div>
 
         <BottomNav screen={screen} onNavigate={setScreen} />

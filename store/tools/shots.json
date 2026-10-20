@@ -1,0 +1,79 @@
+{
+  "_comment": [
+    "The screenshot set: how capture.mjs reaches each screen, and the headline and",
+    "sub line render.mjs prints over it. English only for now; add an \"sv\" key to",
+    "every title/sub/tagline (and \"sv\" to LANGS in render.mjs) to add a listing.",
+    "",
+    "Copy rules (see store/README.md and the copywriting skill): the app is a drink",
+    "journal with alcohol-free streaks and an ESTIMATE. Never call it a breathalyzer,",
+    "a test, a measurement or a BAC calculator, never imply fitness to drive, never grade a number, no",
+    "exclamation marks, no em-dashes. Only claim what the app visibly does.",
+    "",
+    "steps: { tab } clicks a bottom-nav tab by its label; { click } clicks the first",
+    "button whose text contains the string; { scrollTo } centers (and { scrollToTop }",
+    "scrolls to the top) the first element",
+    "whose own text contains the string; { wait } waits until the text is on the",
+    "page. 'page' names the capture file captures/<id>-<page>.png."
+  ],
+  "screenshots": [
+    {
+      "id": "01",
+      "page": "today",
+      "steps": [{ "tab": "Today" }, { "wait": "Tonight’s curve" }],
+      "title": { "en": "Tonight at a glance" },
+      "sub": {
+        "en": "Your drinks so far, and an estimate of how the evening adds up."
+      }
+    },
+    {
+      "id": "02",
+      "page": "log",
+      "steps": [
+        { "tab": "Today" },
+        { "click": "Log a drink" },
+        { "wait": "usual" }
+      ],
+      "title": { "en": "Log a drink in a couple of taps" },
+      "sub": {
+        "en": "Pick the type, then the size. Your usual pour is already picked."
+      }
+    },
+    {
+      "id": "03",
+      "page": "history",
+      "steps": [{ "tab": "History" }],
+      "title": { "en": "See how your weeks add up" },
+      "sub": {
+        "en": "This week, this month and the last 12 days at a glance."
+      }
+    },
+    {
+      "id": "04",
+      "page": "insights",
+      "steps": [{ "tab": "Insights" }, { "wait": "This week" }],
+      "title": { "en": "Spot your own patterns" },
+      "sub": {
+        "en": "Your trend against your weekly target, and your busiest days."
+      }
+    },
+    {
+      "id": "05",
+      "page": "private",
+      "steps": [
+        { "tab": "Settings" },
+        { "scrollToTop": "YOUR USUAL SIZES" },
+        { "wait": "Everything stays on this device" }
+      ],
+      "title": { "en": "Your data stays on your phone" },
+      "sub": {
+        "en": "No account and no sync. Back up to a file whenever you like."
+      }
+    }
+  ],
+  "featureGraphic": {
+    "name": "Promilla",
+    "tagline": {
+      "en": "A private drink journal with alcohol-free streaks."
+    }
+  }
+}

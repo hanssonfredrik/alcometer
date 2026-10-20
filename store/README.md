@@ -1,0 +1,136 @@
+# Promilla store assets
+
+Everything Google Play and App Store Connect ask for in the way of graphics,
+plus the scripts that rebuild it, so the next release is a re-run rather than a
+rediscovery. Modelled on DiabetesNinja's `store/ronin/` kit
+(`C:\Projects\diabetesninja-app\store\`); a fix in one usually belongs in the
+other.
+
+Nothing here is part of the app build. No workflow reads it and Vite never
+bundles it. Listing **text** (name, subtitle, description, keywords, review
+notes, and the Play fields) is in [`app-store-text.md`](app-store-text.md),
+ready to paste and checked against every limit. Account setup and the rest of
+the release checklist are in [`docs/SUBMISSION.md`](../docs/SUBMISSION.md).
+
+## What to upload
+
+English only for now (see [Adding a language](#adding-a-language)).
+
+| Store slot                                   | File                                    | Size        | Format                           |
+| -------------------------------------------- | --------------------------------------- | ----------- | -------------------------------- |
+| Play app icon                                | `out/googleplay/icon-512.png`           | 512 × 512   | 32-bit PNG with alpha, ≤ 1024 KB |
+| Play feature graphic                         | `out/googleplay/feature-graphic.png`    | 1024 × 500  | 24-bit PNG, no alpha             |
+| Play phone screenshots                       | `out/googleplay/phone/*.png` (5)        | 1080 × 1920 | 24-bit PNG, no alpha             |
+| App Store iPhone, before a build is attached | `out/appstore/iphone-6.5/*.png` (5)     | 1284 × 2778 | PNG, no alpha                    |
+| App Store iPhone 6.9"                        | `out/appstore/iphone-6.9/*.png` (5)     | 1320 × 2868 | PNG, no alpha                    |
+| (reference only) App Store marketing icon    | `out/appstore/icon-1024.png`            | 1024 × 1024 | PNG, no alpha                    |
+
+- **Which App Store set:** with no processed build attached to the version,
+  App Store Connect only offers the 6.5" slot and rejects 6.9" files. Upload
+  `iphone-6.5` there; Apple accepts 6.5" as the primary iPhone size and scales
+  the rest. Once a build is attached the 6.9" slot appears and `iphone-6.9`
+  can replace them, but it does not have to.
+- **Play** wants at least 2 phone screenshots and takes 8; it asks for 4
+  before it will consider an app for promotion. Apple takes 1 to 10 per size.
+- **`icon-1024.png` is not an upload.** Since Xcode 14 the marketing icon is
+  read from the asset catalog inside the binary (`npm run icons` generates
+  it). Keep it for press and for anyone who asks for "the icon".
+- **No iPad set.** The app is iPhone-only in the store; if iPad is ever
+  enabled, App Store Connect will ask for a 13" set and this kit needs a
+  fourth canvas in `render.mjs` and a rule in `finalize.mjs`.
+
+The five shots, in order: Today mid-evening (gauge + tonight's curve), the
+log sheet, History, Insights (trend sparkline + heatmap), and Settings' data
+section ("everything stays on this device").
+
+## Regenerating
+
+```bash
+npm run store            # all of the below, in order
+```
+
+or step by step:
+
+```bash
+npm run build            # capture.mjs photographs dist/, not the dev server
+npm run store:icons      # out/*/icon-*.png from assets/icon.svg
+npm run store:capture    # captures/<id>-<page>.png from the real app
+npm run store:render     # frames every capture onto every canvas + feature graphic
+npm run store:finalize   # ALWAYS LAST: strips alpha, checks every file, exits 1 if off spec
+```
+
+`render.mjs --only 03` re-frames one shot; `--only feature` just the banner.
+`capture.mjs --only 01` re-captures one screen.
+
+Then **look at every PNG in `out/`** before uploading. The spec check only
+proves sizes and formats, not that the picture is right.
+
+### How it works
+
+- **`tools/capture.mjs`** serves `dist/` with `vite preview` on :4318 and
+  opens it in headless Edge at 430 × 932 @3x (1290 × 2796, an iPhone 16 Pro
+  Max). Before any app script runs it pins `Date` to `seed.mjs`'s `NOW` and
+  the timezone to Europe/Stockholm, emulates `prefers-reduced-motion` (so the
+  needle and sheet never get caught mid-animation), seeds
+  `localStorage['neontrk_v1']`, then reloads per shot and walks the `steps`
+  in `shots.json`. It uses a throwaway browser profile, so no stale service
+  worker can serve an old build.
+  - There are no system bars to crop, unlike DiabetesNinja's emulator
+    captures: a bare web viewport is exactly the app's pixels.
+- **`tools/seed.mjs`** is the demo data: six months of fixed-seed history
+  (mostly weekends, long dry stretches, weekly total trending down) and
+  tonight, Friday 16 Oct 2026 at 22:50, three drinks in and still "Tipsy".
+  A re-shoot always produces the same pictures. Change `NOW` or the PRNG
+  seed and every screenshot changes with it.
+- **`tools/render.mjs`** opens `templates/screenshot.html` at each canvas
+  size (1 CSS px = 1 output px) with the capture, headline and sub line, and
+  `templates/feature-graphic.html` at 1024 × 500. The templates wait for
+  fonts and images and then set `window.__ready`.
+- **`tools/finalize.mjs`** is a `sharp` port of Ronin's `finalize.py`: it
+  removes the alpha channel where a store forbids one, then checks exact
+  size, alpha, bytes, Play's 320–3840 px side range and 2:1 limit, and
+  minimum counts.
+- **`tools/cdp.mjs`** is the no-dependency DevTools client (Node 22+'s global
+  `WebSocket`). It finds Edge, then Chrome; set `STORE_BROWSER` to override,
+  and `STORE_HEADLESS=old` if a browser writes blank PNGs with
+  `--headless=new`.
+- **`templates/fonts/`** are copies of the app's Space Grotesk faces from
+  `@fontsource`, so the frames match the app's type.
+
+### Gotchas
+
+- **Rebuild first.** `capture.mjs` shoots `dist/`. A stale build means stale
+  screenshots, and nothing will flag it.
+- **The captures need the `steps` targets to exist.** Steps find buttons and
+  text by their visible label (CSS Module class names are hashed). If a UI
+  label changes, update `shots.json` or capture fails with "target not
+  found".
+- **A UI change to any shot's screen means a re-shoot.** The preflight skill
+  reminds you; the store-assets skill has the checklist.
+
+## Adding a language
+
+Follow the Ronin kit: add an `sv` key to every `title`/`sub` in `shots.json`
+and to `featureGraphic.tagline`, add `sv: '-sv'` to `LANGS` in
+`render.mjs`, add `-sv` rules to `finalize.mjs`, and capture Swedish
+screenshots (the app itself would need a Swedish UI first; the picture must
+match the headline over it).
+
+## Rules the copy and the pictures follow
+
+`shots.json` holds every headline. These rules follow from the app's own
+(CLAUDE.md) and from App Review history, and apply to the listing exactly as
+to the UI:
+
+- **It is a drink journal with alcohol-free streaks and an estimate.** Never call
+  it a breathalyser, a test, a measurement or a "BAC calculator", and never
+  lead with the ‰ number. Apple has repeatedly rejected software-only BAC
+  estimators under Guideline 1.4 (Physical Harm); see
+  `docs/naming/app-name-report.md`. The feature graphic carries no number at
+  all.
+- **Never imply fitness to drive**, and never grade a level as good or safe.
+- **Only claim what the app visibly does.** "No account and no sync" is true
+  because nothing leaves the device; keep it true.
+- Plain and factual, second person, no exclamation marks, no em-dashes.
+- The demo data is invented and deliberately unremarkable: moderate nights,
+  mostly under the limit, a trend going down.

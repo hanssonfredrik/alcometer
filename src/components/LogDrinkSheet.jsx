@@ -72,15 +72,18 @@ export default function LogDrinkSheet({
           disabled={!valid}
           onClick={submit}
         >
-          Add {valid ? describeDrink({ type, cl: finalCl }) : LABELS[type]}
+          Add{' '}
+          {valid
+            ? describeDrink({ type, cl: finalCl })
+            : LABELS[type].toLowerCase()}
         </button>
       }
     >
       <div className={styles.title}>LOG A DRINK</div>
       {!isToday && (
         <p className={styles.note}>
-          Adds to {dayLabel} at {BACKFILL_HOUR}:00 — tap the entry afterwards to
-          adjust the time.
+          This adds the drink to {dayLabel} at {BACKFILL_HOUR}:00. Tap it
+          afterwards to change the time.
         </p>
       )}
 

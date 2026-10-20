@@ -4,7 +4,7 @@ const TABS = [
   { id: 'today', label: 'Today' },
   { id: 'history', label: 'History' },
   { id: 'insights', label: 'Insights' },
-  { id: 'settings', label: 'Setup' },
+  { id: 'settings', label: 'Settings' },
 ]
 
 export default function BottomNav({ screen, onNavigate }) {

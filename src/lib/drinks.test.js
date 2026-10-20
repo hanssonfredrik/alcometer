@@ -60,6 +60,6 @@ describe('lastDrinkType', () => {
 
 describe('describeDrink', () => {
   it('formats label and size', () => {
-    expect(describeDrink({ type: 'beer', cl: 33 })).toBe('Beer · 33 cl')
+    expect(describeDrink({ type: 'beer', cl: 33 })).toBe('beer, 33 cl')
   })
 })

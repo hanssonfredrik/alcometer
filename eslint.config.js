@@ -53,6 +53,17 @@ export default [
     },
   },
   {
+    // The store-asset kit: plain Node scripts (no browser, no React).
+    files: ['store/tools/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     // Test files run under Vitest globals in a Node-ish environment.
     files: ['src/**/*.test.{js,jsx}'],
     languageOptions: {

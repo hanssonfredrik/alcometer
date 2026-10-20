@@ -29,7 +29,10 @@ export function lastDrinkType(days) {
   return best && DRINK_TYPES.includes(best.type) ? best.type : DRINK_TYPES[0]
 }
 
-/** "Beer · 33 cl" — used by the confirm button and the undo toast. */
+/**
+ * "beer, 33 cl": a drink mid-sentence ("Add beer, 33 cl", "Logged beer,
+ * 33 cl"). Used by the log sheet's confirm button and the undo toast.
+ */
 export function describeDrink({ type, cl }) {
-  return `${LABELS[type] || type} · ${cl} cl`
+  return `${(LABELS[type] || type).toLowerCase()}, ${cl} cl`
 }

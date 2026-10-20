@@ -1,9 +1,9 @@
 {
-  "name": "alcometer",
+  "name": "promilla",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Alcometer — a mobile-first PWA for tracking drinks, estimating BAC (Widmark), and building sober-day streaks.",
+  "description": "Promilla — a mobile-first PWA for tracking drinks, estimating BAC (Widmark), and building sober-day streaks.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,7 +16,12 @@
     "format:check": "prettier --check .",
     "icons": "node scripts/generate-icons.mjs && capacitor-assets generate --assetPath assets/native --ios --android",
     "sync": "npm run build && npx cap sync",
-    "android": "npm run sync && npx cap run android"
+    "android": "npm run sync && npx cap run android",
+    "store:icons": "node store/tools/icons.mjs",
+    "store:capture": "cross-env TZ=Europe/Stockholm node store/tools/capture.mjs",
+    "store:render": "node store/tools/render.mjs",
+    "store:finalize": "node store/tools/finalize.mjs",
+    "store": "npm run build && npm run store:icons && npm run store:capture && npm run store:render && npm run store:finalize"
   },
   "dependencies": {
     "@capacitor-community/safe-area": "^8.0.1",

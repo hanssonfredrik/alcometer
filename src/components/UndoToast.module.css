@@ -17,6 +17,10 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.2s ease;
 }
+/* Above Today's docked log button (22 + 64 + 14 px), with the same 12px gap. */
+.toast[data-raised='true'] {
+  bottom: 112px;
+}
 .text {
   flex: 1;
   min-width: 0;

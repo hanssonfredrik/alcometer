@@ -71,7 +71,8 @@ export const DEFAULT_LIMIT = 3
 // legal driving limit, but the UI never claims fitness to drive — this is a
 // Widmark estimate.
 export const BAC_ZONES = [
-  { id: 'sober', label: 'Sober', max: 0 },
+  // Labelled "Zero", never "Sober": an estimate of 0.00 is not a fitness claim.
+  { id: 'sober', label: 'Zero', max: 0 },
   { id: 'light', label: 'Light', max: 0.2 },
   { id: 'tipsy', label: 'Tipsy', max: 0.5 },
   { id: 'drunk', label: 'Drunk', max: 1.0 },
@@ -115,29 +116,44 @@ export const DEFAULT_PROFILE = {
   theme: DEFAULT_THEME,
 }
 
-// Sober-day streak milestones (award badges).
+// Alcohol-free streak milestones (award badges).
 export const MILESTONES = [
   {
     d: 1,
     icon: '1',
-    label: 'First clear day',
-    desc: 'A full day with nothing logged.',
+    label: 'First alcohol-free day',
+    desc: 'A whole day with nothing logged.',
   },
-  { d: 3, icon: '3', label: 'Dry spell', desc: 'Three sober days in a row.' },
+  {
+    d: 3,
+    icon: '3',
+    label: 'Three in a row',
+    desc: '3 alcohol-free days in a row.',
+  },
   {
     d: 7,
     icon: '7',
-    label: 'One week clear',
-    desc: 'A whole week off the drink.',
+    label: 'A full week',
+    desc: '7 alcohol-free days in a row.',
   },
   {
     d: 14,
     icon: '14',
-    label: 'Two weeks strong',
-    desc: '14 sober days back to back.',
+    label: 'Two weeks',
+    desc: '14 alcohol-free days in a row.',
   },
-  { d: 30, icon: '30', label: 'Dry month', desc: 'A full month with none.' },
-  { d: 90, icon: '90', label: '90-day legend', desc: 'A quarter year sober.' },
+  {
+    d: 30,
+    icon: '30',
+    label: 'A month',
+    desc: '30 alcohol-free days in a row.',
+  },
+  {
+    d: 90,
+    icon: '90',
+    label: 'Ninety days',
+    desc: '90 alcohol-free days in a row.',
+  },
 ]
 
 // Also read by the inline pre-paint script in index.html — keep in sync.

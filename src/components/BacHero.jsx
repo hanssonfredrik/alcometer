@@ -1,15 +1,19 @@
+import BacGauge from './BacGauge.jsx'
 import styles from './BacHero.module.css'
 
 /**
  * The Today hero: the estimated blood-alcohol level, its plain-language zone,
- * when it burns off, and the drink count against tonight's limit. Purely
- * presentational — every prop is pre-formatted by TodayScreen's memo.
+ * when it burns off, and the drink count against tonight's limit, with a
+ * speedometer dial (BacGauge) around the number. Purely presentational —
+ * every prop is pre-formatted by TodayScreen's memo; `bacValue` is the raw
+ * ‰ number the dial positions itself from (`bac` is its display string).
  *
  * `zone` is a BAC_ZONES record; its id selects the `--zone` colour via the
  * `[data-zone]` rules in the CSS module.
  */
 export default function BacHero({
   bac,
+  bacValue,
   zone,
   isToday,
   soberLabel,
@@ -28,17 +32,19 @@ export default function BacHero({
       <div className={styles.eyebrow}>
         {isToday ? 'BLOOD ALCOHOL · ESTIMATE' : 'PEAK THAT EVENING · ESTIMATE'}
       </div>
-      <div className={styles.numRow}>
-        <span className={styles.num}>{bac}</span>
-        <span className={styles.unit}>‰</span>
-      </div>
+      <BacGauge bac={bacValue}>
+        <div className={styles.numRow}>
+          <span className={styles.num}>{bac}</span>
+          <span className={styles.unit}>‰</span>
+        </div>
+      </BacGauge>
       <div className={styles.zoneRow}>
         <span className={styles.zone}>
           <span className={styles.zoneDot} aria-hidden="true" />
           {zone.label}
         </span>
         {isToday && soberLabel && (
-          <span className={styles.sober}>Sober by ~{soberLabel}</span>
+          <span className={styles.sober}>Zero around {soberLabel}</span>
         )}
       </div>
       <div className={styles.count}>

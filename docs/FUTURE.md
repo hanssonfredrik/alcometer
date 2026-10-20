@@ -1,6 +1,6 @@
 # Future ideas
 
-Proposals for future versions of Alcometer. Nothing here is committed work —
+Proposals for future versions of Promilla. Nothing here is committed work —
 it's a menu, roughly ordered by value-for-effort within each section. Guiding
 constraints that any of these must respect:
 
@@ -22,9 +22,10 @@ out" gap — a lost phone or cleared WebView no longer means losing every streak
 - ✓ **Shipped — Export / import backup.** `lib/backup.js` plus "Download
   backup" / "Import backup" in Setup: exports the whole persisted object as
   JSON (browser download on web, OS share sheet on native), and imports it
-  through a validate-then-merge flow that unions entries per day and keeps the
-  newer entry on `id` collision. Import migrates older files first, so a
-  backup never strands the install.
+  as a full restore: a confirmation modal spells out that everything on the
+  device (drinks, profile, sizes, theme) is removed and replaced by the file,
+  then the picker opens. Import migrates older files first, so a backup never
+  strands the install.
 - ✓ **Shipped — Schema versioning + migrations.** The object carries a
   `version` field; `SCHEMA_VERSION` + a `migrate()` ladder in `storage.js`
   upgrade both loaded state and imported backups (the v1→v2 logical-day

@@ -28,7 +28,7 @@ export default function DrinkRow({ entry, onEdit, onRemove, showGrams }) {
           type="button"
           className={styles.body}
           onClick={onEdit}
-          aria-label={`Edit ${entry.typeLabel}`}
+          aria-label={`Edit ${entry.typeLabel.toLowerCase()} at ${entry.timeLabel}`}
         >
           {content}
         </button>
@@ -40,7 +40,7 @@ export default function DrinkRow({ entry, onEdit, onRemove, showGrams }) {
           type="button"
           className={styles.remove}
           onClick={onRemove}
-          aria-label={`Remove ${entry.typeLabel}`}
+          aria-label={`Remove ${entry.typeLabel.toLowerCase()} at ${entry.timeLabel}`}
         >
           ×
         </button>

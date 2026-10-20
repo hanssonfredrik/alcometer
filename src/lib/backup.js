@@ -1,6 +1,6 @@
 // Data portability: JSON backup export/import and CSV export.
 //
-// Pure helpers (serialize / validate / merge / CSV) carry no DOM or Capacitor
+// Pure helpers (serialize / validate / restore / CSV) carry no DOM or Capacitor
 // dependency and stay unit-test friendly. The file I/O lives behind a single
 // `saveOrShareFile` sink that branches web-vs-native, modelled on
 // `lib/haptics.js`: a browser download on web, the OS share sheet on native.
@@ -29,57 +29,44 @@ export function serialize(data) {
  */
 export function validateBackup(obj) {
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-    throw new Error("This file isn't an Alcometer backup.")
+    throw new Error(
+      "That file isn't a Promilla backup. Choose a backup file the app saved.",
+    )
   }
   if (!obj.days || typeof obj.days !== 'object') {
-    throw new Error('Backup is missing its day data — it may be corrupt.')
+    throw new Error(
+      "That backup is incomplete, so it can't be restored. Try another file.",
+    )
   }
   return obj
 }
 
+/** Total number of logged entries across all days. */
+export function countEntries(data) {
+  return Object.values(data?.days || {}).reduce(
+    (n, day) => n + (day.entries || []).length,
+    0,
+  )
+}
+
 /**
- * Merge an imported backup into `current`, returning `{ data, mergedEntries }`.
+ * Turn an imported backup into the complete new persisted object, returning
+ * `{ data, entries }`.
  *
- * The import is migrated to the current schema first, then folded into a clone
- * of the local data:
- *   - entries: unioned per logical-day key by `id`; on an `id` collision the
- *     entry with the larger `ts` wins ("keep the newer entry"), then each day
- *     is re-sorted by `ts`.
- *   - day.limit: an existing local day keeps its limit; a day only present in
- *     the import brings its own.
- *   - profile / sizes: the import wins — importing a backup means "restore my
- *     setup", so the saved weight/sex and drink sizes take over.
- * `mergedEntries` counts entries that were newly added or replaced a collision.
+ * Importing is a full restore, not a merge: whatever is on the device —
+ * every logged drink, the profile, the drink sizes and the theme — is
+ * discarded and replaced by the file's contents. The UI confirms this with
+ * the user (see components/ImportBackupModal) before the file picker opens.
+ * The file is migrated to the current schema first so an older backup never
+ * strands the install; the input object is not mutated. `entries` is the
+ * number of drinks the restored data holds, for the UI to report.
  */
-export function mergeBackup(current, imported) {
-  const inc = migrate(clone(imported))
-  const out = clone(current)
-  let mergedEntries = 0
-
-  for (const [key, incDay] of Object.entries(inc.days)) {
-    const localDay = out.days[key]
-    if (!localDay) {
-      out.days[key] = clone(incDay)
-      mergedEntries += (incDay.entries || []).length
-      continue
-    }
-    const byId = new Map(localDay.entries.map((e) => [e.id, e]))
-    for (const e of incDay.entries || []) {
-      const existing = byId.get(e.id)
-      if (!existing || e.ts > existing.ts) {
-        byId.set(e.id, e)
-        mergedEntries++
-      }
-    }
-    localDay.entries = [...byId.values()].sort((a, b) => a.ts - b.ts)
-    // Local day keeps its own limit; nothing to do.
+export function restoreBackup(imported) {
+  const data = migrate(clone(imported))
+  for (const day of Object.values(data.days)) {
+    day.entries = [...(day.entries || [])].sort((a, b) => a.ts - b.ts)
   }
-
-  out.profile = clone(inc.profile)
-  out.sizes = clone(inc.sizes)
-  out.version = inc.version
-
-  return { data: out, mergedEntries }
+  return { data, entries: countEntries(data) }
 }
 
 /** Escape a value for a CSV cell (RFC-4180 style double-quoting). */
@@ -154,7 +141,7 @@ function stampedName(prefix, ext) {
 /** Export the whole persisted object as a JSON backup file. */
 export function exportBackup(data) {
   return saveOrShareFile({
-    filename: stampedName('alcometer-backup', 'json'),
+    filename: stampedName('promilla-backup', 'json'),
     mime: 'application/json',
     content: serialize(data),
   })
@@ -163,7 +150,7 @@ export function exportBackup(data) {
 /** Export all entries as a CSV file. */
 export function exportEntriesCsv(data) {
   return saveOrShareFile({
-    filename: stampedName('alcometer-entries', 'csv'),
+    filename: stampedName('promilla-entries', 'csv'),
     mime: 'text/csv',
     content: entriesToCsv(data),
   })
@@ -202,7 +189,9 @@ export function importBackupFile() {
         done(
           reject,
           err instanceof SyntaxError
-            ? new Error("Couldn't read that file — it isn't valid JSON.")
+            ? new Error(
+                "Couldn't read that file. Choose a backup file the app saved.",
+              )
             : err,
         )
       }

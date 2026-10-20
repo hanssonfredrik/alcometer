@@ -8,8 +8,14 @@ import {
 import { entryGrams } from '../lib/alcohol.js'
 import { dateKey, dayIndex, formatTime } from '../lib/datetime.js'
 import { WEEKDAYS, MONTHS, LABELS, DRINK_ICONS } from '../lib/constants.js'
+import { sparkPath } from '../lib/charts.js'
 import DayDetailModal from '../components/DayDetailModal.jsx'
+import Sparkline from '../components/Sparkline.jsx'
 import styles from './InsightsScreen.module.css'
+
+// Sparkline box (SVG units; it stretches to the card).
+const SPARK_W = 300
+const SPARK_H = 56
 
 // Display order: Monday-first (getDay is Sunday-first).
 const MON_FIRST = [1, 2, 3, 4, 5, 6, 0]
@@ -38,10 +44,7 @@ export default function InsightsScreen({ data, now }) {
           ...cell,
           // Out-of-range cells have nothing to show, so they stay inert.
           open: cell.status !== 'empty',
-          label:
-            cell.status === 'empty'
-              ? ''
-              : `${cell.key} · ${cell.count} drink${cell.count === 1 ? '' : 's'}`,
+          label: cell.status === 'empty' ? '' : heatLabel(cell),
         })),
         month: month !== prevMonth ? MONTHS[month] : '',
       })
@@ -62,6 +65,8 @@ export default function InsightsScreen({ data, now }) {
     )
 
     const trend = weeklyTrend(days, now, target, 4)
+    // Headroom above the target line so it never sits on the top edge.
+    const spark = sparkPath(trend.weeks, SPARK_W, SPARK_H, target * 1.25)
 
     return {
       heatWeeks,
@@ -73,6 +78,9 @@ export default function InsightsScreen({ data, now }) {
       hasWeekday: weekdays.some((w) => w.count > 0),
       trend,
       target,
+      spark,
+      sparkTargetY: target > 0 ? spark.yOf(target) : null,
+      sparkOver: target > 0 && trend.weeks.at(-1) > target,
     }
   }, [data, now])
 
@@ -94,7 +102,7 @@ export default function InsightsScreen({ data, now }) {
         <div className={styles.trendMain}>
           <div className={styles.trendNum}>
             {t.current.toFixed(1)}
-            <span className={styles.trendUnit}> std / wk</span>
+            <span className={styles.trendUnit}> std a week</span>
           </div>
           <div className={styles.trendArrow} data-dir={t.direction}>
             {arrow}
@@ -106,9 +114,17 @@ export default function InsightsScreen({ data, now }) {
           </div>
         </div>
         <p className={styles.trendSub}>
-          4-week average vs the previous four weeks ({t.previous.toFixed(1)} std
-          / wk).
+          Average of the last 4 weeks. The 4 weeks before that averaged{' '}
+          {t.previous.toFixed(1)}.
         </p>
+        <Sparkline
+          spark={v.spark}
+          w={SPARK_W}
+          h={SPARK_H}
+          targetY={v.sparkTargetY}
+          over={v.sparkOver}
+          labels={[`${t.weeks.length} weeks ago`, 'This week']}
+        />
         {v.target > 0 && (
           <>
             <div className={styles.targetTrack}>
@@ -119,10 +135,10 @@ export default function InsightsScreen({ data, now }) {
               />
             </div>
             <div className={styles.targetLine}>
-              <span>Max {v.target} std / wk</span>
+              <span>Weekly target: {v.target} std</span>
               <span className={styles.targetDelta} data-over={t.overTarget > 0}>
-                {t.overTarget > 0 ? '+' : ''}
-                {t.overTarget.toFixed(1)} {t.overTarget > 0 ? 'over' : 'under'}
+                {Math.abs(t.overTarget).toFixed(1)} std{' '}
+                {t.overTarget > 0 ? 'over' : 'under'}
               </span>
             </div>
           </>
@@ -135,8 +151,9 @@ export default function InsightsScreen({ data, now }) {
         {v.hasWeekday ? (
           <>
             <p className={styles.lead}>
-              Your <span className={styles.em}>{fullDay(v.busiest.day)}s</span>{' '}
-              average {v.busiest.count.toFixed(1)} drinks.
+              Your busiest day is{' '}
+              <span className={styles.em}>{fullDay(v.busiest.day)}</span>:{' '}
+              {v.busiest.count.toFixed(1)} drinks on average.
             </p>
             {v.weekdays.map((w) => (
               <div key={w.day} className={styles.wdRow}>
@@ -153,7 +170,7 @@ export default function InsightsScreen({ data, now }) {
           </>
         ) : (
           <p className={styles.empty}>
-            Log a few drinks to see your weekly pattern.
+            Your week by day shows up here once you have logged drinks.
           </p>
         )}
       </section>
@@ -198,7 +215,8 @@ export default function InsightsScreen({ data, now }) {
         </div>
         <div className={styles.legend}>
           <span className={styles.legendItem}>
-            <span className={styles.legendMark} data-status="sober" /> sober
+            <span className={styles.legendMark} data-status="sober" />{' '}
+            alcohol-free
           </span>
           <span className={styles.legendItem}>
             <span className={styles.legendMark} data-status="within" /> within
@@ -264,4 +282,12 @@ const FULL_DAYS = [
 ]
 function fullDay(day) {
   return FULL_DAYS[day]
+}
+
+/** Screen-reader / tooltip label for a heatmap cell: "Friday 16 Oct: 3 drinks". */
+function heatLabel(cell) {
+  const d = new Date(cell.key + 'T12:00:00')
+  const date = `${FULL_DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`
+  if (!cell.count) return `${date}: alcohol-free`
+  return `${date}: ${cell.count} ${cell.count === 1 ? 'drink' : 'drinks'}`
 }

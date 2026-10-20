@@ -1,0 +1,67 @@
+/* Reads --zone from the parent (BacHero), so the pointer knob, the glow on
+   the current band and the number always share the current zone colour. */
+.gauge {
+  position: relative;
+  width: 100%;
+  max-width: 268px;
+  margin: 4px auto 0;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.track {
+  fill: none;
+  stroke: var(--w-08);
+  stroke-width: 15;
+  stroke-linecap: round;
+}
+.band {
+  fill: none;
+  stroke-width: 9;
+  opacity: 0.28;
+}
+.fill {
+  fill: none;
+  stroke-width: 9;
+}
+.fill[data-last='true'] {
+  filter: drop-shadow(
+    0 0 5px color-mix(in oklch, var(--zone) 70%, transparent)
+  );
+}
+
+.tick {
+  font: 500 10px var(--font-mono);
+  fill: var(--w-50);
+}
+
+.pointer {
+  transform-box: view-box;
+  transform-origin: 120px 114px;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.needle {
+  stroke: var(--text-strong);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.knob {
+  fill: var(--zone);
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 6px var(--zone));
+}
+
+/* The number sits in the bowl of the arc, bottom-aligned with its ends. */
+.readout {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+}

@@ -37,16 +37,17 @@
 .numRow {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 6px;
+  /* Nudge right by half the unit so the digits, not digits+unit, centre. */
+  padding-left: 20px;
 }
 .num {
-  font: 600 76px/0.9 var(--font-mono);
+  font: 600 58px/0.9 var(--font-mono);
   letter-spacing: -0.03em;
   color: var(--zone);
 }
 .unit {
-  font: 500 24px var(--font-mono);
+  font: 500 22px var(--font-mono);
   color: var(--w-50);
 }
 
@@ -55,7 +56,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 .zone {
   display: inline-flex;

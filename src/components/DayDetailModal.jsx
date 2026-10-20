@@ -11,16 +11,16 @@ export default function DayDetailModal({ day, onClose }) {
   return (
     <Sheet
       position="center"
-      ariaLabel={`Log for ${day.rel} ${day.dateLabel}`}
+      ariaLabel={`Drinks on ${day.rel}, ${day.dateLabel}`}
       onClose={onClose}
       footer={
         day.count > 0 ? (
           <div className={styles.foot}>
             {day.over
-              ? `${day.count - day.limit} over that day's limit of ${day.limit}.`
-              : `Within that day's limit of ${day.limit}.`}
+              ? `${day.count - day.limit} over the limit of ${day.limit}.`
+              : `Within the limit of ${day.limit}.`}
             {' · '}
-            {day.grams} g pure alcohol
+            {day.grams} g of alcohol
           </div>
         ) : null
       }
@@ -52,11 +52,11 @@ export default function DayDetailModal({ day, onClose }) {
                 </div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statLabel}>Std glasses</div>
+                <div className={styles.statLabel}>Standard</div>
                 <div className={styles.statValue}>{day.std}</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statLabel}>Peak ‰</div>
+                <div className={styles.statLabel}>Peak ‰ (est.)</div>
                 <div className={styles.statValue}>{day.peak}</div>
               </div>
             </div>
@@ -71,7 +71,7 @@ export default function DayDetailModal({ day, onClose }) {
           <div className={styles.sober}>
             <div className={styles.soberMark}>✓</div>
             <div className={styles.soberText}>
-              Alcohol-free day — nothing logged.
+              Alcohol-free day. Nothing logged.
             </div>
           </div>
         )}

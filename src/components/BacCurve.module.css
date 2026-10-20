@@ -1,0 +1,130 @@
+.card {
+  border-radius: 18px;
+  border: 1px solid var(--w-08);
+  background: var(--w-03);
+  padding: 14px 16px 12px;
+  margin-bottom: 14px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.title {
+  font: 600 15px var(--font-sans);
+  color: var(--text);
+}
+.est {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.18em;
+  color: var(--w-45);
+}
+
+/* Room on the right for the guide labels. */
+.plot {
+  position: relative;
+  height: 110px;
+  margin-right: 30px;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.guide {
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+.guideLabel {
+  position: absolute;
+  right: -30px;
+  width: 26px;
+  transform: translateY(-50%);
+  font: 500 11px var(--font-mono);
+  text-align: right;
+  opacity: 0.85;
+}
+
+.area {
+  stroke: none;
+}
+.futureArea {
+  fill: var(--accent-12);
+  stroke: none;
+}
+.line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px var(--accent-55));
+}
+.projection {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  opacity: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+/* One small tick on the baseline per logged drink. */
+.drinkTick {
+  position: absolute;
+  bottom: -6px;
+  width: 2px;
+  height: 8px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: var(--w-60);
+}
+
+.nowDot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 0 0 var(--accent-55);
+  animation: nowPulse 2.4s ease-out infinite;
+}
+@keyframes nowPulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
+.axis {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 30px 0 0;
+  font: 500 12px var(--font-mono);
+  color: var(--w-50);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font: 500 15px var(--font-sans);
+  color: var(--w-60);
+}
+.legendDash {
+  width: 18px;
+  border-top: 2px dashed var(--accent);
+  opacity: 0.8;
+}

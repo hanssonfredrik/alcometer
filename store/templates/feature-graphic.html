@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Promilla feature graphic</title>
+    <!--
+      The Google Play feature graphic: 1024x500, the banner at the top of the
+      listing. The app's own icon (assets/icon.svg, used directly, never
+      redrawn), its name and the tagline from shots.json, on the app's ink
+      ground with the accent glow.
+
+      No ‰ value, no screenshot and no claim: a number on a banner has no
+      context, and the listing leads with the journal, not the estimate. Play
+      crops this on some surfaces and puts a video play button dead centre,
+      so nothing that must be read sits in the middle or near an edge.
+
+      Params: lang (default en).
+    -->
+    <style>
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 500;
+        font-display: block;
+        src: url(fonts/space-grotesk-latin-500-normal.woff2) format('woff2');
+      }
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 700;
+        font-display: block;
+        src: url(fonts/space-grotesk-latin-700-normal.woff2) format('woff2');
+      }
+      :root {
+        --ink: #08070c;
+        --accent: oklch(0.72 0.155 255);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 1024px;
+        height: 500px;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            60% 90% at 78% 50%,
+            color-mix(in oklch, var(--accent) 28%, transparent),
+            transparent 70%
+          ),
+          var(--ink);
+      }
+      #inner {
+        height: 100%;
+        padding: 0 84px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 48px;
+      }
+      #name {
+        margin: 0;
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 84px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #f4f4f5;
+      }
+      #tagline {
+        margin: 22px 0 0;
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 1.35;
+        color: rgba(244, 244, 245, 0.72);
+        max-width: 520px;
+        text-wrap: balance;
+      }
+      #mark {
+        width: 240px;
+        height: 240px;
+        flex: 0 0 auto;
+        display: block;
+        border-radius: 54px;
+        box-shadow: 0 0 70px color-mix(in oklch, var(--accent) 45%, transparent);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inner">
+      <div>
+        <h1 id="name"></h1>
+        <p id="tagline"></p>
+      </div>
+      <img id="mark" alt="" />
+    </div>
+
+    <script>
+      document.getElementById('mark').src = '../../assets/icon.svg'
+      const lang = new URLSearchParams(location.search).get('lang') || 'en'
+      fetch('../tools/shots.json')
+        .then((r) => r.json())
+        .then(async (data) => {
+          document.getElementById('name').textContent = data.featureGraphic.name
+          document.getElementById('tagline').textContent =
+            data.featureGraphic.tagline[lang]
+          await Promise.all([
+            document.getElementById('mark').decode(),
+            document.fonts.ready,
+          ])
+          await new Promise((r) =>
+            requestAnimationFrame(() => requestAnimationFrame(r)),
+          )
+          window.__ready = true
+        })
+    </script>
+  </body>
+</html>

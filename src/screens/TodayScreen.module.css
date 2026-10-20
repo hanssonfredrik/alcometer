@@ -1,3 +1,23 @@
+/* Fills the scroll area (App.module.css makes .scroll a flex column) so the
+   dock can sit at the bottom on a short day and stick there on a long one. */
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Docked log button ---- */
+/* Bleeds over the scroll padding (24px sides and bottom) so it sits flush on
+   the bottom nav. The fade lets rows scroll under it without a hard edge. */
+.dock {
+  position: sticky;
+  bottom: -24px;
+  z-index: 5;
+  margin: auto -24px -24px;
+  padding: 22px 24px 14px;
+  background: linear-gradient(to bottom, transparent, var(--panel) 20px);
+}
+
 /* ---- Day pager ---- */
 .dayNav {
   display: flex;
@@ -80,7 +100,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 16px 0 6px;
+  margin: 2px 0 12px;
 }
 .summaryText {
   font: 600 15px var(--font-sans);

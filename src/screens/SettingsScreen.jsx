@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
   DRINK_TYPES,
   LABELS,
@@ -9,30 +9,45 @@ import {
   DEFAULT_SIZES,
 } from '../lib/constants.js'
 import {
+  countEntries,
   exportBackup,
   exportEntriesCsv,
   importBackupFile,
 } from '../lib/backup.js'
 import { hapticLog } from '../lib/haptics.js'
 import NumberField from '../components/NumberField.jsx'
+import ImportBackupModal from '../components/ImportBackupModal.jsx'
 import styles from './SettingsScreen.module.css'
 
 export default function SettingsScreen({ data, actions }) {
   const { profile, sizes } = data
   const [dataMsg, setDataMsg] = useState(null) // { kind: 'ok' | 'err', text }
+  const [confirmImport, setConfirmImport] = useState(false)
 
   const theme = profile.theme ?? DEFAULT_THEME
 
+  const closeImport = useCallback(() => setConfirmImport(false), [])
+
+  // Runs from the modal's confirm button click so the file picker still
+  // counts as user-initiated on iOS/Android. Import is a full replace — the
+  // modal has just told the user so.
   const handleImport = async () => {
+    setConfirmImport(false)
     setDataMsg(null)
     try {
       const obj = await importBackupFile()
       if (!obj) return // picker cancelled
       const count = actions.importData(obj)
       hapticLog()
-      setDataMsg({ kind: 'ok', text: `Imported ${count} entries.` })
+      setDataMsg({
+        kind: 'ok',
+        text: `Backup restored. ${count} ${count === 1 ? 'drink is' : 'drinks are'} now on this device.`,
+      })
     } catch (err) {
-      setDataMsg({ kind: 'err', text: err.message || 'Import failed.' })
+      setDataMsg({
+        kind: 'err',
+        text: err.message || 'Couldn’t restore that backup.',
+      })
     }
   }
 
@@ -69,7 +84,7 @@ export default function SettingsScreen({ data, actions }) {
       </div>
 
       <div className={styles.sectionLabel}>APPEARANCE</div>
-      <p className={styles.hint}>Pick the accent colour used across the app.</p>
+      <p className={styles.hint}>Pick the accent color for the app.</p>
       <div className={styles.themeRow}>
         {THEMES.map((t) => (
           <button
@@ -90,12 +105,13 @@ export default function SettingsScreen({ data, actions }) {
         ))}
       </div>
 
-      <div className={styles.sectionLabel}>WEEKLY GOAL</div>
+      <div className={styles.sectionLabel}>WEEKLY TARGET</div>
       <p className={styles.hint}>
-        Standard drinks per week — your Insights trend is measured against this.
+        The most standard drinks you want in a week. Insights compares your
+        trend with it. A standard drink is 12 g of alcohol.
       </p>
       <label className={styles.weightField}>
-        Target (std / week)
+        Standard drinks a week
         <NumberField
           value={profile.weeklyTarget ?? DEFAULT_WEEKLY_TARGET}
           fallback={DEFAULT_WEEKLY_TARGET}
@@ -103,10 +119,10 @@ export default function SettingsScreen({ data, actions }) {
         />
       </label>
 
-      <div className={styles.sectionLabel}>STANDARD DRINK SIZES</div>
+      <div className={styles.sectionLabel}>YOUR USUAL SIZES</div>
       <p className={styles.hint}>
-        These set what each quick-log button adds. Edit to match your usual
-        pour.
+        These are picked for you when you log a drink. Change them to match your
+        usual pour.
       </p>
 
       {DRINK_TYPES.map((type) => {
@@ -137,7 +153,7 @@ export default function SettingsScreen({ data, actions }) {
       })}
 
       <button className={styles.reset} onClick={() => actions.resetSizes()}>
-        Reset to Swedish standards
+        Reset to Swedish defaults
       </button>
 
       <div className={styles.sectionLabel}>DATA</div>
@@ -147,16 +163,22 @@ export default function SettingsScreen({ data, actions }) {
       </p>
       <div className={styles.dataBtns}>
         <button className={styles.dataBtn} onClick={() => exportBackup(data)}>
-          Download backup
+          Back up now
         </button>
-        <button className={styles.dataBtn} onClick={handleImport}>
+        <button
+          className={styles.dataBtn}
+          onClick={() => {
+            setDataMsg(null)
+            setConfirmImport(true)
+          }}
+        >
           Import backup
         </button>
         <button
           className={styles.dataBtn}
           onClick={() => exportEntriesCsv(data)}
         >
-          Export entries (CSV)
+          Export drinks (CSV)
         </button>
       </div>
       {dataMsg && (
@@ -166,11 +188,11 @@ export default function SettingsScreen({ data, actions }) {
       )}
 
       <div className={styles.disclaimer}>
-        Promille is estimated with the{' '}
-        <span className={styles.em}>Widmark</span> formula using your weight,
-        sex (body-water ratio) and time since your first drink, with alcohol
-        burned off at ~0.15&nbsp;‰/h. It&apos;s an estimate — never a substitute
-        for a real breathalyzer.
+        The ‰ level is an estimate. It uses the{' '}
+        <span className={styles.em}>Widmark</span> formula with your weight, sex
+        and the time since your first drink, and assumes about 0.15&nbsp;‰ burns
+        off per hour. Real levels vary with food, health and medication. Never
+        use it to decide whether you can drive.
       </div>
 
       <a
@@ -179,8 +201,17 @@ export default function SettingsScreen({ data, actions }) {
         target="_blank"
         rel="noopener noreferrer"
       >
-        All data stays on this device — privacy policy
+        Privacy policy
       </a>
+
+      {confirmImport && (
+        <ImportBackupModal
+          entries={countEntries(data)}
+          days={Object.keys(data.days).length}
+          onConfirm={handleImport}
+          onClose={closeImport}
+        />
+      )}
     </div>
   )
 }

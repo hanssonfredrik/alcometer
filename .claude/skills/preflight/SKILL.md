@@ -1,6 +1,6 @@
 ---
 name: preflight
-description: The checks to run before committing a change to Alcometer — unit tests, lint, Prettier, a production build, native sync when plugins or the web bundle changed, and screenshots for anything visual. Use when about to commit, when asked "is this ready", or after finishing a feature or fix.
+description: The checks to run before committing a change to Promilla — unit tests, lint, Prettier, a production build, native sync when plugins or the web bundle changed, and screenshots for anything visual. Use when about to commit, when asked "is this ready", or after finishing a feature or fix.
 ---
 
 # Preflight before a commit
@@ -9,10 +9,14 @@ Run in this order; stop and fix at the first failure.
 
 1. **Tests** — `npm run test:run`. New pure helpers in `src/lib/` need a test
    file next to them (`foo.test.js`); schema changes need `storage.test.js`
-   cases for the migration (forward, idempotent, and via `mergeBackup`).
+   cases for the migration (forward, idempotent, and via `restoreBackup`).
 2. **Lint + format** — `npm run lint && npm run format:check`. Fix formatting
    with `npx prettier --write "src/**/*.{js,jsx,css}"` (Prettier also reflows
    imports, so re-check any exact-text edit you planned afterwards).
+2b. **Copy** (any change to text a user reads: UI strings, aria-labels,
+   errors, `public/privacy.html`, store text or captions, README) — follow the
+   `copywriting` skill and run its em-dash check. If you renamed a visible
+   label, update the matching step in `store/tools/shots.json`.
 3. **Build** — `npm run build`. Catches import typos and CSS-module misses that
    the dev server tolerates.
 4. **Visual check** (any change under `src/components`, `src/screens`,
@@ -24,7 +28,13 @@ Run in this order; stop and fix at the first failure.
    `npx cap sync`. Commit the gradle/SPM/plist changes it makes; the copied
    `public/` bundles inside the shells are gitignored.
 6. **Icons** (only if `assets/*.svg` changed) — `npm run icons`, then commit
-   the regenerated images in their own commit (large binary diff).
+   the regenerated images in their own commit (large binary diff). Also
+   `npm run store` so the store icons and feature graphic follow.
+6b. **Store screenshots** (when a screen that appears in
+   `store/tools/shots.json` changed visibly, or a label a capture step clicks
+   was renamed) — `npm run store`, Read every PNG in `store/out/`, and commit
+   the refreshed `store/captures` + `store/out` in their own commit. See the
+   `store-assets` skill.
 7. **Docs** — if files, flows or verification steps changed, update
    `CLAUDE.md` and the relevant skill in `.claude/skills/` in the same change.
 

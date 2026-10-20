@@ -122,8 +122,8 @@ export default function HistoryScreen({ data, now }) {
     achievements.push({
       key: 'safe',
       icon: '✓',
-      label: 'Home safe',
-      desc: 'Finished a night out within your set limit.',
+      label: 'Kept your limit',
+      desc: 'A night with drinks that stayed within your limit.',
       earned: safeNight,
     })
     const earnedCount = achievements.filter((a) => a.earned).length
@@ -147,12 +147,16 @@ export default function HistoryScreen({ data, now }) {
         <div className={styles.summary}>
           <div className={styles.summaryLabel}>This week</div>
           <div className={styles.summaryNum}>{v.weekCount}</div>
-          <div className={styles.summaryStd}>{v.weekStd} std</div>
+          <div className={styles.summaryStd}>
+            {v.weekCount === 1 ? 'drink' : 'drinks'} · {v.weekStd} std
+          </div>
         </div>
         <div className={styles.summary}>
           <div className={styles.summaryLabel}>This month</div>
           <div className={styles.summaryNum}>{v.monthCount}</div>
-          <div className={styles.summaryStd}>{v.monthStd} std</div>
+          <div className={styles.summaryStd}>
+            {v.monthCount === 1 ? 'drink' : 'drinks'} · {v.monthStd} std
+          </div>
         </div>
       </div>
 
@@ -162,7 +166,7 @@ export default function HistoryScreen({ data, now }) {
           <div className={styles.chartTitle}>Last 12 days</div>
           <div className={styles.legend}>
             <span className={styles.legendMark} />
-            <span className={styles.legendText}>peak ‰</span>
+            <span className={styles.legendText}>peak ‰ (est.)</span>
           </div>
         </div>
         <div className={styles.bars}>
@@ -204,7 +208,7 @@ export default function HistoryScreen({ data, now }) {
         </div>
       </section>
 
-      {/* Monthly overview */}
+      {/* Drinks by month */}
       <section className={styles.monthCard}>
         <div className={styles.monthTitle}>Monthly overview</div>
         {v.monthBars.map((m, i) => (

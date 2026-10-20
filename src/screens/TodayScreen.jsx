@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { totalGrams, bacAt, peakBac, bacZone, soberAt } from '../lib/alcohol.js'
 import { dateKey, dayIndex, addDays, formatTime } from '../lib/datetime.js'
 import { lastDrinkType } from '../lib/drinks.js'
+import { curveWindow, curveGeometry, CURVE_W, CURVE_H } from '../lib/charts.js'
 import {
   LABELS,
   DRINK_ICONS,
@@ -10,12 +11,22 @@ import {
   DEFAULT_LIMIT,
 } from '../lib/constants.js'
 import BacHero from '../components/BacHero.jsx'
+import BacCurve from '../components/BacCurve.jsx'
 import DrinkRow from '../components/DrinkRow.jsx'
 import LogDrinkSheet from '../components/LogDrinkSheet.jsx'
 import EditDrinkModal from '../components/EditDrinkModal.jsx'
 import styles from './TodayScreen.module.css'
 
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const DOW_LONG = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]
 
 function dayLabels(offset, ts, nowTs) {
   const d = new Date(ts)
@@ -23,11 +34,20 @@ function dayLabels(offset, ts, nowTs) {
     d.getFullYear() === new Date(nowTs).getFullYear()
       ? `${d.getDate()} ${MONTHS[d.getMonth()]}`
       : `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
-  let rel
-  if (offset === 0) rel = 'Today'
-  else if (offset === -1) rel = 'Yesterday'
-  else rel = DOW[d.getDay()]
-  return { rel, dateStr }
+  // `rel` is the pager title ("Yesterday", "Sun"); `relPhrase` reads inside
+  // a sentence ("for yesterday", "to Sunday").
+  let rel, relPhrase
+  if (offset === 0) {
+    rel = 'Today'
+    relPhrase = 'today'
+  } else if (offset === -1) {
+    rel = 'Yesterday'
+    relPhrase = 'yesterday'
+  } else {
+    rel = DOW[d.getDay()]
+    relPhrase = DOW_LONG[d.getDay()]
+  }
+  return { rel, relPhrase, dateStr }
 }
 
 export default function TodayScreen({
@@ -78,15 +98,25 @@ export default function TodayScreen({
     const limit = day.limit ?? DEFAULT_LIMIT
     const soberTs = soberAt(bac, now)
 
+    // BAC over the evening; null with nothing logged (the card is hidden).
+    const win = curveWindow(entries, profile, now, isToday)
+    const curve = win && {
+      geo: curveGeometry(entries, profile, win, { w: CURVE_W, h: CURVE_H }),
+      axis: [win.from, (win.from + win.to) / 2, win.to].map(formatTime),
+      soberLabel: soberTs ? formatTime(soberTs) : null,
+    }
+
     return {
       count,
       limit,
       over: count > limit,
       std: (grams / STD_GLASS_GRAMS).toFixed(1),
       grams: Math.round(grams),
+      bacValue: shown,
       bacBig: shown.toFixed(2),
       zone: bacZone(shown),
       soberLabel: soberTs ? formatTime(soberTs) : null,
+      curve,
       lastType: lastDrinkType(data.days),
       entries: [...entries].reverse().map((e) => ({
         id: e.id,
@@ -104,13 +134,13 @@ export default function TodayScreen({
     }
   }, [data, now, selectedKey, isToday])
 
-  const { rel, dateStr } = dayLabels(dayOffset, selectedTs, now)
+  const { rel, relPhrase, dateStr } = dayLabels(dayOffset, selectedTs, now)
 
   const closeLog = useCallback(() => setLogOpen(false), [])
   const closeEdit = useCallback(() => setEditing(null), [])
 
   return (
-    <div>
+    <div className={styles.screen}>
       {/* Day pager */}
       <nav className={styles.dayNav} aria-label="Select day">
         <button
@@ -142,6 +172,7 @@ export default function TodayScreen({
 
       <BacHero
         bac={v.bacBig}
+        bacValue={v.bacValue}
         zone={v.zone}
         isToday={isToday}
         soberLabel={v.soberLabel}
@@ -149,17 +180,6 @@ export default function TodayScreen({
         limit={v.limit}
         over={v.over}
       />
-
-      <button
-        type="button"
-        className={styles.logBtn}
-        onClick={() => setLogOpen(true)}
-      >
-        <span className={styles.logPlus} aria-hidden="true">
-          +
-        </span>
-        {isToday ? 'Log a drink' : `Add a drink to ${rel}`}
-      </button>
 
       {/* One-line summary + the limit stepper (its only home now) */}
       <div className={styles.summary}>
@@ -189,6 +209,8 @@ export default function TodayScreen({
         </div>
       </div>
 
+      {v.curve && <BacCurve curve={v.curve} isToday={isToday} />}
+
       {/* Log for the selected day, newest first */}
       {v.entries.length > 0 ? (
         <div className={styles.log}>
@@ -212,16 +234,31 @@ export default function TodayScreen({
         </div>
       ) : (
         <div className={styles.empty}>
-          {isToday ? 'Nothing logged yet tonight.' : 'Nothing logged this day.'}
+          {isToday ? 'Nothing logged yet tonight.' : 'Nothing logged that day.'}
         </div>
       )}
+
+      {/* The one primary action, docked above the bottom nav: always in
+          reach (thumb zone) and visible however far the list scrolls. */}
+      <div className={styles.dock}>
+        <button
+          type="button"
+          className={styles.logBtn}
+          onClick={() => setLogOpen(true)}
+        >
+          <span className={styles.logPlus} aria-hidden="true">
+            +
+          </span>
+          {isToday ? 'Log a drink' : `Add a drink for ${relPhrase}`}
+        </button>
+      </div>
 
       {logOpen && (
         <LogDrinkSheet
           sizes={data.sizes}
           initialType={v.lastType}
           isToday={isToday}
-          dayLabel={rel}
+          dayLabel={relPhrase}
           onAdd={(drink) => {
             onLogDrink(drink, selectedKey)
             setLogOpen(false)

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadData, saveData, defaultData } from '../lib/storage.js'
-import { mergeBackup } from '../lib/backup.js'
+import { restoreBackup } from '../lib/backup.js'
 import { dateKey, backfillTs } from '../lib/datetime.js'
 import { DEFAULT_SIZES, DEFAULT_LIMIT } from '../lib/constants.js'
 
@@ -234,17 +234,18 @@ export function useTracker() {
     })
   }, [mutate])
 
-  // Merge an imported backup into the current data (see lib/backup.js), then
-  // persist. Returns how many entries were added/replaced so the UI can report.
+  // Replace everything with an imported backup (see lib/backup.js) and
+  // persist. Nothing of the current state survives — the UI has already asked
+  // the user to confirm that. Returns how many entries the restored data holds
+  // so the UI can report.
   const importData = useCallback(
     (imported) => {
-      let mergedEntries = 0
+      const restored = restoreBackup(imported)
       mutate((d) => {
-        const merged = mergeBackup(d, imported)
-        Object.assign(d, merged.data)
-        mergedEntries = merged.mergedEntries
+        for (const key of Object.keys(d)) delete d[key]
+        Object.assign(d, restored.data)
       })
-      return mergedEntries
+      return restored.entries
     },
     [mutate],
   )

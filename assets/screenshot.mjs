@@ -5,7 +5,8 @@
 // run-app skill).
 // Usage:  node assets/screenshot.mjs
 // Output: screenshots/01-today, 01b-prev-day, 01c-log-sheet, 02-history,
-//         04-insights, 03-setup (.png) in the project root.
+//         04-insights, 03-settings, 03b-import-confirm,
+//         03c-import-confirm-small (.png) in the project root.
 import { spawn } from 'node:child_process'
 import { writeFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -160,8 +161,27 @@ await clickTab('History')
 await capture('02-history.png')
 await clickTab('Insights')
 await capture('04-insights.png')
-await clickTab('Setup')
-await capture('03-setup.png')
+await clickTab('Settings')
+await capture('03-settings.png')
+// The import-backup confirmation (a centred modal) — also at a small phone.
+const openImport = async () => {
+  await evalJs(`[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='Import backup')?.click()`)
+  await sleep(400)
+}
+await openImport()
+await capture('03b-import-confirm.png')
+await evalJs(`document.querySelector('[role=dialog]')?.parentElement.click()`)
+await sleep(300)
+await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 667, deviceScaleFactor: 2, mobile: true })
+await sleep(300)
+await openImport()
+await capture('03c-import-confirm-small.png')
+await evalJs(`document.querySelector('[role=dialog]')?.parentElement.click()`)
+await sleep(300)
+// Today at the small phone: hero (gauge), log button and summary line must
+// all sit above the bottom nav without scrolling.
+await clickTab('Today')
+await capture('01d-today-small.png')
 
 ws.close()
 edge.kill()

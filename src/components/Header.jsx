@@ -17,7 +17,9 @@ export default function Header({ screenLabel, dateLabel, data, now }) {
       <div className={styles.streak}>
         <span className={styles.dot} />
         <span className={styles.streakNum}>{streak.current}</span>
-        <span className={styles.streakText}>day streak</span>
+        <span className={styles.streakText}>
+          {streak.current === 1 ? 'alcohol-free day' : 'alcohol-free days'}
+        </span>
       </div>
     </header>
   )

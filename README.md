@@ -1,85 +1,83 @@
-# Alcometer
+# Promilla
 
-A mobile-first PWA for tracking drinks, estimating your blood-alcohol level (BAC), and building sober-day streaks. Dark "neon" aesthetic, works offline, and **all data stays on your device** — nothing is ever sent anywhere.
+A private drink journal for your phone. You log what you drink, see an
+estimate of your evening, and build streaks of alcohol-free days. Everything
+stays on the device and it works offline.
 
-Built with React + Vite. The same codebase also ships as native iOS and
-Android apps via [Capacitor](https://capacitorjs.com/) — the web build runs
-inside a native shell with platform storage, haptics, and splash/icons.
+It is one React + Vite codebase that ships as a web app (PWA) and as native
+iOS and Android apps through [Capacitor](https://capacitorjs.com/).
 
-**[Live demo →](https://victorious-moss-0f60f0d10.7.azurestaticapps.net/)**
+**[Try the web app](https://victorious-moss-0f60f0d10.7.azurestaticapps.net/)**
 
-## Features
+## Run it
 
-- **Today** — log drinks, see a live BAC estimate, and know when you'll be sober.
-- **History** — review past days and track your sober-day streaks and milestones.
-- **Setup** — set your weight, sex, and default drink sizes.
-- **Offline-first PWA** — installable and fully usable without a connection.
-
-## Getting started
-
-Requires [Node.js](https://nodejs.org/) 18+.
+You need [Node.js](https://nodejs.org/) 22 or newer.
 
 ```bash
-npm install       # install dependencies
-npm run dev       # start the dev server at http://localhost:5173
+npm install
+npm run dev        # http://localhost:5173
 ```
 
-## Scripts
+## Commands
 
-```bash
-npm run dev       # dev server (http://localhost:5173)
-npm run build     # production build to dist/ (also generates the service worker)
-npm run preview   # serve the built dist/ (use this to test PWA/offline behaviour)
-npm run icons     # regenerate PWA + native icons/splash from assets/*.svg
-npm run sync      # build + copy the web app into the native projects
-npm run android   # build, sync, and run on an Android device/emulator
-```
+| Command              | What it does                                                 |
+| -------------------- | ------------------------------------------------------------ |
+| `npm run dev`        | Dev server with hot reload                                   |
+| `npm run build`      | Production build to `dist/`, including the service worker    |
+| `npm run preview`    | Serves `dist/`. Use this to test offline and install         |
+| `npm test`           | Unit tests in watch mode (`npm run test:run` runs them once) |
+| `npm run lint`       | ESLint                                                       |
+| `npm run format`     | Prettier                                                     |
+| `npm run icons`      | Rebuilds every app icon and splash from `assets/*.svg`       |
+| `npm run sync`       | Builds and copies the web app into `ios/` and `android/`     |
+| `npm run android`    | Syncs, then runs on an Android emulator or device            |
+| `npm run store`      | Rebuilds the App Store and Google Play screenshots           |
 
-> The service worker only runs in a build, not in `npm run dev`. To test offline
-> behaviour, run `npm run build && npm run preview`.
+The service worker only runs in a build, so test offline behavior with
+`npm run build && npm run preview`, not `npm run dev`.
 
-## Native apps (iOS / Android)
-
-The `ios/` and `android/` folders are Capacitor shells around the same
-`dist/` build — there is no separate mobile codebase. On native, data is
-stored in platform storage (UserDefaults / SharedPreferences) instead of
-`localStorage`, and the service worker is skipped.
-
-- **Android:** `npm run android` with an emulator/device (needs the Android
-  SDK), or grab the debug APK from the *Android* GitHub Actions workflow.
-- **iOS:** built and uploaded to TestFlight by the *iOS (TestFlight)*
-  workflow on a macOS runner — no local Mac needed. See `SUBMISSION.md`
-  for the one-time App Store / Play Store setup.
-
-## How the estimate works
-
-The BAC number uses the Widmark formula:
-
-$$\text{BAC} = \frac{A}{r \cdot w} - \beta \cdot t$$
-
-where $A$ is grams of pure alcohol consumed, $r$ is the body-water ratio
-(0.68 male / 0.55 female), $w$ is your weight, $t$ is hours since the first
-drink, and $\beta$ = 0.15 ‰/h burn-off.
-
-**This is only an estimate.** Do not use it to decide whether it's safe to drive
-or operate machinery.
-
-## Project structure
+## How it's built
 
 ```
 src/
-  main.jsx              Entry point: fonts, global CSS, mounts <App>.
-  App.jsx               App shell: header, screen area, bottom nav.
-  styles/global.css     Design tokens + resets + fonts.
-  lib/                  Pure logic (constants, storage, datetime, alcohol math).
-  hooks/useTracker.js   The single store: persisted data + mutations.
-  components/           Header, BottomNav.
-  screens/              TodayScreen, HistoryScreen, SettingsScreen.
+  App.jsx       The shell: header, the four tabs, bottom nav
+  screens/      Today, History, Insights, Settings
+  components/   Shared pieces (the gauge, the curve, the log sheet, ...)
+  lib/          Pure logic with unit tests (the estimate, dates, storage)
+  hooks/        useTracker: the one store for all data
 ```
 
-Data is persisted to `localStorage` under the key `neontrk_v1`.
+`CLAUDE.md` has the full architecture, the data model and the conventions.
+
+## Native apps
+
+`ios/` and `android/` are thin Capacitor shells around the same `dist/` build.
+There is no separate mobile code. On a phone, data goes to the platform's
+own storage instead of the browser's.
+
+- **Android:** run `npm run android`, or download the APK from the
+  *Android* GitHub Actions workflow.
+- **iOS:** the *iOS (TestFlight)* workflow builds and uploads it from a macOS
+  runner, so you don't need a Mac.
+
+Store setup is in [`docs/SUBMISSION.md`](docs/SUBMISSION.md). Screenshots,
+icons and the listing text are in [`store/`](store/README.md).
+
+## The estimate
+
+The ‰ level uses the Widmark formula:
+
+$$\text{BAC} = \frac{A}{r \cdot w} - \beta \cdot t$$
+
+$A$ is grams of alcohol so far, $r$ the body-water ratio (0.68 for men, 0.55
+for women), $w$ your weight in kg, $t$ the hours since your first drink, and
+$\beta$ = 0.15 ‰ per hour.
+
+It is an estimate, and your real level can be quite different. Never use it
+to decide whether you can drive.
 
 ## Privacy
 
-Everything runs locally in your browser. There is no account, no server, and no
-tracking — your data never leaves your device.
+There is no account, no server and no tracking. Your data never leaves your
+device unless you save a backup or export a CSV yourself. The full policy is
+in [`public/privacy.html`](public/privacy.html).

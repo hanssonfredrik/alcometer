@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Promilla store screenshot</title>
+    <!--
+      One framed store screenshot. store/tools/render.mjs opens this with a
+      viewport of exactly the canvas size and captures it, so 1 CSS pixel is
+      1 output pixel and the app capture is only ever scaled down, never
+      redrawn.
+
+      Everything is sized off the canvas width and height in JS, because the
+      same template fills a 1080x1920 Play canvas and a much taller 1320x2868
+      App Store one. Ported from DiabetesNinja's store/ronin/templates.
+
+      The look is the app's: --ink ground, the default blue accent as a glow,
+      Space Grotesk for type. Colours are copied from src/styles/global.css.
+
+      Params: screen (file:// url of the capture), title, sub, w, h.
+    -->
+    <style>
+      /* Copies of the app's faces (from @fontsource), not references, so the
+         kit renders even without node_modules. */
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 500;
+        font-display: block;
+        src: url(fonts/space-grotesk-latin-500-normal.woff2) format('woff2');
+      }
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 700;
+        font-display: block;
+        src: url(fonts/space-grotesk-latin-700-normal.woff2) format('woff2');
+      }
+
+      :root {
+        --ink: #08070c;
+        --accent: oklch(0.72 0.155 255);
+        --text: #f4f4f5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background:
+          radial-gradient(
+            120% 55% at 50% 0%,
+            color-mix(in oklch, var(--accent) 30%, transparent),
+            transparent 70%
+          ),
+          radial-gradient(
+            90% 40% at 50% 100%,
+            color-mix(in oklch, var(--accent) 12%, transparent),
+            transparent 70%
+          ),
+          var(--ink);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      #head {
+        flex: 0 0 auto;
+        text-align: center;
+      }
+      #title {
+        margin: 0;
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        line-height: 1.1;
+        color: var(--text);
+        text-wrap: balance;
+      }
+      #sub {
+        margin: 0;
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+        font-weight: 500;
+        line-height: 1.38;
+        color: rgba(244, 244, 245, 0.66);
+        text-wrap: balance;
+      }
+
+      #stage {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+      }
+      /* A near-black frame with an accent rim and glow: reads as a phone at
+         thumbnail size without a photo-real device. */
+      #phone {
+        background: #15131c;
+        border: 2px solid color-mix(in oklch, var(--accent) 45%, transparent);
+      }
+      #screen {
+        overflow: hidden;
+        line-height: 0;
+        background: var(--ink);
+      }
+      #shot {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="head">
+      <h1 id="title"></h1>
+      <p id="sub"></p>
+    </div>
+    <div id="stage">
+      <div id="phone">
+        <div id="screen"><img id="shot" alt="" /></div>
+      </div>
+    </div>
+
+    <script>
+      const p = new URLSearchParams(location.search)
+      const W = Number(p.get('w'))
+      const H = Number(p.get('h'))
+      const px = (n) => Math.round(n) + 'px'
+
+      document.body.style.width = px(W)
+      document.body.style.height = px(H)
+
+      const title = document.getElementById('title')
+      const sub = document.getElementById('sub')
+      const head = document.getElementById('head')
+      const stage = document.getElementById('stage')
+      const phone = document.getElementById('phone')
+      const screen = document.getElementById('screen')
+      const shot = document.getElementById('shot')
+
+      title.textContent = p.get('title') || ''
+      sub.textContent = p.get('sub') || ''
+      if (!sub.textContent) sub.style.display = 'none'
+
+      const padX = Math.round(W * 0.078)
+      const padTop = Math.round(H * 0.05)
+      const padBottom = Math.round(H * 0.042)
+      const gapHeadPhone = Math.round(H * 0.03)
+
+      head.style.padding = `${px(padTop)} ${px(padX)} 0`
+      title.style.fontSize = px(W * 0.07)
+      sub.style.fontSize = px(W * 0.036)
+      sub.style.marginTop = px(W * 0.022)
+      stage.style.padding = `${px(gapHeadPhone)} ${px(padX)} ${px(padBottom)}`
+
+      shot.src = p.get('screen')
+
+      async function layout() {
+        await shot.decode()
+        await document.fonts.ready
+
+        const headH = head.getBoundingClientRect().height
+        const avail = H - headH - gapHeadPhone - padBottom
+        const bezel = Math.max(6, Math.round(W * 0.016))
+        const maxPhoneW = W - 2 * padX
+        const aspect = shot.naturalWidth / shot.naturalHeight
+
+        // Fit by height, then clamp by width if it would hit the margins.
+        let h = avail - 2 * bezel
+        let w = h * aspect
+        if (w + 2 * bezel > maxPhoneW) {
+          w = maxPhoneW - 2 * bezel
+          h = w / aspect
+        }
+
+        const outerR = Math.round((w + 2 * bezel) * 0.12)
+        phone.style.padding = px(bezel)
+        phone.style.borderRadius = px(outerR)
+        phone.style.boxShadow =
+          `0 0 ${px(W * 0.06)} color-mix(in oklch, var(--accent) 35%, transparent),` +
+          `0 ${px(W * 0.02)} ${px(W * 0.05)} rgba(0, 0, 0, 0.6)`
+        screen.style.width = px(w)
+        screen.style.height = px(h)
+        screen.style.borderRadius = px(Math.max(0, outerR - bezel))
+
+        // Two frames so the final geometry is painted before the capture.
+        await new Promise((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(r)),
+        )
+        window.__ready = true
+      }
+
+      layout()
+    </script>
+  </body>
+</html>

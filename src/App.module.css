@@ -46,6 +46,9 @@
   /* Don't hand a rubber-band at the end of the list to the document. */
   overscroll-behavior: contain;
   padding: 6px 24px 24px;
+  /* A column, so a screen can fill the height (Today's docked button). */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Save-failure banner: shown across all screens when a persist fails so a

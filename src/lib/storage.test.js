@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { defaultData, migrate } from './storage.js'
-import { mergeBackup } from './backup.js'
+import { restoreBackup } from './backup.js'
 import {
   DEFAULT_SIZES,
   DEFAULT_WEEKLY_TARGET,
@@ -108,8 +108,7 @@ describe('migrate — v2 → v3 default accent', () => {
   })
 
   it('upgrades an imported v2 backup on the way in', () => {
-    const current = { ...v2('cyan'), version: 3 }
-    const { data } = mergeBackup(current, v2('pink'))
+    const { data } = restoreBackup(v2('pink'))
     expect(data.profile.theme).toBe(DEFAULT_THEME)
     expect(data.version).toBe(3)
   })
