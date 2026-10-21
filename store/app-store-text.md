@@ -122,7 +122,7 @@ First release.
 **Support URL** and **Privacy Policy URL** (one page covers both):
 
 ```
-https://victorious-moss-0f60f0d10.7.azurestaticapps.net/privacy
+https://app.promilla.se/privacy
 ```
 
 **Marketing URL:** optional. Leave it empty.
@@ -147,10 +147,11 @@ The core of the app is the journal: logging drinks, a limit for the night, a wee
 To try it, tap "Log a drink", pick a type and a size, and confirm. History, Insights and Settings need no setup.
 ```
 
-**Screenshots:** upload `out/appstore/iphone-6.5/` (files 01 to 05 in order)
-into the **iPhone 6.5" Display** slot. Once a build is attached you can use
-`out/appstore/iphone-6.9/` in the **iPhone 6.9" Display** slot instead.
-Never drop one set into the other's slot, or the Play files into either:
+**Screenshots:** in the **"iPhone with Dynamic Island (medium display)"** tab,
+upload `out/appstore/iphone-6.3/` (files 01 to 05, in order). That tab accepts
+1206 × 2622. If your page shows a 6.5" or 6.9" slot instead, use
+`iphone-6.5/` or `iphone-6.9/`. Never drop a set into another slot, or the
+Play files into any:
 App Store Connect rejects them with "File dimensions are invalid". If it asks
 for iPad screenshots, the attached build is an old one that still supports
 iPad (see `README.md`).

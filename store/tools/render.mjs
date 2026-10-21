@@ -45,6 +45,10 @@ const CANVASES = {
   play: { w: 1080, h: 1920, dir: 'store/out/googleplay/phone' },
   appstore69: { w: 1320, h: 2868, dir: 'store/out/appstore/iphone-6.9' },
   appstore65: { w: 1284, h: 2778, dir: 'store/out/appstore/iphone-6.5' },
+  // App Store Connect's "iPhone with Dynamic Island (medium display)" slot
+  // (6.1" / 6.3"), which it asks for first as of Oct 2026. It accepts
+  // 1179x2556 or 1206x2622; the larger one is used.
+  appstore63: { w: 1206, h: 2622, dir: 'store/out/appstore/iphone-6.3' },
 }
 
 const FEATURE = {

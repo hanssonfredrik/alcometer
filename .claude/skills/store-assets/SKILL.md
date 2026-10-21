@@ -21,7 +21,8 @@ npm run store     # build → icons → capture → render → finalize
 1. It must end with `All assets match the store specs`. `finalize.mjs` exits
    1 on any size, alpha, byte or count problem.
 2. **Read every PNG** in `store/out/googleplay/phone/`,
-   `store/out/appstore/iphone-6.5/` and the feature graphic. The spec check
+   `store/out/appstore/iphone-6.3/`, `store/out/appstore/iphone-6.5/` and the
+   feature graphic. The spec check
    cannot see a wrong picture. For each one, check that:
    - the headline matches what is on screen;
    - no sheet is half-open and no toast is showing;

@@ -21,15 +21,22 @@ English only for now (see [Adding a language](#adding-a-language)).
 | Play app icon                                | `out/googleplay/icon-512.png`           | 512 × 512   | 32-bit PNG with alpha, ≤ 1024 KB |
 | Play feature graphic                         | `out/googleplay/feature-graphic.png`    | 1024 × 500  | 24-bit PNG, no alpha             |
 | Play phone screenshots                       | `out/googleplay/phone/*.png` (5)        | 1080 × 1920 | 24-bit PNG, no alpha             |
-| App Store iPhone, before a build is attached | `out/appstore/iphone-6.5/*.png` (5)     | 1284 × 2778 | PNG, no alpha                    |
+| App Store iPhone, medium display (6.1"/6.3") | `out/appstore/iphone-6.3/*.png` (5)     | 1206 × 2622 | PNG, no alpha                    |
+| App Store iPhone 6.5" (older layout)         | `out/appstore/iphone-6.5/*.png` (5)     | 1284 × 2778 | PNG, no alpha                    |
 | App Store iPhone 6.9"                        | `out/appstore/iphone-6.9/*.png` (5)     | 1320 × 2868 | PNG, no alpha                    |
 | (reference only) App Store marketing icon    | `out/appstore/icon-1024.png`            | 1024 × 1024 | PNG, no alpha                    |
 
-- **Which App Store set:** with no processed build attached to the version,
-  App Store Connect only offers the 6.5" slot and rejects 6.9" files. Upload
-  `iphone-6.5` there; Apple accepts 6.5" as the primary iPhone size and scales
-  the rest. Once a build is attached the 6.9" slot appears and `iphone-6.9`
-  can replace them, but it does not have to.
+- **Which App Store set:** use whichever slot App Store Connect shows. Each
+  slot lists the sizes it takes under the drop zone, so match that text. As
+  of October 2026 the version page leads with **"iPhone with Dynamic Island
+  (medium display)"** (6.1"/6.3"). That slot takes 1179 × 2556 or 1206 × 2622,
+  so upload `iphone-6.3`. Older layouts showed a 6.5" or 6.9" slot instead;
+  `iphone-6.5` and `iphone-6.9` cover those. If Apple adds a new size, add a
+  canvas to `render.mjs` and a rule to `finalize.mjs`.
+- **Other tabs on that page:** "iPad 13" display" means the attached build
+  still supports iPad (see below). "Apple Watch" can stay empty, because the
+  app has no watch app. Any other device tab (for example "iPhone Duo") lists
+  its own sizes. This kit doesn't make those yet.
 - **Play** wants at least 2 phone screenshots and takes 8; it asks for 4
   before it will consider an app for promotion. Apple takes 1 to 10 per size.
 - **`icon-1024.png` is not an upload.** Since Xcode 14 the marketing icon is
@@ -46,6 +53,8 @@ English only for now (see [Adding a language](#adding-a-language)).
 **"File dimensions are invalid" in App Store Connect** means a set went into
 the wrong slot. The pixel sizes are right (`finalize.mjs` proves it):
 
+- `iphone-6.3/` (1206 × 2622) goes in **iPhone with Dynamic Island
+  (medium display)** only;
 - `iphone-6.5/` (1284 × 2778) goes in **iPhone 6.5" Display** only;
 - `iphone-6.9/` (1320 × 2868) goes in **iPhone 6.9" Display** only;
 - `googleplay/phone/` (1080 × 1920) is for Play and fits no Apple slot;

@@ -219,8 +219,9 @@ link it. Native-only pieces:
   `lib/backup.js`.
 - **Icons/splash**: `npm run icons` derives native source images into
   `assets/native/` (gitignored) and fans them out with `@capacitor/assets`.
-- **CI**: `.github/workflows/android.yml` (debug APK; signed AAB on `v*`
-  tags), `.github/workflows/ios.yml` (TestFlight from a macOS runner — there
+- **CI**: `.github/workflows/android.yml` (debug APK; on `v*` tags a signed
+  AAB with `versionCode` = run number, uploaded to Play internal testing when
+  `PLAY_SERVICE_ACCOUNT_JSON` is set), `.github/workflows/ios.yml` (TestFlight from a macOS runner — there
   is no local Mac in this setup). Store checklist: `docs/SUBMISSION.md`.
 - **Store assets**: `store/` (modelled on DiabetesNinja's `store/ronin/`)
   holds the finished screenshots, feature graphic and store icons under

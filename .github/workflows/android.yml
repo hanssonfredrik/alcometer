@@ -8,6 +8,11 @@
 #   ANDROID_KEYSTORE_PASSWORD
 #   ANDROID_KEY_ALIAS
 #   ANDROID_KEY_PASSWORD
+#   PLAY_SERVICE_ACCOUNT_JSON    Play Console service account key (JSON);
+#                                when set, tag builds go to internal testing
+#
+# versionCode is the workflow run number and versionName the tag without
+# its "v", so every tag gets a fresh, increasing code for Play.
 #
 # Create the keystore once with:
 #   keytool -genkey -v -keystore upload.jks -keyalg RSA -keysize 2048 \
@@ -69,6 +74,8 @@ jobs:
         run: |
           echo "$KEYSTORE" | base64 -d > upload.jks
           ./gradlew bundleRelease \
+            -PversionCode=${{ github.run_number }} \
+            -PversionName="${GITHUB_REF_NAME#v}" \
             -Pandroid.injected.signing.store.file="$PWD/upload.jks" \
             -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
             -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
@@ -83,3 +90,18 @@ jobs:
         with:
           name: promilla-release-aab
           path: android/app/build/outputs/bundle/release/app-release.aab
+
+      # The app must already exist in Play Console with one AAB uploaded by
+      # hand; the API cannot create it.
+      - name: Upload to Play internal testing
+        if: startsWith(github.ref, 'refs/tags/v') && env.KEYSTORE != '' && env.PLAY_JSON != ''
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: se.venueve.neontracker
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          status: completed

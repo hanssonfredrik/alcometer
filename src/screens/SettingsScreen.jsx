@@ -197,7 +197,7 @@ export default function SettingsScreen({ data, actions }) {
 
       <a
         className={styles.privacyLink}
-        href="https://victorious-moss-0f60f0d10.7.azurestaticapps.net/privacy"
+        href="https://app.promilla.se/privacy"
         target="_blank"
         rel="noopener noreferrer"
       >

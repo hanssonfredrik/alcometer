@@ -7,7 +7,7 @@ stays on the device and it works offline.
 It is one React + Vite codebase that ships as a web app (PWA) and as native
 iOS and Android apps through [Capacitor](https://capacitorjs.com/).
 
-**[Try the web app](https://victorious-moss-0f60f0d10.7.azurestaticapps.net/)**
+**[Try the web app](https://app.promilla.se/)**
 
 ## Run it
 

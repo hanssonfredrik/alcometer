@@ -71,6 +71,14 @@ const RULES = [
     note: 'App Store iPhone 6.9" portrait: no alpha',
   },
   {
+    dir: 'appstore/iphone-6.3',
+    size: [1206, 2622],
+    alpha: false,
+    maxBytes: SCREENSHOT_MAX,
+    minCount: 1,
+    note: 'App Store iPhone 6.3" (medium display) portrait: no alpha',
+  },
+  {
     dir: 'appstore/iphone-6.5',
     size: [1284, 2778],
     alpha: false,
