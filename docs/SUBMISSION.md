@@ -106,7 +106,7 @@ building and signing.
 4. **Add four GitHub secrets**:
    | Secret | Value |
    |---|---|
-   | `ANDROID_KEYSTORE_BASE64` | `[Convert]::ToBase64String([IO.File]::ReadAllBytes("upload.jks"))` output |
+   | `ANDROID_KEYSTORE_BASE64` | `[Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\keys\promilla-upload.jks")) \| Set-Clipboard`, then paste. Use the full path: .NET doesn't resolve relative paths from your current folder. |
    | `ANDROID_KEYSTORE_PASSWORD` | keystore password |
    | `ANDROID_KEY_ALIAS` | `upload` |
    | `ANDROID_KEY_PASSWORD` | key password |
@@ -117,12 +117,65 @@ building and signing.
 6. **First upload to Play, by hand** (the API can't create the app): Play Console → Testing → Internal testing → Create
    release → upload the `.aab` → add your Google account as a tester →
    install from the opt-in link on your phone.
-7. **Optional: automatic uploads after that.** Google Cloud Console →
-   create a service account → create a JSON key. Play Console → Users and
-   permissions → invite the service account's email with release rights
-   for Promilla. Add the whole JSON file as the GitHub secret
-   `PLAY_SERVICE_ACCOUNT_JSON`. From then on every `v*` tag lands in
-   internal testing on its own (like TestFlight on iOS).
+7. **Optional: automatic uploads after that.** Once this is set up, every
+   `v*` tag lands in internal testing on its own (like TestFlight on iOS).
+   Do it only after step 6: the API can't upload to an app with no builds.
+
+   **a. Create a Google Cloud project and turn on the API.**
+   Open https://console.cloud.google.com/ while signed in with the Google
+   account that owns the Play developer account. Create a project (for
+   example `promilla-play`). Then go to **APIs & Services → Library**,
+   search for **Google Play Android Developer API** and click **Enable**.
+   Uploads fail with "API has not been used in project" if you skip this.
+
+   **b. Create the service account.** In the same project go to
+   **IAM & Admin → Service accounts → Create service account**. Name it
+   (for example `github-play-upload`) and click **Create and continue**.
+   Skip the optional role and user-access steps and click **Done**. It
+   needs no Cloud roles: its rights come from Play Console in step d. Copy
+   its email, which looks like
+   `github-play-upload@promilla-play.iam.gserviceaccount.com`.
+
+   **c. Create a JSON key.** Click the service account → **Keys** tab →
+   **Add key → Create new key → JSON → Create**. A `.json` file downloads.
+   It is a password: never commit it. If key creation is blocked by the
+   `iam.disableServiceAccountKeyCreation` policy (common on new Google
+   Workspace organizations), an org admin has to lift it for this project.
+
+   **d. Give it access in Play Console.** Open https://play.google.com/console
+   → **Users and permissions** (in the left menu at the account level, not
+   inside the app) → **Invite new users**. Paste the service account email.
+   Under **App permissions** click **Add app**, choose Promilla, and tick:
+   - **View app information (read-only)**
+   - **Release apps to testing tracks**
+
+   Leave everything under Account permissions unticked. Click
+   **Invite user** and confirm. There is no invite email to accept: the
+   account is active right away. There is no need to link the Cloud project
+   anywhere in Play Console either (the old "API access" page is gone).
+
+   **e. Add the GitHub secret.** GitHub → `alcometer` → **Settings →
+   Secrets and variables → Actions → New repository secret**. Name it
+   `PLAY_SERVICE_ACCOUNT_JSON` and paste the whole contents of the `.json`
+   file, braces included. To copy it in PowerShell:
+   `Get-Content $HOME\Downloads\<file>.json -Raw | Set-Clipboard`.
+   Then move the file into your password manager and delete it from
+   Downloads.
+
+   **f. Test it.** Push the next tag (`git tag v1.0.1 && git push --tags`).
+   In the Android run, **Upload to Play internal testing** should now run
+   instead of being skipped. The new build shows up under **Testing →
+   Internal testing** a few minutes later and rolls out to testers
+   (the workflow uses `status: completed`).
+
+   If the upload step fails:
+   | Error | Fix |
+   |---|---|
+   | `The caller does not have permission` | Permissions from step d can take up to 24 h to apply. Wait, then re-run the job. Also check that Promilla is ticked under App permissions. |
+   | `Package not found: se.venueve.neontracker` | Step 6 isn't done yet, or the service account isn't attached to this app. |
+   | `Only releases with status draft may be created on draft app` | The app hasn't left draft yet. Finish the first internal release in step 6 (roll it out, not only save it). |
+   | `APK specifies a version code that has already been used` | Re-running an old run reuses its number. Push a new tag instead. |
+   | `Google Play Android Developer API has not been used in project` | Enable the API (step a), wait a few minutes, re-run. |
 8. **Optional: sign release builds locally.** Put `upload.jks` in
    `android/` and create `android/keystore.properties` (both gitignored):
    ```properties
