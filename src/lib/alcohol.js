@@ -21,21 +21,26 @@ export function totalGrams(entries) {
  * Estimated blood-alcohol concentration (‰, per mille) at time `atTs`,
  * using the Widmark formula with linear burn-off.
  *
- *   BAC = A / (r · weight) − β · t
- *
- * where A is grams consumed up to `atTs`, r the body-water ratio,
- * t hours since the first drink, and β the burn-off rate.
+ * Each drink adds A / (r · weight), where A is its grams of alcohol and r
+ * the body-water ratio. Between drinks the level falls by β per hour and
+ * stops at zero. Walking the drinks in order (instead of one closed-form
+ * A / (r · weight) − β · t over the whole day) means hours spent at zero
+ * never count against a later drink.
  */
 export function bacAt(entries, atTs, profile) {
   if (!entries.length) return 0
   const r = WIDMARK_R[profile.sex] ?? WIDMARK_R.M
-  const grams = entries
-    .filter((e) => e.ts <= atTs)
-    .reduce((sum, e) => sum + entryGrams(e), 0)
-  if (grams <= 0) return 0
-  const first = Math.min(...entries.map((e) => e.ts))
-  const hours = Math.max(0, (atTs - first) / 3600000)
-  return Math.max(0, grams / (r * (profile.weight || 75)) - BURN_RATE * hours)
+  const perGram = 1 / (r * (profile.weight || 75))
+  const burn = (level, from, to) =>
+    Math.max(0, level - (BURN_RATE * (to - from)) / 3600000)
+  const drunk = entries.filter((e) => e.ts <= atTs).sort((a, b) => a.ts - b.ts)
+  let level = 0
+  let at = drunk.length ? drunk[0].ts : atTs
+  for (const e of drunk) {
+    level = burn(level, at, e.ts) + entryGrams(e) * perGram
+    at = e.ts
+  }
+  return burn(level, at, atTs)
 }
 
 /**

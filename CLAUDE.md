@@ -131,9 +131,12 @@ knows the difference). Schema version 3:
 
 ### The estimate (Widmark)
 
-`bacAt()` in `lib/alcohol.js`: `BAC = A / (r · weight) − β · t`, where `A` is
-grams of pure alcohol consumed so far, `r` the body-water ratio (0.68 M / 0.55
-F), `t` hours since the first drink, and `β` = 0.15 ‰/h burn-off. Absorption is
+`bacAt()` in `lib/alcohol.js`: each drink adds `A / (r · weight)`, where `A`
+is its grams of pure alcohol and `r` the body-water ratio (0.68 M / 0.55 F).
+Between drinks the level falls by `β` = 0.15 ‰/h and stops at zero. The drinks
+are walked in time order, so hours spent at zero never cancel out a later
+drink (a closed-form `A / (r · weight) − β · t` from the first drink did, and
+a beer at 12:30 made a beer at 15:30 read 0.00). Absorption is
 treated as instant (a logged drink counts in full immediately). It's an
 estimate — the UI says so, and so should you. `bacZone()` maps a ‰ value to the
 plain-language bands in `BAC_ZONES` (sober / light / tipsy / drunk / heavy);

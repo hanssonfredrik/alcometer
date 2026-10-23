@@ -96,6 +96,30 @@ describe('bacAt (Widmark with linear burn-off)', () => {
     )
   })
 
+  it('burns off between drinks that overlap', () => {
+    const entries = [beer(0), beer(HOUR)]
+    const one = entryGrams(entries[0]) / (WIDMARK_R.M * MALE.weight)
+    expect(bacAt(entries, 2 * HOUR, MALE)).toBeCloseTo(
+      2 * one - BURN_RATE * 2,
+      6,
+    )
+  })
+
+  it('does not bank burn-off from hours spent at zero', () => {
+    // 33 cl beer at 12:30 is gone by about 14:10. A second one at 15:30 must
+    // read as one beer's worth, not be cancelled by the idle hours between.
+    const entries = [beer(0, 330), beer(3 * HOUR, 330)]
+    const one = entryGrams(entries[1]) / (WIDMARK_R.M * MALE.weight)
+    expect(bacAt(entries, 3 * HOUR, MALE)).toBeCloseTo(one, 6)
+    expect(bacAt(entries, 4 * HOUR, MALE)).toBeCloseTo(one - BURN_RATE, 6)
+  })
+
+  it('handles entries in any order', () => {
+    const entries = [beer(3 * HOUR, 330), beer(0, 330)]
+    const one = entryGrams(entries[0]) / (WIDMARK_R.M * MALE.weight)
+    expect(bacAt(entries, 3 * HOUR, MALE)).toBeCloseTo(one, 6)
+  })
+
   it('defaults weight to 75 kg when missing', () => {
     const entries = [beer(0)]
     const grams = entryGrams(entries[0])
