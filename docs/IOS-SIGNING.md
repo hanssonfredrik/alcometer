@@ -11,15 +11,27 @@ You do steps 1–4. Step 5 is the workflow change, which Claude makes.
 ## What you reuse
 
 Promilla is on the same Apple team as DiabetesNinja: **Venueve AB
-(`J859ZS5D33`)**. Its Apple Distribution certificate is already on your
-machine:
+(`J859ZS5D33`)**, and signs with the same Apple Distribution certificate
+(valid until **2 Aug 2027**). You don't create a new certificate. You only
+make a profile for Promilla.
 
-- `C:\Projects\diabetesninja-app\app\diabetesninja\cert\ios\dist.p12`
-- Valid until **2 Aug 2027**
-- Password: the one saved as `APPLE_CERT_PASSWORD` for DiabetesNinja (from
-  your password manager)
+Promilla has its own `.p12` of that certificate, with its own password (in
+your password manager):
 
-You don't create a new certificate. You only make a profile for Promilla.
+- `C:\Users\fredr\keys\promilla-dist.p12`
+
+It was built from the certificate and private key in
+`C:\Projects\diabetesninja-app\app\diabetesninja\cert\ios\` (`dist.pem` and
+`dist.key`). DiabetesNinja's own `dist.p12` uses a password that's no longer
+known, so don't use that file. To rebuild Promilla's (one line; it asks for
+the new password twice):
+
+```powershell
+& "C:\Program Files\Git\mingw64\bin\openssl.exe" pkcs12 -export -legacy -inkey "C:\Projects\diabetesninja-app\app\diabetesninja\cert\ios\dist.key" -in "C:\Projects\diabetesninja-app\app\diabetesninja\cert\ios\dist.pem" -out "$HOME\keys\promilla-dist.p12"
+```
+
+`-legacy` is required: without it the macOS keychain on the runner can't
+import the file.
 
 ## 1. Clear the certificate limit
 
@@ -48,7 +60,7 @@ Run these in PowerShell from `C:\Projects\Venueve\alcometer`, so `gh` sets
 them on the `alcometer` repo:
 
 ```powershell
-gh secret set APPLE_CERT_P12_BASE64 --body ([Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\Projects\diabetesninja-app\app\diabetesninja\cert\ios\dist.p12")))
+gh secret set APPLE_CERT_P12_BASE64 --body ([Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\keys\promilla-dist.p12")))
 gh secret set APPLE_CERT_PASSWORD --body (Read-Host "p12 password" -MaskInput)
 gh secret set APPLE_PROVISIONING_PROFILE_BASE64 --body ([Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\keys\Promilla_AppStore.mobileprovision")))
 gh secret set APPLE_CODESIGN_PROVISION --body "Promilla AppStore"
@@ -79,17 +91,18 @@ Say "iOS secrets are in" in the session.
   profile), so no certificate is ever created
 - export and upload to TestFlight with the API key, as today
 
-Then Claude starts a manual iOS run (`gh workflow run ios.yml`). When it's
-green, re-run the `v1.0.2` iOS build, or tag the next version, to get the BAC
-fix onto TestFlight.
+To test a change to signing without a tag, start a manual run:
+`gh workflow run ios.yml`. It uploads to TestFlight like a tagged run. The
+first green run was 40008364923 on 23 Oct 2026.
 
 ## When the certificate expires (2 Aug 2027)
 
 Renew it once, following "Distribution certificate" in
 `C:\Projects\diabetesninja-app\docs\completed\ReleaseSetup.md`. Then:
 
-1. Update `APPLE_CERT_P12_BASE64` and `APPLE_CERT_PASSWORD` in all three
-   repos' secrets (DiabetesNinja, Ronin, Promilla).
+1. Rebuild `promilla-dist.p12` from the new certificate and key (command
+   above), then update `APPLE_CERT_P12_BASE64` and `APPLE_CERT_PASSWORD`
+   here. DiabetesNinja and Ronin need their secrets updated too.
 2. Regenerate every profile against the new certificate, including
    `Promilla AppStore`. Then update `APPLE_PROVISIONING_PROFILE_BASE64`.
 
@@ -97,6 +110,7 @@ Renew it once, following "Distribution certificate" in
 
 | Error | Fix |
 |---|---|
+| `SecKeychainItemImport: The user name or passphrase you entered is not correct` | `APPLE_CERT_PASSWORD` doesn't open the `.p12`. Check it locally with `& "C:\Program Files\Git\mingw64\bin\openssl.exe" pkcs12 -in "$HOME\keys\promilla-dist.p12" -noout -legacy` (no output means it opens), then set the secret again. |
 | `No signing certificate "iOS Distribution" found` or no identity in the keychain | `APPLE_CERT_P12_BASE64` or `APPLE_CERT_PASSWORD` is wrong. Set both again from step 3. |
 | `No profile for team … matching 'Promilla AppStore'` | The name in `APPLE_CODESIGN_PROVISION` doesn't match the profile, or the profile is for another App ID. |
 | `Provisioning profile … doesn't include signing certificate` | The profile was made with a different certificate. Redo step 2 with **Apple Distribution: Venueve AB**. |
