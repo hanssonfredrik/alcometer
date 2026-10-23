@@ -45,17 +45,10 @@ building and signing.
    e.g. `neontracker`.
 4. **Create an App Store Connect API key**: App Store Connect → Users and
    Access → Integrations → App Store Connect API → Team Keys → **+**.
-   Role: **Admin** (required — see below). Download the `.p8` file — **you
-   can only download it once**. Note the Key ID and the Issuer ID (shown at
-   the top of the page).
-   > ⚠️ **Must be Admin.** Cloud signing generates the *Distribution*
-   > certificate at export time, and only an Admin-role key can create it
-   > (an App Manager key can sign the archive but not export — you'll hit
-   > `Cloud signing permission error` / `No signing certificate "iOS
-   > Distribution" found`). There is no per-key "Access to Cloud Managed
-   > Distribution Certificate" toggle in the web UI, so the role is the only
-   > lever — and **a key's role can't be changed after creation**: if an
-   > existing key is too low, create a new Admin key and update the secrets.
+   Role: **App Manager** or higher. Download the `.p8` file. **You can only
+   download it once.** Note the Key ID and the Issuer ID (shown at the top
+   of the page). The key only uploads builds: signing uses the saved
+   certificate in the next step.
 5. **Find your Team ID**: developer.apple.com → Membership details →
    Team ID (10 characters).
 6. **Add four GitHub secrets**: repo → Settings → Secrets and variables →
@@ -66,13 +59,15 @@ building and signing.
    | `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID from step 4 |
    | `APP_STORE_CONNECT_PRIVATE_KEY` | full text contents of the `.p8` file |
    | `APPLE_TEAM_ID` | Team ID from step 5 |
+
+   Then set up signing (the Venueve AB distribution certificate and a
+   `Promilla AppStore` profile, four more secrets) by following
+   `docs/IOS-SIGNING.md`.
 7. **Run the workflow**: repo → Actions → "iOS (TestFlight)" → Run
-   workflow. First run takes ~15 min. If it fails at the **export** step
-   with `Cloud signing permission error` / `No signing certificate "iOS
-   Distribution" found`, the API key role is too low — it must be **Admin**
-   (see step 4); recreate the key as Admin and update the secrets. Also
-   confirm the bundle id is registered (step 2) and that any pending Apple
-   agreements (App Store Connect → Business) are accepted.
+   workflow. The first run takes about 15 min. Signing errors are covered in
+   the table at the end of `docs/IOS-SIGNING.md`. Also confirm the bundle
+   id is registered (step 2) and that any pending Apple agreements (App
+   Store Connect → Business) are accepted.
 8. **Install via TestFlight**: App Store Connect → TestFlight → the build
    appears after ~10 min of processing. **Export compliance is handled
    automatically** — the iOS `Info.plist` sets

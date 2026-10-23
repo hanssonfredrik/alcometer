@@ -224,8 +224,12 @@ link it. Native-only pieces:
   `assets/native/` (gitignored) and fans them out with `@capacitor/assets`.
 - **CI**: `.github/workflows/android.yml` (debug APK; on `v*` tags a signed
   AAB with `versionCode` = run number, uploaded to Play internal testing when
-  `PLAY_SERVICE_ACCOUNT_JSON` is set), `.github/workflows/ios.yml` (TestFlight from a macOS runner — there
-  is no local Mac in this setup). Store checklist: `docs/SUBMISSION.md`.
+  `PLAY_SERVICE_ACCOUNT_JSON` is set), `.github/workflows/ios.yml` (TestFlight from a macOS runner; there
+  is no local Mac in this setup). iOS signing is manual, with the shared
+  Venueve AB distribution certificate and a `Promilla AppStore` profile in
+  secrets (`docs/IOS-SIGNING.md`). Don't switch back to automatic signing:
+  on a fresh runner it creates a new certificate every run until Apple's
+  limit is hit. Store checklist: `docs/SUBMISSION.md`.
 - **Store assets**: `store/` (modelled on DiabetesNinja's `store/ronin/`)
   holds the finished screenshots, feature graphic and store icons under
   `store/out/` plus the no-dependency scripts that rebuild them from the real
