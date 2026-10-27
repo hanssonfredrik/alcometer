@@ -200,6 +200,12 @@ Required before public release; not required for TestFlight/internal testing.
     → expect 17+/18+. Rating only — approval is unaffected; Guideline 1.4.3
     bans apps *encouraging* excess, which this isn't.
   - Play: IARC questionnaire → alcohol references → typically PEGI 16/18.
+    Done 2026-10-27. IARC Global Rating ID
+    `171c400c-34ed-83f3-8120-3fb40c47ecdf` (enter it on any other IARC
+    storefront, such as the Microsoft Store or Galaxy Store, instead of
+    answering again). Answer the questionnaire again if an update adds
+    content that changes the answers (sharing, chat, purchases, ads,
+    location).
 - **Screenshots**:
   - App Store: iPhone medium display, 6.1"/6.3" (1206×2622 or 1179×2556).
     That is the slot App Store Connect leads with as of Oct 2026. Older
