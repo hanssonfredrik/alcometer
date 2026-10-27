@@ -113,10 +113,12 @@ alcohol,tracker,promille,diary,journal,units,moderation,mindful,habit,counter,wi
 "bac" is the only keyword that names the estimate. Users never see keywords,
 but App Review does. If a review cites Guideline 1.4, remove it first.
 
-**What's New in This Version:**
+**What's New in This Version** (max 4000), 208/4000:
 
 ```
-First release.
+First release of Promilla.
+Log a drink in a few taps and see your estimated blood alcohol level. Follow your week against your own weekly target and build alcohol-free streaks.
+Everything stays on your phone.
 ```
 
 **Support URL** and **Privacy Policy URL** (one page covers both):
@@ -182,8 +184,11 @@ it is.
 shared. **Content rating (IARC):** answer the alcohol questions honestly. It
 usually comes out as PEGI 16 or 18.
 
-**Release notes** (max 500):
+**Release notes** (max 500), 208/500. Play Console wraps them in
+`<en-US>` tags; keep those if you paste into the tagged box.
 
 ```
-First release.
+First release of Promilla.
+Log a drink in a few taps and see your estimated blood alcohol level. Follow your week against your own weekly target and build alcohol-free streaks.
+Everything stays on your phone.
 ```
