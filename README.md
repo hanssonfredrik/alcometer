@@ -7,7 +7,7 @@ stays on the device and it works offline.
 It is one React + Vite codebase that ships as a web app (PWA) and as native
 iOS and Android apps through [Capacitor](https://capacitorjs.com/).
 
-**[Try the web app](https://app.promilla.se/)**
+**[Try the web app](https://app.promilla.se/)** · [promilla.se](https://www.promilla.se/)
 
 ## Run it
 

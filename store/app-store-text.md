@@ -127,7 +127,7 @@ Everything stays on your phone.
 https://app.promilla.se/privacy
 ```
 
-**Marketing URL:** optional. Leave it empty.
+**Marketing URL:** `https://www.promilla.se` once the marketing page is live (see "Marketing site" in `CLAUDE.md`). Leave it empty until then.
 
 **Copyright:**
 

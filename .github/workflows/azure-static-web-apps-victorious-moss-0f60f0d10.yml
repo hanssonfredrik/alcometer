@@ -4,8 +4,14 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - web/marketing/**
+      - .github/workflows/marketing.yml
   pull_request:
     types: [opened, synchronize, reopened, closed]
+    paths-ignore:
+      - web/marketing/**
+      - .github/workflows/marketing.yml
     branches:
       - main
 

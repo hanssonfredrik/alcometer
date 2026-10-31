@@ -1,0 +1,84 @@
+name: Marketing site (www.promilla.se)
+
+# Provisions the marketing Static Web App from infra/marketing/main.bicep and
+# uploads web/marketing/ to it (no build step). Signs in to Azure over OIDC
+# with the promilla-marketing-github app registration, so the only secrets are
+# the three AZURE_* ids. The web app (app.promilla.se) is a separate Static
+# Web App with its own workflow. Setup: docs/MARKETING-SITE.md.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - web/marketing/**
+      - infra/marketing/**
+      - .github/workflows/marketing.yml
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: marketing
+  cancel-in-progress: false
+
+env:
+  RESOURCE_GROUP: rg-promilla-web
+  SITE_NAME: swa-promilla-marketing
+  CUSTOM_DOMAIN: www.promilla.se
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Provision and deploy
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Azure only accepts the custom domain once its CNAME points at the
+      # site, so bind it only when DNS is in place. Until then the page is
+      # live on the azurestaticapps.net hostname.
+      - name: Check the custom domain's CNAME
+        id: dns
+        run: |
+          target=$(dig +short CNAME "$CUSTOM_DOMAIN" | head -n1)
+          echo "CNAME $CUSTOM_DOMAIN -> ${target:-<none>}"
+          if [[ "$target" == *.azurestaticapps.net. ]]; then
+            echo "bind=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "bind=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy infrastructure (Bicep)
+        run: |
+          az deployment group create \
+            --resource-group "$RESOURCE_GROUP" \
+            --name "marketing-${GITHUB_RUN_NUMBER}" \
+            --template-file infra/marketing/main.bicep \
+            --parameters name="$SITE_NAME" customDomain="$CUSTOM_DOMAIN" \
+                         bindCustomDomain=${{ steps.dns.outputs.bind }} \
+            --query properties.outputs -o json
+
+      - name: Get the deployment token
+        id: token
+        run: |
+          token=$(az staticwebapp secrets list -n "$SITE_NAME" -g "$RESOURCE_GROUP" \
+            --query properties.apiKey -o tsv)
+          echo "::add-mask::$token"
+          echo "value=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the page
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.token.outputs.value }}
+          action: upload
+          app_location: web/marketing
+          output_location: ''
+          skip_app_build: true
+          skip_api_build: true

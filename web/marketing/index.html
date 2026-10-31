@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f5f6fb" />
+    <title>Promilla · A private drink journal</title>
+    <meta
+      name="description"
+      content="Promilla is a private drink journal. Log what you drink, see roughly how your evening adds up and build streaks of alcohol-free days. Everything stays on your phone."
+    />
+    <link rel="canonical" href="https://www.promilla.se/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.promilla.se/" />
+    <meta property="og:title" content="Promilla · A private drink journal" />
+    <meta
+      property="og:description"
+      content="Log what you drink and build streaks of alcohol-free days. Everything stays on your phone."
+    />
+    <meta property="og:image" content="https://www.promilla.se/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <style>
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 400;
+        font-display: swap;
+        src: url('/fonts/space-grotesk-latin-400-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 500;
+        font-display: swap;
+        src: url('/fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Space Grotesk';
+        font-weight: 700;
+        font-display: swap;
+        src: url('/fonts/space-grotesk-latin-700-normal.woff2') format('woff2');
+      }
+
+      :root {
+        --bg: #f5f6fb;
+        --surface: #ffffff;
+        --ink: #14121c;
+        --muted: #55536a;
+        --line: #e3e4ee;
+        --accent: #3a7bf2;
+        --accent-hover: #2c69dc;
+        --accent-soft: #e6eefe;
+        --font:
+          'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(
+            90% 60% at 80% 0%,
+            #e3ecff 0%,
+            rgba(227, 236, 255, 0) 70%
+          ),
+          var(--bg);
+        color: var(--ink);
+        font: 400 17px/1.6 var(--font);
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+      }
+      a:hover {
+        color: var(--accent-hover);
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Header */
+      header {
+        padding: 20px 0;
+      }
+      header .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+      }
+      .brand img {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+      }
+      header nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 10px 4px;
+      }
+      header nav a:hover {
+        color: var(--ink);
+      }
+
+      /* Hero */
+      .hero {
+        display: grid;
+        gap: 48px;
+        align-items: center;
+        padding-block: 32px 64px;
+      }
+      .hero h1 {
+        font-size: clamp(38px, 7vw, 60px);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        margin: 0 0 20px;
+      }
+      .hero .lead {
+        font-size: 19px;
+        color: var(--muted);
+        margin: 0 0 32px;
+        max-width: 34em;
+      }
+
+      /* Download links */
+      .get {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .store {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+      }
+      .store img {
+        height: 48px;
+        width: auto;
+      }
+      /* An empty href means the store page isn't public yet. Set the real
+         URL on the <a> and the badge becomes a normal link. */
+      .store[href=''] {
+        pointer-events: none;
+        cursor: default;
+      }
+      .store[href=''] img {
+        opacity: 0.45;
+        filter: grayscale(1);
+      }
+      .store .soon {
+        display: none;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .store[href=''] .soon {
+        display: block;
+      }
+      .webapp {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 52px;
+        padding: 0 20px;
+        border-radius: 9px;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 500;
+        font-size: 17px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .webapp:hover {
+        background: var(--accent-hover);
+        color: #fff;
+      }
+      .webapp svg {
+        width: 22px;
+        height: 22px;
+        flex: none;
+      }
+
+      /* Phone frames around the dark app screenshots */
+      .phone {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 300px;
+        padding: 10px;
+        border-radius: 44px;
+        background: #0b0912;
+        box-shadow:
+          0 30px 60px -20px rgba(20, 18, 40, 0.35),
+          0 0 0 1px rgba(20, 18, 40, 0.08);
+      }
+      .phone img {
+        border-radius: 34px;
+        aspect-ratio: 600 / 1300;
+        width: 100%;
+      }
+
+      /* Sections */
+      section {
+        padding: 56px 0;
+      }
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 8px;
+      }
+      h2 {
+        font-size: clamp(28px, 4.5vw, 38px);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin: 0 0 16px;
+      }
+      .features {
+        display: grid;
+        gap: 56px;
+      }
+      .feature h3 {
+        font-size: 22px;
+        margin: 28px 0 8px;
+      }
+      .feature p {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 32px 28px;
+      }
+      .card p {
+        color: var(--muted);
+        margin: 0 0 12px;
+      }
+      .card p:last-child {
+        margin-bottom: 0;
+      }
+      .points {
+        list-style: none;
+        padding: 0;
+        margin: 24px 0 0;
+        display: grid;
+        gap: 12px;
+      }
+      .points li {
+        display: flex;
+        gap: 12px;
+        align-items: baseline;
+      }
+      .points li::before {
+        content: '';
+        flex: none;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        transform: translateY(-1px);
+      }
+      .cards {
+        display: grid;
+        gap: 24px;
+      }
+      .estimate strong {
+        color: var(--ink);
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 32px 0 48px;
+        margin-top: 32px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      footer .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 28px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      footer nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+      }
+      footer a {
+        color: var(--muted);
+        padding: 8px 0;
+      }
+
+      @media (min-width: 900px) {
+        .hero {
+          grid-template-columns: 1.15fr 1fr;
+          padding-block: 56px 88px;
+        }
+        .features {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 40px;
+        }
+        .feature .phone {
+          max-width: 260px;
+        }
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <a class="brand" href="/">
+          <img src="/img/icon.png" alt="" width="40" height="40" />
+          Promilla
+        </a>
+        <nav>
+          <a href="https://app.promilla.se/privacy">Privacy</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap hero">
+        <div>
+          <h1>A private drink journal.</h1>
+          <p class="lead">
+            Log what you drink, see roughly how your evening adds up, and build
+            streaks of alcohol-free days. Everything stays on your phone.
+          </p>
+          <div class="get">
+            <a
+              class="store"
+              href=""
+              aria-label="Download on the App Store (coming soon)"
+            >
+              <img
+                src="/img/badge-app-store.svg"
+                alt="Download on the App Store"
+                width="144"
+                height="48"
+              />
+              <span class="soon">Coming soon</span>
+            </a>
+            <a
+              class="store"
+              href="https://play.google.com/store/apps/details?id=se.venueve.neontracker"
+              aria-label="Get it on Google Play"
+            >
+              <img
+                src="/img/badge-google-play.png"
+                alt="Get it on Google Play"
+                width="161"
+                height="48"
+              />
+              <span class="soon">Coming soon</span>
+            </a>
+            <a class="webapp" href="https://app.promilla.se/">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path
+                  d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"
+                />
+              </svg>
+              Open the web app
+            </a>
+          </div>
+        </div>
+        <div class="phone">
+          <img
+            src="/img/shot-today.webp"
+            width="600"
+            height="1300"
+            alt="The Today screen: an estimated level of 0.23 ‰ on a dial, a curve of the evening and the drinks logged tonight."
+          />
+        </div>
+      </div>
+
+      <section>
+        <div class="wrap">
+          <div class="features">
+            <div class="feature">
+              <div class="phone">
+                <img
+                  src="/img/shot-log.webp"
+                  width="600"
+                  height="1300"
+                  loading="lazy"
+                  alt="Logging a drink: wine, beer, cava or liquor, then the size."
+                />
+              </div>
+              <h3>Log tonight</h3>
+              <p>
+                Pick wine, beer, cava or liquor, then the size. Your usual pour
+                is already picked. A dial and a curve show an estimate of your
+                evening.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="phone">
+                <img
+                  src="/img/shot-history.webp"
+                  width="600"
+                  height="1300"
+                  loading="lazy"
+                  alt="History: totals for the week and month, the last 12 days and the awards for alcohol-free days."
+                />
+              </div>
+              <h3>Alcohol-free days</h3>
+              <p>
+                Count your alcohol-free days in a row and collect milestones
+                along the way. Set a weekly target in standard drinks.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="phone">
+                <img
+                  src="/img/shot-insights.webp"
+                  width="600"
+                  height="1300"
+                  loading="lazy"
+                  alt="Insights: an 8-week trend against the weekly target and a 12-week calendar."
+                />
+              </div>
+              <h3>Look back</h3>
+              <p>
+                Follow your 8-week trend against your target, see your busiest
+                day of the week and a 12-week calendar.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap cards">
+          <div class="card">
+            <p class="eyebrow">Your data</p>
+            <h2>Nothing leaves your phone.</h2>
+            <ul class="points">
+              <li>No account, no ads, no tracking.</li>
+              <li>Works offline.</li>
+              <li>Save a backup file and restore it on a new phone.</li>
+              <li>Export your drinks as CSV whenever you like.</li>
+            </ul>
+          </div>
+          <div class="card estimate">
+            <p class="eyebrow">About the estimate</p>
+            <h2>A rough guide, not a measurement.</h2>
+            <p>
+              The level is an estimate from the Widmark formula. It uses your
+              weight, your sex and the time since your first drink. Your real
+              level can be quite different, depending on food, health and
+              medication.
+            </p>
+            <p>
+              <strong>Never use it to decide whether you can drive.</strong>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>© 2026 Venueve AB</span>
+        <nav>
+          <a href="https://app.promilla.se/privacy">Privacy and support</a>
+          <a href="https://app.promilla.se/">Web app</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -188,6 +188,32 @@ grid any more; don't reintroduce one-tap logging without a size.
 - Keep this file and `.claude/skills/*` current when the structure, flows or
   verification steps change — they are the onboarding for the next session.
 
+## Marketing site (www.promilla.se)
+
+`web/marketing/` is the public homepage at `https://www.promilla.se`: one
+static `index.html` (inline CSS, no JS, no build) plus images and self-hosted
+Space Grotesk fonts. It is light-themed on purpose and is not part of the Vite
+app. `npm run marketing` serves it on http://localhost:8742. The app stays at
+the repo root and on `https://app.promilla.se`, and so does the privacy and
+support page (`/privacy`, linked from both store listings).
+`www.promilla.se/privacy` 301-redirects there.
+
+- **Deploy**: `.github/workflows/marketing.yml` signs in to Azure over OIDC,
+  deploys `infra/marketing/main.bicep` (the `swa-promilla-marketing` Static
+  Web App in `rg-promilla-web`), binds `www.promilla.se` once its CNAME
+  resolves, and uploads the folder. It runs on pushes that touch
+  `web/marketing/**` or `infra/marketing/**`; the app workflow ignores those.
+  `promilla.se` is forwarded to www by Loopia, which can't point an apex at
+  Azure. Setup and DNS: `docs/MARKETING-SITE.md`.
+- **Images**: `npm run marketing:images` renders `img/icon.png` and `img/og.png`
+  from `assets/icon.svg` and WebP screenshots from `store/captures/` (refresh
+  those with `npm run store` first). The store badges are the official Apple
+  and Google artwork; don't restyle them.
+- **Store links**: a badge with `href=""` shows as "Coming soon" and isn't
+  clickable. When an app goes public, put its store URL in the `href` and
+  update the `aria-label`.
+- Copy follows the `copywriting` skill like everything else.
+
 ## PWA
 
 Configured in `vite.config.js` via `vite-plugin-pwa` (`generateSW`,

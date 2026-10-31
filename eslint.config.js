@@ -16,6 +16,7 @@ export default [
       'assets/**',
       'scripts/**',
       'dev-dist/**',
+      'web/**',
     ],
   },
   js.configs.recommended,

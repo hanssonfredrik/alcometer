@@ -124,7 +124,7 @@ A full sweep of a file is its own change.
 # User-facing source and copy: every hit must be a comment line or an en-dash range.
 grep -rn '—' src --include=*.jsx | grep -v '^\S*:\s*[0-9]*:\s*\(//\|\*\|/\*\|{/\*\)'
 grep -n '—' src/lib/constants.js src/lib/drinks.js src/lib/backup.js | grep -v '//\| \* '
-grep -n '—' index.html vite.config.js public/privacy.html store/*.md store/tools/shots.json README.md
+grep -n "—" index.html vite.config.js public/privacy.html web/marketing/index.html store/*.md store/tools/shots.json README.md
 ```
 
 Then read every string you changed out loud. If it sounds like a form or a
