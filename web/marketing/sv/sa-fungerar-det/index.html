@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f5f6fb" />
+    <title>Så räknar Promilla ut promillen: Widmarks formel förklarad</title>
+    <meta
+      name="description"
+      content="Så räknar Promilla ut en uppskattning av din promille med Widmarks formel: uträkningen, ett räkneexempel, standardglas, vad uppskattningen inte tar hänsyn till och varför den bara är en fingervisning."
+    />
+    <link rel="canonical" href="https://www.promilla.se/sv/sa-fungerar-det/" />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.promilla.se/how-it-works/"
+    />
+    <link
+      rel="alternate"
+      hreflang="sv"
+      href="https://www.promilla.se/sv/sa-fungerar-det/"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.promilla.se/how-it-works/"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/site.css" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Promilla" />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta
+      property="og:url"
+      content="https://www.promilla.se/sv/sa-fungerar-det/"
+    />
+    <meta property="og:title" content="Så fungerar uppskattningen · Promilla" />
+    <meta
+      property="og:description"
+      content="Widmarks formel bakom Promillas uppskattning, med ett räkneexempel och vad den inte tar hänsyn till."
+    />
+    <meta property="og:image" content="https://www.promilla.se/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "TechArticle",
+            "@id": "https://www.promilla.se/sv/sa-fungerar-det/#article",
+            "headline": "Så fungerar uppskattningen",
+            "description": "Så räknar Promilla ut en uppskattning av din promille med Widmarks formel, med ett räkneexempel och vad uppskattningen inte tar hänsyn till.",
+            "inLanguage": "sv",
+            "url": "https://www.promilla.se/sv/sa-fungerar-det/",
+            "datePublished": "2026-10-31",
+            "dateModified": "2026-10-31",
+            "image": "https://www.promilla.se/img/og.png",
+            "author": { "@id": "https://www.promilla.se/#org" },
+            "publisher": { "@id": "https://www.promilla.se/#org" },
+            "about": { "@id": "https://www.promilla.se/#app" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://www.promilla.se/#org",
+            "name": "Venueve AB",
+            "url": "https://www.promilla.se/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Promilla",
+                "item": "https://www.promilla.se/sv/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Så fungerar uppskattningen",
+                "item": "https://www.promilla.se/sv/sa-fungerar-det/"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <a class="brand" href="/sv/">
+          <img src="/img/icon.png" alt="" width="40" height="40" />
+          Promilla
+        </a>
+        <nav>
+          <a href="/sv/sa-fungerar-det/" aria-current="page">Så fungerar det</a>
+          <a href="https://app.promilla.se/privacy">Integritet</a>
+          <a href="/how-it-works/" hreflang="en" lang="en">English</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="wrap prose">
+        <h1>Så fungerar uppskattningen</h1>
+        <p class="lead">
+          Promilla räknar ut en uppskattning av din promille med Widmarks
+          formel. Den utgår från din vikt, ditt kön och dryckerna du loggar. Det
+          är en grov fingervisning, inte en mätning.
+        </p>
+        <p class="updated">
+          Senast uppdaterad <time datetime="2026-10-31">31 okt 2026</time>
+        </p>
+
+        <h2>Kort sagt</h2>
+        <ul>
+          <li>
+            Varje dryck räknas in i uppskattningen direkt när du loggar den.
+          </li>
+          <li>
+            Uppskattningen sjunker med 0,15 ‰ i timmen och stannar på noll.
+          </li>
+          <li>Din vikt och ditt kön avgör hur mycket en dryck höjer den.</li>
+          <li>Mat, hälsa och mediciner ingår inte.</li>
+        </ul>
+        <p class="warn">Använd den aldrig för att avgöra om du kan köra.</p>
+
+        <h2>Formeln</h2>
+        <p>För varje dryck räknar Promilla först ut gram ren alkohol:</p>
+        <p class="formula">gram = volym i ml × alkoholhalt × 0,789</p>
+        <p>
+          0,789 g per ml är alkoholens densitet. Alkoholhalten skrivs som en
+          andel, så 5 % blir 0,05. Sedan höjer drycken promillen så här mycket:
+        </p>
+        <p class="formula">tillägg i ‰ = gram ÷ (r × vikt i kg)</p>
+        <p>
+          <strong>r</strong> är den andel av kroppen som alkoholen fördelas i,
+          så som Erik Widmark definierade den. Promilla använder 0,68 för män
+          och 0,55 för kvinnor. Mellan dryckerna sjunker promillen med 0,15 ‰ i
+          timmen. Den går aldrig under noll, och timmar på noll räknas inte av
+          mot en senare dryck.
+        </p>
+
+        <h2>Ett räkneexempel</h2>
+        <p>En man som väger 75 kg dricker en öl på 33 cl och 5 %.</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Steg</th>
+              <th scope="col">Resultat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alkohol i ölen</td>
+              <td>330 × 0,05 × 0,789 = 13,0 g</td>
+            </tr>
+            <tr>
+              <td>Tillägg till promillen</td>
+              <td>13,0 ÷ (0,68 × 75) = 0,26 ‰</td>
+            </tr>
+            <tr>
+              <td>En timme senare</td>
+              <td>0,26 − 0,15 = 0,11 ‰</td>
+            </tr>
+            <tr>
+              <td>Uppskattningen når noll</td>
+              <td>Ungefär 1 timme och 40 minuter efter ölen</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          En kvinna som väger 60 kg och dricker samma öl får 13,0 ÷ (0,55 × 60)
+          = 0,39 ‰.
+        </p>
+
+        <h2>Standardglas</h2>
+        <p>
+          Ett standardglas är 12 g ren alkohol. Promilla räknar dina drycker i
+          standardglas, så att olika storlekar och styrkor räknas lika. Du
+          sätter ett veckomål i standardglas, och Historik och Insikter visar
+          dina veckor mot målet. Promillas vanliga storlekar, som du kan ändra:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Dryck</th>
+              <th scope="col">Storlek och styrka</th>
+              <th scope="col">Standardglas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Vin</td>
+              <td>15 cl och 12 %</td>
+              <td>1,2</td>
+            </tr>
+            <tr>
+              <td>Öl</td>
+              <td>33 cl och 5 %</td>
+              <td>1,1</td>
+            </tr>
+            <tr>
+              <td>Cava</td>
+              <td>12 cl och 11 %</td>
+              <td>0,9</td>
+            </tr>
+            <tr>
+              <td>Sprit</td>
+              <td>6 cl och 40 %</td>
+              <td>1,6</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Nivåerna i appen</h2>
+        <p>Appen är på engelska, så nivåerna heter så här:</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Namn i appen</th>
+              <th scope="col">Ungefär</th>
+              <th scope="col">Uppskattad promille</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Zero</td>
+              <td>Noll</td>
+              <td>0,00 ‰</td>
+            </tr>
+            <tr>
+              <td>Light</td>
+              <td>Lätt</td>
+              <td>Under 0,20 ‰</td>
+            </tr>
+            <tr>
+              <td>Tipsy</td>
+              <td>Salongsberusad</td>
+              <td>0,20 till 0,49 ‰</td>
+            </tr>
+            <tr>
+              <td>Drunk</td>
+              <td>Berusad</td>
+              <td>0,50 till 0,99 ‰</td>
+            </tr>
+            <tr>
+              <td>Very drunk</td>
+              <td>Mycket berusad</td>
+              <td>1,00 ‰ och mer</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Namnen beskriver uppskattningen och inget mer. Noll betyder att
+          uppskattningen har nått 0,00. Det betyder inte att alkoholen har
+          lämnat kroppen.
+        </p>
+
+        <h2>Vad uppskattningen inte tar hänsyn till</h2>
+        <ul>
+          <li>
+            <strong>Tiden det tar att ta upp alkoholen.</strong> Promilla räknar
+            in en dryck helt i samma stund som du loggar den. Din verkliga
+            promille stiger en stund efter att du har druckit.
+          </li>
+          <li>
+            <strong>Mat.</strong> En måltid gör att alkoholen når blodet
+            långsammare.
+          </li>
+          <li>
+            <strong>Din kropp.</strong> Hälsa, mediciner, ålder och hur ofta du
+            dricker påverkar hur snabbt du bryter ned alkohol. 0,15 ‰ i timmen
+            är ett genomsnitt, och människor skiljer sig åt.
+          </li>
+          <li>
+            <strong>Det du häller upp.</strong> Uppskattningen blir aldrig
+            bättre än storlekarna och styrkorna du loggar.
+          </li>
+        </ul>
+        <p>
+          Därför kan din verkliga promillehalt vara en helt annan än
+          uppskattningen, högre eller lägre.
+        </p>
+        <p class="warn">Använd den aldrig för att avgöra om du kan köra.</p>
+
+        <h2>Dagar och alkoholfria dagar i rad</h2>
+        <p>
+          I Promilla byts dagen klockan 05.00, så en kväll ute som drar över
+          midnatt stannar på samma dag. En dag utan loggade drycker är en
+          alkoholfri dag. Appen räknar hur många alkoholfria dagar du har i rad,
+          med milstolpar vid 1, 3, 7, 14, 30 och 90 dagar.
+        </p>
+
+        <p>
+          <a href="https://app.promilla.se/">Öppna webbappen</a> eller gå
+          tillbaka till <a href="/sv/">Promillas startsida</a>.
+        </p>
+      </article>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>© 2026 Venueve AB</span>
+        <nav>
+          <a href="/sv/">Startsida</a>
+          <a href="https://app.promilla.se/privacy">Integritet och support</a>
+          <a href="https://app.promilla.se/">Webbapp</a>
+          <a href="/how-it-works/" hreflang="en" lang="en">English</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

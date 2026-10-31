@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f5f6fb" />
-    <title>Promilla · A private drink journal</title>
+    <title>Promilla · A private drink journal with alcohol-free streaks</title>
     <meta
       name="description"
-      content="Promilla is a private drink journal. Log what you drink, see roughly how your evening adds up and build streaks of alcohol-free days. Everything stays on your phone."
+      content="Promilla is a private drink journal. Log what you drink, see roughly how your evening adds up and build streaks of alcohol-free days. Free, no account, everything stays on your phone."
     />
     <link rel="canonical" href="https://www.promilla.se/" />
+    <link rel="alternate" hreflang="en" href="https://www.promilla.se/" />
+    <link rel="alternate" hreflang="sv" href="https://www.promilla.se/sv/" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.promilla.se/"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/img/icon.png" />
     <link
@@ -20,8 +27,12 @@
       type="font/woff2"
       crossorigin
     />
+    <link rel="stylesheet" href="/site.css" />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Promilla" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="sv_SE" />
     <meta property="og:url" content="https://www.promilla.se/" />
     <meta property="og:title" content="Promilla · A private drink journal" />
     <meta
@@ -33,322 +44,136 @@
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <style>
-      @font-face {
-        font-family: 'Space Grotesk';
-        font-weight: 400;
-        font-display: swap;
-        src: url('/fonts/space-grotesk-latin-400-normal.woff2') format('woff2');
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.promilla.se/#org",
+            "name": "Venueve AB",
+            "url": "https://www.promilla.se/",
+            "email": "hello@promilla.se",
+            "address": { "@type": "PostalAddress", "addressCountry": "SE" }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.promilla.se/#website",
+            "url": "https://www.promilla.se/",
+            "name": "Promilla",
+            "inLanguage": ["en", "sv"],
+            "publisher": { "@id": "https://www.promilla.se/#org" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://www.promilla.se/#webpage",
+            "url": "https://www.promilla.se/",
+            "name": "Promilla · A private drink journal with alcohol-free streaks",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://www.promilla.se/#website" },
+            "about": { "@id": "https://www.promilla.se/#app" }
+          },
+          {
+            "@type": "MobileApplication",
+            "@id": "https://www.promilla.se/#app",
+            "name": "Promilla",
+            "description": "A private drink journal. Log what you drink, follow an estimate of your evening and build streaks of alcohol-free days. Everything stays on your phone.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "Android, iOS, Web",
+            "url": "https://www.promilla.se/",
+            "image": "https://www.promilla.se/img/icon.png",
+            "screenshot": [
+              "https://www.promilla.se/img/shot-today.webp",
+              "https://www.promilla.se/img/shot-log.webp",
+              "https://www.promilla.se/img/shot-history.webp",
+              "https://www.promilla.se/img/shot-insights.webp"
+            ],
+            "installUrl": "https://play.google.com/store/apps/details?id=se.venueve.neontracker",
+            "sameAs": [
+              "https://play.google.com/store/apps/details?id=se.venueve.neontracker",
+              "https://app.promilla.se/"
+            ],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "SEK"
+            },
+            "publisher": { "@id": "https://www.promilla.se/#org" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://www.promilla.se/#faq",
+            "inLanguage": "en",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Promilla?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Promilla is a private drink journal for your phone and the web. You log what you drink, see an estimate of your evening and build streaks of alcohol-free days. Everything stays on your phone."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is Promilla free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Promilla is free, with no ads and no in-app purchases."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does Promilla collect my data?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. There is no account, no tracking and no server. Your drinks are saved on your phone. You can save a backup file or export them as CSV."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does Promilla estimate my level?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It uses the Widmark formula with your weight and sex. Each drink raises the estimate, and it falls by 0.15 ‰ an hour until it reaches zero. How the estimate works shows the full math."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use Promilla to decide whether I can drive?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. The level is a rough estimate, and your real level can be quite different. Never use it to decide whether you can drive."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is a standard drink?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A standard drink is 12 g of pure alcohol. A 33 cl beer at 5% is about 1.1 standard drinks. Promilla counts your week in standard drinks against a weekly target you set."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What counts as an alcohol-free day?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A day with no drinks logged. Days roll over at 05:00, so a drink at 01:00 counts toward the evening before."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which phones does Promilla work on?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Android through Google Play, iPhone through the App Store (coming soon) and any modern browser at app.promilla.se. The web app works offline once it has loaded."
+                }
+              }
+            ]
+          }
+        ]
       }
-      @font-face {
-        font-family: 'Space Grotesk';
-        font-weight: 500;
-        font-display: swap;
-        src: url('/fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
-      }
-      @font-face {
-        font-family: 'Space Grotesk';
-        font-weight: 700;
-        font-display: swap;
-        src: url('/fonts/space-grotesk-latin-700-normal.woff2') format('woff2');
-      }
-
-      :root {
-        --bg: #f5f6fb;
-        --surface: #ffffff;
-        --ink: #14121c;
-        --muted: #55536a;
-        --line: #e3e4ee;
-        --accent: #3a7bf2;
-        --accent-hover: #2c69dc;
-        --accent-soft: #e6eefe;
-        --font:
-          'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      html {
-        -webkit-text-size-adjust: 100%;
-      }
-      body {
-        margin: 0;
-        background:
-          radial-gradient(
-            90% 60% at 80% 0%,
-            #e3ecff 0%,
-            rgba(227, 236, 255, 0) 70%
-          ),
-          var(--bg);
-        color: var(--ink);
-        font: 400 17px/1.6 var(--font);
-        -webkit-font-smoothing: antialiased;
-      }
-      a {
-        color: var(--accent);
-      }
-      a:hover {
-        color: var(--accent-hover);
-      }
-      img {
-        display: block;
-        max-width: 100%;
-        height: auto;
-      }
-      .wrap {
-        max-width: 1080px;
-        margin: 0 auto;
-        padding: 0 24px;
-      }
-
-      /* Header */
-      header {
-        padding: 20px 0;
-      }
-      header .wrap {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: var(--ink);
-        text-decoration: none;
-        font-weight: 700;
-        font-size: 22px;
-        letter-spacing: -0.01em;
-      }
-      .brand img {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-      }
-      header nav a {
-        color: var(--muted);
-        text-decoration: none;
-        font-weight: 500;
-        padding: 10px 4px;
-      }
-      header nav a:hover {
-        color: var(--ink);
-      }
-
-      /* Hero */
-      .hero {
-        display: grid;
-        gap: 48px;
-        align-items: center;
-        padding-block: 32px 64px;
-      }
-      .hero h1 {
-        font-size: clamp(38px, 7vw, 60px);
-        line-height: 1.05;
-        letter-spacing: -0.03em;
-        margin: 0 0 20px;
-      }
-      .hero .lead {
-        font-size: 19px;
-        color: var(--muted);
-        margin: 0 0 32px;
-        max-width: 34em;
-      }
-
-      /* Download links */
-      .get {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        align-items: flex-start;
-      }
-      .store {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        text-decoration: none;
-      }
-      .store img {
-        height: 48px;
-        width: auto;
-      }
-      /* An empty href means the store page isn't public yet. Set the real
-         URL on the <a> and the badge becomes a normal link. */
-      .store[href=''] {
-        pointer-events: none;
-        cursor: default;
-      }
-      .store[href=''] img {
-        opacity: 0.45;
-        filter: grayscale(1);
-      }
-      .store .soon {
-        display: none;
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--muted);
-      }
-      .store[href=''] .soon {
-        display: block;
-      }
-      .webapp {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        height: 52px;
-        padding: 0 20px;
-        border-radius: 9px;
-        background: var(--accent);
-        color: #fff;
-        font-weight: 500;
-        font-size: 17px;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-      .webapp:hover {
-        background: var(--accent-hover);
-        color: #fff;
-      }
-      .webapp svg {
-        width: 22px;
-        height: 22px;
-        flex: none;
-      }
-
-      /* Phone frames around the dark app screenshots */
-      .phone {
-        margin: 0 auto;
-        width: 100%;
-        max-width: 300px;
-        padding: 10px;
-        border-radius: 44px;
-        background: #0b0912;
-        box-shadow:
-          0 30px 60px -20px rgba(20, 18, 40, 0.35),
-          0 0 0 1px rgba(20, 18, 40, 0.08);
-      }
-      .phone img {
-        border-radius: 34px;
-        aspect-ratio: 600 / 1300;
-        width: 100%;
-      }
-
-      /* Sections */
-      section {
-        padding: 56px 0;
-      }
-      .eyebrow {
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin: 0 0 8px;
-      }
-      h2 {
-        font-size: clamp(28px, 4.5vw, 38px);
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        margin: 0 0 16px;
-      }
-      .features {
-        display: grid;
-        gap: 56px;
-      }
-      .feature h3 {
-        font-size: 22px;
-        margin: 28px 0 8px;
-      }
-      .feature p {
-        color: var(--muted);
-        margin: 0;
-      }
-
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 32px 28px;
-      }
-      .card p {
-        color: var(--muted);
-        margin: 0 0 12px;
-      }
-      .card p:last-child {
-        margin-bottom: 0;
-      }
-      .points {
-        list-style: none;
-        padding: 0;
-        margin: 24px 0 0;
-        display: grid;
-        gap: 12px;
-      }
-      .points li {
-        display: flex;
-        gap: 12px;
-        align-items: baseline;
-      }
-      .points li::before {
-        content: '';
-        flex: none;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--accent);
-        transform: translateY(-1px);
-      }
-      .cards {
-        display: grid;
-        gap: 24px;
-      }
-      .estimate strong {
-        color: var(--ink);
-      }
-
-      footer {
-        border-top: 1px solid var(--line);
-        padding: 32px 0 48px;
-        margin-top: 32px;
-        color: var(--muted);
-        font-size: 15px;
-      }
-      footer .wrap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px 28px;
-        align-items: center;
-        justify-content: space-between;
-      }
-      footer nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px 24px;
-      }
-      footer a {
-        color: var(--muted);
-        padding: 8px 0;
-      }
-
-      @media (min-width: 900px) {
-        .hero {
-          grid-template-columns: 1.15fr 1fr;
-          padding-block: 56px 88px;
-        }
-        .features {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 40px;
-        }
-        .feature .phone {
-          max-width: 260px;
-        }
-        .cards {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-    </style>
+    </script>
   </head>
   <body>
     <header>
@@ -358,7 +183,9 @@
           Promilla
         </a>
         <nav>
+          <a href="/how-it-works/">How it works</a>
           <a href="https://app.promilla.se/privacy">Privacy</a>
+          <a href="/sv/" hreflang="sv" lang="sv">Svenska</a>
         </nav>
       </div>
     </header>
@@ -505,7 +332,76 @@
             <p>
               <strong>Never use it to decide whether you can drive.</strong>
             </p>
+            <p><a href="/how-it-works/">How the estimate works</a></p>
           </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="wrap faq">
+          <p class="eyebrow">Questions</p>
+          <h2>Common questions</h2>
+          <details>
+            <summary>What is Promilla?</summary>
+            <p>
+              Promilla is a private drink journal for your phone and the web.
+              You log what you drink, see an estimate of your evening and build
+              streaks of alcohol-free days. Everything stays on your phone.
+            </p>
+          </details>
+          <details>
+            <summary>Is Promilla free?</summary>
+            <p>Yes. Promilla is free, with no ads and no in-app purchases.</p>
+          </details>
+          <details>
+            <summary>Does Promilla collect my data?</summary>
+            <p>
+              No. There is no account, no tracking and no server. Your drinks
+              are saved on your phone. You can save a backup file or export them
+              as CSV.
+            </p>
+          </details>
+          <details>
+            <summary>How does Promilla estimate my level?</summary>
+            <p>
+              It uses the Widmark formula with your weight and sex. Each drink
+              raises the estimate, and it falls by 0.15 ‰ an hour until it
+              reaches zero.
+              <a href="/how-it-works/">How the estimate works</a> shows the full
+              math.
+            </p>
+          </details>
+          <details>
+            <summary>Can I use Promilla to decide whether I can drive?</summary>
+            <p>
+              No. The level is a rough estimate, and your real level can be
+              quite different. Never use it to decide whether you can drive.
+            </p>
+          </details>
+          <details>
+            <summary>What is a standard drink?</summary>
+            <p>
+              A standard drink is 12 g of pure alcohol. A 33 cl beer at 5% is
+              about 1.1 standard drinks. Promilla counts your week in standard
+              drinks against a weekly target you set.
+            </p>
+          </details>
+          <details>
+            <summary>What counts as an alcohol-free day?</summary>
+            <p>
+              A day with no drinks logged. Days roll over at 05:00, so a drink
+              at 01:00 counts toward the evening before.
+            </p>
+          </details>
+          <details>
+            <summary>Which phones does Promilla work on?</summary>
+            <p>
+              Android through Google Play, iPhone through the App Store (coming
+              soon) and any modern browser at
+              <a href="https://app.promilla.se/">app.promilla.se</a>. The web
+              app works offline once it has loaded.
+            </p>
+          </details>
         </div>
       </section>
     </main>
@@ -514,8 +410,10 @@
       <div class="wrap">
         <span>© 2026 Venueve AB</span>
         <nav>
+          <a href="/how-it-works/">How the estimate works</a>
           <a href="https://app.promilla.se/privacy">Privacy and support</a>
           <a href="https://app.promilla.se/">Web app</a>
+          <a href="/sv/" hreflang="sv" lang="sv">Svenska</a>
         </nav>
       </div>
     </footer>

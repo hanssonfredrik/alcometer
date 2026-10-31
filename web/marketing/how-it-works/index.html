@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f5f6fb" />
+    <title>How the estimate works: the Widmark formula in Promilla</title>
+    <meta
+      name="description"
+      content="How Promilla estimates your blood alcohol level with the Widmark formula: the math, a worked example, standard drinks, what the estimate leaves out and why it is only a rough guide."
+    />
+    <link rel="canonical" href="https://www.promilla.se/how-it-works/" />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.promilla.se/how-it-works/"
+    />
+    <link
+      rel="alternate"
+      hreflang="sv"
+      href="https://www.promilla.se/sv/sa-fungerar-det/"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.promilla.se/how-it-works/"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/site.css" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Promilla" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="sv_SE" />
+    <meta property="og:url" content="https://www.promilla.se/how-it-works/" />
+    <meta property="og:title" content="How the estimate works · Promilla" />
+    <meta
+      property="og:description"
+      content="The Widmark formula behind Promilla's estimate, with a worked example and what it leaves out."
+    />
+    <meta property="og:image" content="https://www.promilla.se/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "TechArticle",
+            "@id": "https://www.promilla.se/how-it-works/#article",
+            "headline": "How the estimate works",
+            "description": "How Promilla estimates your blood alcohol level with the Widmark formula, with a worked example and what the estimate leaves out.",
+            "inLanguage": "en",
+            "url": "https://www.promilla.se/how-it-works/",
+            "datePublished": "2026-10-31",
+            "dateModified": "2026-10-31",
+            "image": "https://www.promilla.se/img/og.png",
+            "author": { "@id": "https://www.promilla.se/#org" },
+            "publisher": { "@id": "https://www.promilla.se/#org" },
+            "about": { "@id": "https://www.promilla.se/#app" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://www.promilla.se/#org",
+            "name": "Venueve AB",
+            "url": "https://www.promilla.se/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Promilla",
+                "item": "https://www.promilla.se/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "How the estimate works",
+                "item": "https://www.promilla.se/how-it-works/"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <a class="brand" href="/">
+          <img src="/img/icon.png" alt="" width="40" height="40" />
+          Promilla
+        </a>
+        <nav>
+          <a href="/how-it-works/" aria-current="page">How it works</a>
+          <a href="https://app.promilla.se/privacy">Privacy</a>
+          <a href="/sv/sa-fungerar-det/" hreflang="sv" lang="sv">Svenska</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="wrap prose">
+        <h1>How the estimate works</h1>
+        <p class="lead">
+          Promilla estimates your blood alcohol level with the Widmark formula.
+          It uses your weight, your sex and the drinks you log. It is a rough
+          guide, not a measurement.
+        </p>
+        <p class="updated">
+          Last updated <time datetime="2026-10-31">31 Oct 2026</time>
+        </p>
+
+        <h2>The short version</h2>
+        <ul>
+          <li>Each drink adds to the estimate as soon as you log it.</li>
+          <li>The estimate falls by 0.15 ‰ an hour and stops at zero.</li>
+          <li>Your weight and sex decide how much one drink adds.</li>
+          <li>Food, health and medication are not part of it.</li>
+        </ul>
+        <p class="warn">Never use it to decide whether you can drive.</p>
+
+        <h2>The formula</h2>
+        <p>
+          For each drink, Promilla first works out the grams of pure alcohol:
+        </p>
+        <p class="formula">grams = volume in ml × strength × 0.789</p>
+        <p>
+          0.789 g per ml is the density of alcohol. The strength is the share of
+          alcohol, so 5% is 0.05. Then the drink adds this much to the level:
+        </p>
+        <p class="formula">added ‰ = grams ÷ (r × weight in kg)</p>
+        <p>
+          <strong>r</strong> is the share of your body that holds the alcohol,
+          as Erik Widmark defined it. Promilla uses 0.68 for men and 0.55 for
+          women. Between drinks the level falls by 0.15 ‰ an hour. It never goes
+          below zero, and hours spent at zero don't count against a later drink.
+        </p>
+
+        <h2>An example</h2>
+        <p>A man who weighs 75 kg has one 33 cl beer at 5%.</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Step</th>
+              <th scope="col">Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alcohol in the beer</td>
+              <td>330 × 0.05 × 0.789 = 13.0 g</td>
+            </tr>
+            <tr>
+              <td>Added to the level</td>
+              <td>13.0 ÷ (0.68 × 75) = 0.26 ‰</td>
+            </tr>
+            <tr>
+              <td>One hour later</td>
+              <td>0.26 − 0.15 = 0.11 ‰</td>
+            </tr>
+            <tr>
+              <td>Estimate reaches zero</td>
+              <td>About 1 hour 40 minutes after the beer</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          A woman who weighs 60 kg and has the same beer gets 13.0 ÷ (0.55 × 60)
+          = 0.39 ‰.
+        </p>
+
+        <h2>Standard drinks</h2>
+        <p>
+          A standard drink is 12 g of pure alcohol. Promilla counts your drinks
+          in standard drinks, so different sizes and strengths add up the same
+          way. You set a weekly target in standard drinks, and History and
+          Insights show your weeks against it. Promilla's usual sizes, which you
+          can change:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Drink</th>
+              <th scope="col">Size and strength</th>
+              <th scope="col">Standard drinks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Wine</td>
+              <td>15 cl at 12%</td>
+              <td>1.2</td>
+            </tr>
+            <tr>
+              <td>Beer</td>
+              <td>33 cl at 5%</td>
+              <td>1.1</td>
+            </tr>
+            <tr>
+              <td>Cava</td>
+              <td>12 cl at 11%</td>
+              <td>0.9</td>
+            </tr>
+            <tr>
+              <td>Liquor</td>
+              <td>6 cl at 40%</td>
+              <td>1.6</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>The levels Promilla shows</h2>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Estimated level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Zero</td>
+              <td>0.00 ‰</td>
+            </tr>
+            <tr>
+              <td>Light</td>
+              <td>Under 0.20 ‰</td>
+            </tr>
+            <tr>
+              <td>Tipsy</td>
+              <td>0.20 to 0.49 ‰</td>
+            </tr>
+            <tr>
+              <td>Drunk</td>
+              <td>0.50 to 0.99 ‰</td>
+            </tr>
+            <tr>
+              <td>Very drunk</td>
+              <td>1.00 ‰ and above</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          The names describe the estimate and nothing more. Zero means the
+          estimate has reached 0.00. It doesn't mean the alcohol has left your
+          body.
+        </p>
+
+        <h2>What the estimate leaves out</h2>
+        <ul>
+          <li>
+            <strong>Time to absorb.</strong> Promilla counts a drink in full the
+            moment you log it. Your real level climbs over a while after you
+            drink.
+          </li>
+          <li>
+            <strong>Food.</strong> A meal slows down how fast alcohol reaches
+            your blood.
+          </li>
+          <li>
+            <strong>Your body.</strong> Health, medication, age and how often
+            you drink all change how fast you break alcohol down. 0.15 ‰ an hour
+            is an average, and people differ.
+          </li>
+          <li>
+            <strong>Your pour.</strong> The estimate is only as good as the
+            sizes and strengths you log.
+          </li>
+        </ul>
+        <p>
+          Because of all this, your real level can be quite different from the
+          estimate, higher or lower.
+        </p>
+        <p class="warn">Never use it to decide whether you can drive.</p>
+
+        <h2>Days and alcohol-free streaks</h2>
+        <p>
+          Promilla's days roll over at 05:00, so a night out that runs past
+          midnight stays in one day. A day with no drinks logged is an
+          alcohol-free day. Several in a row make an alcohol-free streak, with
+          milestones at 1, 3, 7, 14, 30 and 90 days.
+        </p>
+
+        <p>
+          <a href="https://app.promilla.se/">Open the web app</a> or go back to
+          <a href="/">the Promilla homepage</a>.
+        </p>
+      </article>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>© 2026 Venueve AB</span>
+        <nav>
+          <a href="/">Home</a>
+          <a href="https://app.promilla.se/privacy">Privacy and support</a>
+          <a href="https://app.promilla.se/">Web app</a>
+          <a href="/sv/sa-fungerar-det/" hreflang="sv" lang="sv">Svenska</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

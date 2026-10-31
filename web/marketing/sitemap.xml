@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Update <lastmod> when a page changes. Each page lists its language pair. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.promilla.se/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.promilla.se/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://www.promilla.se/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.promilla.se/"/>
+  </url>
+  <url>
+    <loc>https://www.promilla.se/sv/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.promilla.se/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://www.promilla.se/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.promilla.se/"/>
+  </url>
+  <url>
+    <loc>https://www.promilla.se/how-it-works/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.promilla.se/how-it-works/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://www.promilla.se/sv/sa-fungerar-det/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.promilla.se/how-it-works/"/>
+  </url>
+  <url>
+    <loc>https://www.promilla.se/sv/sa-fungerar-det/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.promilla.se/how-it-works/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://www.promilla.se/sv/sa-fungerar-det/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.promilla.se/how-it-works/"/>
+  </url>
+</urlset>

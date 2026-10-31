@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: House style for every word a person reads in Promilla. Covers in-app text (labels, buttons, hints, errors, aria-labels), the privacy page, the web manifest, the store listing and screenshot captions, and developer prose (README, docs, skills). Natural US English, no em-dashes, a fixed glossary, and the safety rules for talking about the alcohol estimate. Use before writing or editing any of it.
+description: House style for every word a person reads in Promilla. Covers in-app text (labels, buttons, hints, errors, aria-labels), the privacy page, the marketing site (English and Swedish), the web manifest, the store listing and screenshot captions, and developer prose (README, docs, skills). Natural US English, no em-dashes, a fixed glossary, and the safety rules for talking about the alcohol estimate. Use before writing or editing any of it.
 ---
 
 # Copywriting
@@ -118,13 +118,43 @@ follow the same rules: no em-dashes, second person, short sentences.
 Existing docs still carry old em-dashes. Fix every one on a line you touch.
 A full sweep of a file is its own change.
 
+## Swedish (the marketing site)
+
+The pages under `web/marketing/sv/` are in Swedish. The app itself is English
+only, so say so where it matters ("Appen finns på engelska än så länge"). Write
+natural Swedish, as a Swede would say it, not a word-for-word port. Every rule
+above still holds: short sentences, "du", no em-dashes, no cheering, and the
+safety rules at full strength.
+
+| Idea                    | Svenska                                               | Never                              |
+| ----------------------- | ----------------------------------------------------- | ---------------------------------- |
+| The app                 | dryckesdagbok                                         | alkoholmätare, alkometer, alkotest |
+| alcohol-free day        | alkoholfri dag                                        | nykter dag, torr dag               |
+| A run of them           | "N alkoholfria dagar i rad"                           | svit, nykter streak                |
+| The ‰ value             | uppskattad promille, uppskattningen, promillehalt     | uppmätt, exakt, BAC                |
+| The 0.00 zone           | Noll                                                  | Nykter                             |
+| 12 g of alcohol         | standardglas                                          | enhet                              |
+| Weekly / daily number   | veckomål / gräns                                      | max                                |
+| The drive rule          | "Använd den aldrig för att avgöra om du kan köra."    |                                    |
+| backup                  | säkerhetskopia                                        | backup                             |
+
+- "Promille" is the everyday Swedish word, so use it in prose. It is also
+  what Swedes search for.
+- Swedish number style: decimal comma (`0,15 ‰`, `1,1 standardglas`), a space
+  before `%` (`5 %`), times with a dot (`05.00`), dates like `31 okt 2026`.
+- Name app screens and zone labels in English as the app shows them
+  ("Zero", "Today") and explain them in Swedish.
+- The store badges stay as official artwork; Swedish alt text: "Hämta i App
+  Store", "Ladda ned på Google Play".
+
 ## Check before you finish
 
 ```bash
 # User-facing source and copy: every hit must be a comment line or an en-dash range.
 grep -rn '—' src --include=*.jsx | grep -v '^\S*:\s*[0-9]*:\s*\(//\|\*\|/\*\|{/\*\)'
 grep -n '—' src/lib/constants.js src/lib/drinks.js src/lib/backup.js | grep -v '//\| \* '
-grep -n "—" index.html vite.config.js public/privacy.html web/marketing/index.html store/*.md store/tools/shots.json README.md
+grep -n "—" index.html vite.config.js public/privacy.html store/*.md store/tools/shots.json README.md
+grep -rn "—" web/marketing --include=*.html --include=*.txt
 ```
 
 Then read every string you changed out loud. If it sounds like a form or a

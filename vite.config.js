@@ -43,7 +43,13 @@ export default defineConfig({
         // static host (privacy.html 301s there); keep the PWA out of the way:
         // never precache it and never serve the SPA shell for it.
         globIgnores: ['privacy.html'],
-        navigateFallbackDenylist: [/^\/privacy/],
+        // robots.txt and sitemap.xml are for crawlers; opening them in a
+        // browser should show the file, not the app.
+        navigateFallbackDenylist: [
+          /^\/privacy/,
+          /^\/robots\.txt$/,
+          /^\/sitemap\.xml$/,
+        ],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },

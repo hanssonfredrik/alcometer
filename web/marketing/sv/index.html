@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f5f6fb" />
+    <title>Promilla · En privat dryckesdagbok med alkoholfria dagar</title>
+    <meta
+      name="description"
+      content="Promilla är en privat dryckesdagbok. Logga det du dricker, se en uppskattning av din promille under kvällen och samla alkoholfria dagar i rad. Gratis, inget konto, allt stannar i din telefon."
+    />
+    <link rel="canonical" href="https://www.promilla.se/sv/" />
+    <link rel="alternate" hreflang="en" href="https://www.promilla.se/" />
+    <link rel="alternate" hreflang="sv" href="https://www.promilla.se/sv/" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.promilla.se/"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/site.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Promilla" />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content="https://www.promilla.se/sv/" />
+    <meta property="og:title" content="Promilla · En privat dryckesdagbok" />
+    <meta
+      property="og:description"
+      content="Logga det du dricker och samla alkoholfria dagar i rad. Allt stannar i din telefon."
+    />
+    <meta property="og:image" content="https://www.promilla.se/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.promilla.se/#org",
+            "name": "Venueve AB",
+            "url": "https://www.promilla.se/",
+            "email": "hello@promilla.se",
+            "address": { "@type": "PostalAddress", "addressCountry": "SE" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://www.promilla.se/sv/#webpage",
+            "url": "https://www.promilla.se/sv/",
+            "name": "Promilla · En privat dryckesdagbok med alkoholfria dagar",
+            "inLanguage": "sv",
+            "isPartOf": { "@id": "https://www.promilla.se/#website" },
+            "about": { "@id": "https://www.promilla.se/#app" }
+          },
+          {
+            "@type": "MobileApplication",
+            "@id": "https://www.promilla.se/#app",
+            "name": "Promilla",
+            "description": "En privat dryckesdagbok. Logga det du dricker, följ en uppskattning av kvällen och samla alkoholfria dagar i rad. Allt stannar i din telefon.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "Android, iOS, Web",
+            "url": "https://www.promilla.se/sv/",
+            "image": "https://www.promilla.se/img/icon.png",
+            "installUrl": "https://play.google.com/store/apps/details?id=se.venueve.neontracker&hl=sv",
+            "sameAs": [
+              "https://play.google.com/store/apps/details?id=se.venueve.neontracker",
+              "https://app.promilla.se/"
+            ],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "SEK"
+            },
+            "publisher": { "@id": "https://www.promilla.se/#org" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://www.promilla.se/sv/#faq",
+            "inLanguage": "sv",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Vad är Promilla?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Promilla är en privat dryckesdagbok för mobilen och webben. Du loggar det du dricker, ser en uppskattning av kvällen och samlar alkoholfria dagar i rad. Allt stannar i din telefon."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Kostar Promilla något?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Nej. Promilla är gratis, utan reklam och utan köp i appen."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Samlar Promilla in mina uppgifter?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Nej. Det finns inget konto, ingen spårning och ingen server. Dina drycker sparas i telefonen. Du kan spara en säkerhetskopia eller exportera dem som CSV."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Hur räknar Promilla ut min promille?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Appen använder Widmarks formel med din vikt och ditt kön. Varje dryck höjer uppskattningen, som sedan sjunker med 0,15 ‰ i timmen tills den når noll. Så fungerar uppskattningen visar hela uträkningen."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Kan jag använda Promilla för att avgöra om jag kan köra?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Nej. Promillen är en grov uppskattning, och din verkliga promillehalt kan vara en helt annan. Använd den aldrig för att avgöra om du kan köra."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Vad är ett standardglas?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Ett standardglas är 12 g ren alkohol. En öl på 33 cl och 5 % är ungefär 1,1 standardglas. Promilla räknar din vecka i standardglas mot ett veckomål som du väljer."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Vad räknas som en alkoholfri dag?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "En dag utan loggade drycker. Dagen byts klockan 05.00, så en drink klockan 01.00 räknas till kvällen innan."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Vilka telefoner fungerar Promilla på?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Android via Google Play, iPhone via App Store (kommer snart) och alla moderna webbläsare på app.promilla.se. Webbappen fungerar offline när den väl har laddats. Själva appen finns på engelska än så länge."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <a class="brand" href="/sv/">
+          <img src="/img/icon.png" alt="" width="40" height="40" />
+          Promilla
+        </a>
+        <nav>
+          <a href="/sv/sa-fungerar-det/">Så fungerar det</a>
+          <a href="https://app.promilla.se/privacy">Integritet</a>
+          <a href="/" hreflang="en" lang="en">English</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap hero">
+        <div>
+          <h1>En privat dryckesdagbok.</h1>
+          <p class="lead">
+            Logga det du dricker, se ungefär hur kvällen blir och samla
+            alkoholfria dagar i rad. Allt stannar i din telefon.
+          </p>
+          <div class="get">
+            <a
+              class="store"
+              href=""
+              aria-label="Hämta i App Store (kommer snart)"
+            >
+              <img
+                src="/img/badge-app-store.svg"
+                alt="Hämta i App Store"
+                width="144"
+                height="48"
+              />
+              <span class="soon">Kommer snart</span>
+            </a>
+            <a
+              class="store"
+              href="https://play.google.com/store/apps/details?id=se.venueve.neontracker&amp;hl=sv"
+              aria-label="Ladda ned på Google Play"
+            >
+              <img
+                src="/img/badge-google-play.png"
+                alt="Ladda ned på Google Play"
+                width="161"
+                height="48"
+              />
+              <span class="soon">Kommer snart</span>
+            </a>
+            <a class="webapp" href="https://app.promilla.se/">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path
+                  d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"
+                />
+              </svg>
+              Öppna webbappen
+            </a>
+          </div>
+        </div>
+        <div class="phone">
+          <img
+            src="/img/shot-today.webp"
+            width="600"
+            height="1300"
+            alt="Today-vyn: en uppskattad promille på 0,23 ‰ på en mätare, en kurva över kvällen och dryckerna som loggats i kväll. Appen är på engelska."
+          />
+        </div>
+      </div>
+
+      <section>
+        <div class="wrap">
+          <div class="features">
+            <div class="feature">
+              <div class="phone">
+                <img
+                  src="/img/shot-log.webp"
+                  width="600"
+                  height="1300"
+                  loading="lazy"
+                  alt="Logga en dryck: vin, öl, cava eller sprit, sedan storleken."
+                />
+              </div>
+              <h3>Logga kvällen</h3>
+              <p>
+                Välj vin, öl, cava eller sprit och sedan storleken. Ditt vanliga
+                glas är redan valt. En mätare och en kurva visar en uppskattning
+                av kvällen.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="phone">
+                <img
+                  src="/img/shot-history.webp"
+                  width="600"
+                  height="1300"
+                  loading="lazy"
+                  alt="Historik: summor för veckan och månaden, de senaste 12 dagarna och utmärkelserna för alkoholfria dagar."
+                />
+              </div>
+              <h3>Alkoholfria dagar</h3>
+              <p>
+                Räkna dina alkoholfria dagar i rad och samla milstolpar på
+                vägen. Sätt ett veckomål i standardglas.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="phone">
+                <img
+                  src="/img/shot-insights.webp"
+                  width="600"
+                  height="1300"
+                  loading="lazy"
+                  alt="Insikter: trenden över 8 veckor mot veckomålet och en kalender över 12 veckor."
+                />
+              </div>
+              <h3>Blicka bakåt</h3>
+              <p>
+                Följ din trend över 8 veckor mot ditt veckomål, se vilken
+                veckodag du dricker mest och en kalender över 12 veckor.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap cards">
+          <div class="card">
+            <p class="eyebrow">Dina uppgifter</p>
+            <h2>Inget lämnar din telefon.</h2>
+            <ul class="points">
+              <li>Inget konto, ingen reklam, ingen spårning.</li>
+              <li>Fungerar offline.</li>
+              <li>
+                Spara en säkerhetskopia och återställ den på en ny telefon.
+              </li>
+              <li>Exportera dina drycker som CSV när du vill.</li>
+            </ul>
+          </div>
+          <div class="card estimate">
+            <p class="eyebrow">Om uppskattningen</p>
+            <h2>En grov fingervisning, inte en mätning.</h2>
+            <p>
+              Promillen är en uppskattning med Widmarks formel. Den utgår från
+              din vikt, ditt kön och tiden sedan första glaset. Din verkliga
+              promillehalt kan vara en helt annan, beroende på mat, hälsa och
+              mediciner.
+            </p>
+            <p>
+              <strong>Använd den aldrig för att avgöra om du kan köra.</strong>
+            </p>
+            <p><a href="/sv/sa-fungerar-det/">Så fungerar uppskattningen</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="wrap faq">
+          <p class="eyebrow">Frågor</p>
+          <h2>Vanliga frågor</h2>
+          <details>
+            <summary>Vad är Promilla?</summary>
+            <p>
+              Promilla är en privat dryckesdagbok för mobilen och webben. Du
+              loggar det du dricker, ser en uppskattning av kvällen och samlar
+              alkoholfria dagar i rad. Allt stannar i din telefon.
+            </p>
+          </details>
+          <details>
+            <summary>Kostar Promilla något?</summary>
+            <p>Nej. Promilla är gratis, utan reklam och utan köp i appen.</p>
+          </details>
+          <details>
+            <summary>Samlar Promilla in mina uppgifter?</summary>
+            <p>
+              Nej. Det finns inget konto, ingen spårning och ingen server. Dina
+              drycker sparas i telefonen. Du kan spara en säkerhetskopia eller
+              exportera dem som CSV.
+            </p>
+          </details>
+          <details>
+            <summary>Hur räknar Promilla ut min promille?</summary>
+            <p>
+              Appen använder Widmarks formel med din vikt och ditt kön. Varje
+              dryck höjer uppskattningen, som sedan sjunker med 0,15 ‰ i timmen
+              tills den når noll.
+              <a href="/sv/sa-fungerar-det/">Så fungerar uppskattningen</a>
+              visar hela uträkningen.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Kan jag använda Promilla för att avgöra om jag kan köra?
+            </summary>
+            <p>
+              Nej. Promillen är en grov uppskattning, och din verkliga
+              promillehalt kan vara en helt annan. Använd den aldrig för att
+              avgöra om du kan köra.
+            </p>
+          </details>
+          <details>
+            <summary>Vad är ett standardglas?</summary>
+            <p>
+              Ett standardglas är 12 g ren alkohol. En öl på 33 cl och 5 % är
+              ungefär 1,1 standardglas. Promilla räknar din vecka i standardglas
+              mot ett veckomål som du väljer.
+            </p>
+          </details>
+          <details>
+            <summary>Vad räknas som en alkoholfri dag?</summary>
+            <p>
+              En dag utan loggade drycker. Dagen byts klockan 05.00, så en drink
+              klockan 01.00 räknas till kvällen innan.
+            </p>
+          </details>
+          <details>
+            <summary>Vilka telefoner fungerar Promilla på?</summary>
+            <p>
+              Android via Google Play, iPhone via App Store (kommer snart) och
+              alla moderna webbläsare på
+              <a href="https://app.promilla.se/">app.promilla.se</a>. Webbappen
+              fungerar offline när den väl har laddats. Själva appen finns på
+              engelska än så länge.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>© 2026 Venueve AB</span>
+        <nav>
+          <a href="/sv/sa-fungerar-det/">Så fungerar uppskattningen</a>
+          <a href="https://app.promilla.se/privacy">Integritet och support</a>
+          <a href="https://app.promilla.se/">Webbapp</a>
+          <a href="/" hreflang="en" lang="en">English</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

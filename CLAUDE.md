@@ -190,9 +190,14 @@ grid any more; don't reintroduce one-tap logging without a size.
 
 ## Marketing site (www.promilla.se)
 
-`web/marketing/` is the public homepage at `https://www.promilla.se`: one
-static `index.html` (inline CSS, no JS, no build) plus images and self-hosted
-Space Grotesk fonts. It is light-themed on purpose and is not part of the Vite
+`web/marketing/` is the public homepage at `https://www.promilla.se`: static
+HTML pages sharing `site.css` (no JS, no build) plus images and self-hosted
+Space Grotesk fonts. English home (`/`, with a FAQ) and "How the estimate
+works" (`/how-it-works/`), mirrored in Swedish under `/sv/`
+(`/sv/sa-fungerar-det/`), linked by hreflang. SEO/GEO files: `robots.txt`,
+`sitemap.xml` (bump `<lastmod>` when a page changes), `llms.txt`, JSON-LD in
+every page (FAQ JSON-LD must match the visible FAQ word for word) and a real
+`404.html`. No analytics script, ever: the site promises no tracking. It is light-themed on purpose and is not part of the Vite
 app. `npm run marketing` serves it on http://localhost:8742. The app stays at
 the repo root and on `https://app.promilla.se`, and so does the privacy and
 support page (`/privacy`, linked from both store listings).
@@ -214,7 +219,11 @@ support page (`/privacy`, linked from both store listings).
 - **Store links**: a badge with `href=""` shows as "Coming soon" and isn't
   clickable. When an app goes public, put its store URL in the `href` and
   update the `aria-label`.
-- Copy follows the `copywriting` skill like everything else.
+- Copy follows the `copywriting` skill like everything else (Swedish pages
+  follow its Swedish section).
+- **Search engines**: Google Search Console (Domain property, DNS TXT at
+  Loopia) and Bing Webmaster Tools. Setup steps and the "adding a page"
+  checklist are in `docs/MARKETING-SITE.md`.
 
 ## PWA
 
