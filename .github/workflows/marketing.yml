@@ -41,12 +41,21 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Azure only accepts the custom domain once its CNAME points at the
-      # site, so bind it only when DNS is in place. Until then the page is
-      # live on the azurestaticapps.net hostname.
-      - name: Check the custom domain's CNAME
+      # Bind the custom domain only when it isn't bound yet and its CNAME
+      # points at the site (Azure rejects it otherwise). Skipping an existing
+      # binding matters: re-binding is a long-running operation whose status
+      # lives at subscription scope, which this identity (Contributor on the
+      # resource group only) can't read, so the deployment hangs until it
+      # times out. Bicep deploys incrementally, so a skipped binding stays.
+      - name: Check the custom domain
         id: dns
         run: |
+          if az staticwebapp hostname show -n "$SITE_NAME" -g "$RESOURCE_GROUP" \
+               --hostname "$CUSTOM_DOMAIN" -o none 2>/dev/null; then
+            echo "$CUSTOM_DOMAIN is already bound"
+            echo "bind=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           target=$(dig +short CNAME "$CUSTOM_DOMAIN" | head -n1)
           echo "CNAME $CUSTOM_DOMAIN -> ${target:-<none>}"
           if [[ "$target" == *.azurestaticapps.net. ]]; then

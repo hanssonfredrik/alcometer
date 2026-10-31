@@ -54,9 +54,17 @@ In Loopia Customer Zone, open DNS for `promilla.se`:
 3. Leave `app`, `MX` and the SPF `TXT` records alone.
 
 When the CNAME resolves (`nslookup www.promilla.se` shows the
-azurestaticapps.net name), run the workflow again. It sees the CNAME, binds
-`www.promilla.se` to the site, and Azure issues the certificate. That can take
-up to an hour.
+azurestaticapps.net name), bind the domain once yourself. The workflow's
+identity can't, because Azure reports the binding's progress at subscription
+scope and that identity only has the resource group:
+
+```bash
+az staticwebapp hostname set -n swa-promilla-marketing -g rg-promilla-web --hostname www.promilla.se
+```
+
+Azure then issues the certificate, which can take up to an hour. From then on
+the workflow sees the binding and leaves it alone. (`www.promilla.se` was
+bound on 2026-10-31.)
 
 ## Store links
 

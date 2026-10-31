@@ -200,9 +200,11 @@ support page (`/privacy`, linked from both store listings).
 
 - **Deploy**: `.github/workflows/marketing.yml` signs in to Azure over OIDC,
   deploys `infra/marketing/main.bicep` (the `swa-promilla-marketing` Static
-  Web App in `rg-promilla-web`), binds `www.promilla.se` once its CNAME
-  resolves, and uploads the folder. It runs on pushes that touch
-  `web/marketing/**` or `infra/marketing/**`; the app workflow ignores those.
+  Web App in `rg-promilla-web`) and uploads the folder. It runs on pushes
+  that touch `web/marketing/**` or `infra/marketing/**`; the app workflow
+  ignores those. It leaves an existing `www.promilla.se` binding alone: its
+  identity can't follow a new binding to completion, so a fresh setup binds
+  the domain by hand once (see the doc).
   `promilla.se` is forwarded to www by Loopia, which can't point an apex at
   Azure. Setup and DNS: `docs/MARKETING-SITE.md`.
 - **Images**: `npm run marketing:images` renders `img/icon.png` and `img/og.png`
