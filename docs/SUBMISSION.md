@@ -257,6 +257,12 @@ Do these on real hardware once TestFlight / internal-testing builds are in
 
 ## Known limitations / manual-only items
 
+- **Guideline 2.1 "Information Needed"** (first iOS submission, 23 Oct
+  2026): App Review asked for a screen recording from a physical device plus
+  answers on purpose, setup, external services, regions and regulation. The
+  answers are the App Review Notes in `store/app-store-text.md`, next to the
+  recording shot list. Keep both current so later submissions carry them.
+
 - **Android emulator on this dev PC**: only the SDK command-line tools are
   installed (enough to compile). For a local emulator install Android
   Studio; or just use a real device — `npm run android` picks up any

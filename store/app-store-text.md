@@ -141,13 +141,51 @@ https://app.promilla.se/privacy
 
 **Notes:**
 
-```
-Promilla is a drink journal for people who want to keep track of how much they drink. It works fully offline with no account. No data leaves the device: it uses on-device storage only, with no network calls and no analytics.
+This block answers App Review's Guideline 2.1 "Information Needed" request
+(first submission, 23 Oct 2026). Paste it both into the reply in App Store
+Connect and into this Notes field, and attach the screen recording to the
+reply (shot list below).
 
-The core of the app is the journal: logging drinks, a limit for the night, a weekly target, history, insights and alcohol-free streaks. It also shows an educational estimate of how an evening's drinks add up (the Widmark formula), labelled "Estimate" wherever it appears. The app doesn't measure anything, isn't presented as a measuring device, and never tells anyone they are fit to drive. The app and this listing both say the estimate must never be used for that.
-
-To try it, tap "Log a drink", pick a type and a size, and confirm. History, Insights and Settings need no setup.
 ```
+1. SCREEN RECORDING
+Attached. It was recorded on a physical iPhone running the latest iOS, starting from the Home Screen. Promilla has no account registration, no login, no account deletion (there are no accounts), no user-generated content and no paid content or in-app purchases.
+
+2. PURPOSE AND AUDIENCE
+Promilla is a private drink journal for adults who want to keep track of how much they drink. You log each drink, set a limit for the night and a weekly target, and build alcohol-free streaks. History and Insights show your week, your month and your 8-week trend, so you can see your habits and cut down if you want to.
+
+The app also shows an educational estimate of how an evening's drinks add up (the Widmark formula), labeled "Estimate" wherever it appears. It doesn't measure anything and isn't presented as a measuring device. It never tells anyone they are fit to drive. The app and the listing both say the estimate must never be used to decide that.
+
+3. SETUP AND MAIN FEATURES
+No setup, no login and no sample files. Launch the app and it is ready.
+- Today: tap "Log a drink", pick a type and a size, and confirm. An undo bar appears. Tap a drink to edit it, or remove it. Use the arrows at the top to go to an earlier day and add a drink you forgot.
+- History: totals for this week and this month, the last 12 days, drinks by month, and your alcohol-free streaks.
+- Insights: the 8-week trend against your weekly target, your busiest day of the week, and a 12-week calendar (tap a day to see its drinks).
+- Settings: weight and sex (used for the estimate), weekly target, your usual sizes, accent color, back up to a file, restore from a file, export as CSV, and the privacy policy.
+
+4. EXTERNAL SERVICES
+None. The app works fully offline. All data is stored on the device only. There is no server, no account system, no analytics, no ads, no tracking, no third-party SDKs, no AI services and no payment processor. Fonts are bundled in the app. The only link out is the privacy policy (https://app.promilla.se/privacy), which opens in Safari.
+
+5. REGIONAL DIFFERENCES
+None. The app works the same in every region. It is in English only.
+
+6. REGULATED INDUSTRY OR THIRD-PARTY MATERIAL
+Not applicable. Promilla is not a medical device and makes no medical claims, it doesn't sell or deliver alcohol, and it contains no protected third-party material. All artwork and text are our own.
+```
+
+**Screen recording shot list** (about 1 to 2 minutes, on a physical iPhone
+with the latest iOS). Turn on Screen Recording in Control Center, start it on
+the Home Screen, then tap the Promilla icon:
+
+1. Launch: Today on an empty day (estimate dial, "Log a drink").
+2. Log a drink: type, size, confirm. Show the undo bar. Log a second drink so
+   the dial, the curve and the drink list update.
+3. Tap a drink, change its size or time, save.
+4. Go back one day and add a drink there.
+5. History: scroll through the totals and the alcohol-free streaks.
+6. Insights: scroll to the 12-week calendar and tap a day to open its drinks.
+7. Settings: weight and sex, weekly target, accent color, back up now (the
+   share sheet opens), then tap "Privacy policy" (Safari opens) and return.
+8. Optional: turn on Airplane mode and log a drink to show it works offline.
 
 **Screenshots:** in the **"iPhone with Dynamic Island (medium display)"** tab,
 upload `out/appstore/iphone-6.3/` (files 01 to 05, in order). That tab accepts
